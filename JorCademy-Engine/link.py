@@ -9,7 +9,8 @@ class Link(GameObject):
         self.speed = 3
         self.direction = pygame.Vector2(0, 0)
         self.gravity = 0.2
-        self.jump_speed = -5
+        self.jump_speed = -7
+        self.is_grounded = True
 
 
     # Update the state of Link
@@ -58,7 +59,9 @@ class Link(GameObject):
 
     # Let character jump
     def jump(self):
-        self.direction.y = self.jump_speed
+        if self.is_grounded:
+            self.direction.y = self.jump_speed
+            self.is_grounded = False
 
 
     # Draw Link

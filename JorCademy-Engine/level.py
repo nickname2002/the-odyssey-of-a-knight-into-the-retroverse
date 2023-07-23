@@ -81,6 +81,8 @@ class Level:
                 if player.direction.y > 0:
                     player.y = tile.y - tile.height / 2 - player.height / 2
                     player.direction.y = 0
+                    
+                player.is_grounded = True
 
             # Handle collision on top side of Link
             elif player.collision_top(tile):
