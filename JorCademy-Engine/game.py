@@ -3,7 +3,7 @@ from settings import screen_width, screen_height, tilemap_list
 from level import Level
 
 # Levels
-level = Level(tilemap_list)
+level = Level(tilemap_list, "1_1")
 
 
 def setup() -> None:
@@ -14,6 +14,7 @@ def setup() -> None:
 
     # Setup levels
     level.setup()
+    #level.import_tiles("maps/tileset.png")
 
 
 def update() -> None:

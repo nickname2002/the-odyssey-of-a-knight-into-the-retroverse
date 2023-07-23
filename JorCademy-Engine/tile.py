@@ -1,5 +1,5 @@
 from settings import tile_size
-from jorcademy import rect
+from jorcademy import rect, image
 
 class Tile:
 
@@ -22,3 +22,13 @@ class Tile:
     def draw(self):
         # TODO: change into picture
         rect(self.color, self.x, self.y, tile_size, tile_size)
+
+
+class StaticTile(Tile):
+
+    def __init__(self, size, pos, surface):
+        super().__init__(size, pos)
+        self.image = surface 
+
+    def draw(self):
+        image(f"../{self.image}", self.x, self.y, tile_size, tile_size)
