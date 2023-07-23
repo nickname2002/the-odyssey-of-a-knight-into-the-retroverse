@@ -1,5 +1,5 @@
 from settings import tile_size
-from jorcademy import rect, image
+from jorcademy import rect
 
 class Tile:
 
@@ -25,9 +25,12 @@ class Tile:
 
 class StaticTile(Tile):
 
-    def __init__(self, size, pos, surface):
+    def __init__(self, size, pos, surface, is_backdrop):
         super().__init__(size, pos)
         self.image = surface 
+        self.is_backdrop = is_backdrop
 
     def draw(self, screen):
         screen.blit(self.image, (self.x - tile_size / 2, self.y - tile_size / 2))
+
+    

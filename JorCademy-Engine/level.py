@@ -12,7 +12,7 @@ class Level:
         self.level_name = level_name
         self.tiles = []
         self.cam_pos = 0
-        self.link = Link((100, 100), 20, 40)
+        self.link = Link((100, 100), 32, 64)
 
 
     # Initialize level
@@ -36,10 +36,15 @@ class Level:
                 pos = (x, y)
 
                 # Treat different tiles correctly
-                if tile != "-1":
+                if tile != "-1" and tile != 0:
                     sel_tile = tileset[int(tile)]
-                    self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile))
-                else:
+                    self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile, False))
+                elif tile == 0:
+                    sel_tile = tileset[int(tile)]
+                    self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile, True))
+                elif tile == "-1":
+                    sel_tile = tileset[0]
+                    self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile, True))
                     self.link.x = pos[0]
                     self.link.y = pos[1]
 
@@ -64,11 +69,15 @@ class Level:
 
         for tile in self.tiles:
 
+            # No collision when tile is part of backdrop
+            if tile.is_backdrop:
+                continue 
+
             # Handle collision on left side of Link
             if player.collision_left(tile):
                 if player.direction.x < 0:
                     player.x = tile.x + tile.width / 2 + player.width / 2
-            
+        
             # Handle collision on right side of Link
             elif player.collision_right(tile):
                 if player.direction.x > 0:
@@ -81,6 +90,10 @@ class Level:
         player.apply_gravity()
 
         for tile in self.tiles:
+
+            # No collision when tile is part of backdrop
+            if tile.is_backdrop:
+                continue 
 
             # Handle collision on bottom side of Link
             if player.collision_bottom(tile):
@@ -107,8 +120,8 @@ class Level:
     def update(self):
         # == Player
         self.link.update(self.cam_pos, self.level_length)
-        #self.horizontal_collision()
-        #self.vertical_collision()
+        self.horizontal_collision()
+        self.vertical_collision()
 
         # == Tiles
         if not self.prevent_tile_shift():

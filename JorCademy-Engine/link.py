@@ -10,7 +10,7 @@ class Link(GameObject):
         self.direction = pygame.Vector2(0, 0)
         self.gravity = 0.2
         self.jump_speed = -7
-        self.is_grounded = True
+        self.is_grounded = False
 
 
     # Update the state of Link
