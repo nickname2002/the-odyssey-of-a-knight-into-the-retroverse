@@ -12,16 +12,16 @@ class Link(GameObject):
         self.jump_speed = -5
 
 
-    def update(self):
-        self.handle_movement()
+    def update(self, cam_pos, level_length):
+        self.handle_movement(cam_pos, level_length)
 
 
-    def handle_movement(self):
+    def handle_movement(self, cam_pos, level_length):
         # Update direction & position
         if is_key_down("d"):
-            self.move_right()
+            self.move_right(cam_pos, level_length)
         elif is_key_down("a"):
-            self.move_left()
+            self.move_left(cam_pos)
         else: 
             self.direction.x = 0
         
@@ -31,21 +31,20 @@ class Link(GameObject):
         self.apply_gravity()
 
 
-    def move_right(self):
+    def move_right(self, cam_pos, level_length):
         self.direction.x = self.speed
-        if self.x < screen_width / 2:
+        if self.x < screen_width / 2 or cam_pos >= (level_length - screen_width):
             self.x += self.direction.x
 
 
-    def move_left(self):
+    def move_left(self, cam_pos):
         self.direction.x = -self.speed
-        if self.x > screen_width / 4:
+        if self.x > screen_width / 4 or cam_pos <= 0:
             self.x += self.direction.x
 
 
     def apply_gravity(self):
         if self.direction.y < 5:
-
             self.direction.y += self.gravity
         self.y += self.direction.y
 

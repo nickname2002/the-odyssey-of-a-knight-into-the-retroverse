@@ -12,6 +12,7 @@ class Level:
         self.tiles = []
         self.cam_pos = 0
         self.link = Link((100, 100), 20, 40)
+        self.level_length = len(level_data[0]) * tile_size  # NOTE: might need to be reworked    
 
 
     def setup(self):
@@ -69,11 +70,18 @@ class Level:
 
     def update(self):
         # Player
-        self.link.update()
+        self.link.update(self.cam_pos, self.level_length)
         self.horizontal_collision()
         self.vertical_collision()
 
         # Tiles
+        if self.cam_pos <= 0 and self.link.direction.x < 0:
+            return 
+
+        if self.cam_pos >= (self.level_length - screen_width) and \
+           self.link.direction.x > 0:
+            return
+
         self.world_shift()
         for tile in self.tiles:
             tile.update(self.cam_pos)
