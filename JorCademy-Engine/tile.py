@@ -11,10 +11,14 @@ class Tile:
         self.width = tile_size
         self.height = tile_size
 
-    def draw(self):
-        # TODO: change into picture
-        rect(self.color, self.x, self.y, tile_size, tile_size)
 
+    # Update the state of the tile
     def update(self, shift_x):
         self.x = self.orig_position[0] - shift_x 
         self.y = self.orig_position[1]
+
+
+    # Draw the tile
+    def draw(self):
+        # TODO: change into picture
+        rect(self.color, self.x, self.y, tile_size, tile_size)
