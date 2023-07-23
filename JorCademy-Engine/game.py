@@ -1,9 +1,9 @@
 from jorcademy import *
-from settings import screen_width, screen_height, tilemap_list
+from settings import screen_width, screen_height
 from level import Level
 
 # Levels
-level = Level(tilemap_list, "1_1")
+level = Level("1_1")
 
 
 def setup() -> None:
@@ -11,10 +11,7 @@ def setup() -> None:
     title("Link | The Rescue of Princess Zelda")
     screen(screen_width, screen_height)
     backdrop((255, 255, 255))
-
-    # Setup levels
-    level.setup()
-    #level.import_tiles("maps/tileset.png")
+    # NOTE: setting up level happend in main.py
 
 
 def update() -> None:

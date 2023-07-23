@@ -20,7 +20,6 @@ class Tile:
 
     # Draw the tile
     def draw(self):
-        # TODO: change into picture
         rect(self.color, self.x, self.y, tile_size, tile_size)
 
 
@@ -30,5 +29,5 @@ class StaticTile(Tile):
         super().__init__(size, pos)
         self.image = surface 
 
-    def draw(self):
-        image(f"../{self.image}", self.x, self.y, tile_size, tile_size)
+    def draw(self, screen):
+        screen.blit(self.image, (self.x - tile_size / 2, self.y - tile_size / 2))

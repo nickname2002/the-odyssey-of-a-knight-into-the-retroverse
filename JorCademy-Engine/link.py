@@ -33,7 +33,7 @@ class Link(GameObject):
             self.jump()
 
         # Apply gravity to Link
-        self.apply_gravity()
+        #self.apply_gravity()
 
 
     # Move right

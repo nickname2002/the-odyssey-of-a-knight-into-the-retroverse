@@ -1,82 +1,30 @@
-from settings import tile_size, screen_width, tilemap_list
+from settings import tile_size, screen_width
 from jorcademy import *
 from tile import Tile, StaticTile
 from link import Link
-import csv
-import cv2
-import os
+from support import import_level_data, import_tileset
+
 
 class Level:
 
     # TODO: Make sure levels can be imported
-    def __init__(self, level_data, level_name):
+    def __init__(self, level_name):
         self.level_name = level_name
-        self.level_data = level_data
         self.tiles = []
         self.cam_pos = 0
         self.link = Link((100, 100), 20, 40)
-        self.level_length = len(level_data[0]) * tile_size  # NOTE: might need to be reworked    
-
-
-    # Convert selected level csv-file to list of lists, containing the tiles
-    def import_level_data(self):
-        filepath = "maps/level_" + self.level_name + ".csv"
-        data = []
-
-        # Open and parse csv
-        with open(filepath, newline='') as csv_file:
-            csv_reader = csv.reader(csv_file)
-            for row in csv_reader:
-                data.append([element for element in row])
-
-        return data
-
-
-    # Import tiles from a tileset 
-    def import_tiles(self, path):
-        # Tile properties
-        tile_width = 16
-        tile_height = 16
-
-        # Read the tileset image using OpenCV
-        tileset_image = cv2.imread(path)
-
-        # Get the size of the tileset image
-        tileset_height, tileset_width, _ = tileset_image.shape
-
-        # Calculate the number of rows and columns
-        num_cols = tileset_width // (tile_width + 2 * 1)
-        num_rows = tileset_height // (tile_height + 2 * 1)
-
-        # Create an empty array to store the individual tiles
-        tiles_array = []
-
-        # Split the tileset into individual tiles
-        for row in range(num_rows):
-            for col in range(num_cols):
-                left = col * (tile_width + 1 * 1) + 1
-                upper = row * (tile_height + 1 * 1) + 1
-                right = left + tile_width
-                lower = upper + tile_height
-
-                # Crop the tile from the tileset image
-                tile = tileset_image[upper:lower, left:right]
-
-                # Append the tile to the array
-                tiles_array.append(tile)
-
-        # Export each tile to PNG and store in tiles folder
-        for i, tile in enumerate(tiles_array):
-            cv2.imwrite(f"tiles/{i}.png", tile)
 
 
     # Initialize level
-    def setup(self):
+    def setup(self, screen):
+
+        self.screen = screen
+        self.level_data = import_level_data(f"maps/level_{self.level_name}.csv")
+        self.level_length = len(self.level_data[0] * tile_size)
+        tileset = import_tileset("maps/tileset.png")
 
         # Initial y-coordinate of tile
         y = tile_size / 2
-
-        # self.level_data = self.import_level_data()
 
         # Read tiles into tiles list
         for row in self.level_data:
@@ -88,10 +36,10 @@ class Level:
                 pos = (x, y)
 
                 # Treat different tiles correctly
-                if tile != "L":
-                    image_path = f"tiles/{tile}.png"
-                    self.tiles.append(Tile(tile_size, pos))
-                elif tile == "L":
+                if tile != "-1":
+                    sel_tile = tileset[int(tile)]
+                    self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile))
+                else:
                     self.link.x = pos[0]
                     self.link.y = pos[1]
 
@@ -159,8 +107,8 @@ class Level:
     def update(self):
         # == Player
         self.link.update(self.cam_pos, self.level_length)
-        self.horizontal_collision()
-        self.vertical_collision()
+        #self.horizontal_collision()
+        #self.vertical_collision()
 
         # == Tiles
         if not self.prevent_tile_shift():
@@ -174,4 +122,4 @@ class Level:
     def draw(self):
         self.link.draw()
         for tile in self.tiles:
-            tile.draw()
+            tile.draw(self.screen)
