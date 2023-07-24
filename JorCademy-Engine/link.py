@@ -23,10 +23,12 @@ class Link(GameObject):
         super().__init__(pos, w, h)
         self.speed = 3
         self.direction = pygame.Vector2(0, 0)
+        self.facing_left = False
         self.gravity = 0.2
         self.jump_speed = -8
         self.is_grounded = False
         self.state = IDLE
+        self.walk_animation_delay = 10
         self.timer = 0
         self.sprites = [
             'link/link_idle.png',
@@ -50,7 +52,6 @@ class Link(GameObject):
         self.handle_movement(cam_pos, level_length)
 
 
-    # Handle the movement of link
     def handle_movement(self, cam_pos, level_length):
         # Update horizontal direction and position of Link
         if is_key_down("d"):
@@ -60,7 +61,7 @@ class Link(GameObject):
         else: 
             self.direction.x = 0
             self.state = IDLE
-        
+
         # Update the vertical position of Link
         if is_key_down("space"):
             self.jump()
@@ -68,17 +69,24 @@ class Link(GameObject):
         # Apply gravity to Link
         self.apply_gravity()
 
+        # Update the walking animation state
+        if self.is_grounded and self.state >= WALKING_1 and self.state <= WALKING_10:
+            if self.timer % self.walk_animation_delay == 0:
+                self.state += 1
+                if self.state > WALKING_10:
+                    self.state = WALKING_1
+
+        self.timer += 1
 
     # Move right
     def move_right(self, cam_pos, level_length):
+        self.facing_left = False
         if self.is_grounded:
-            if self.state < 2 or self.state >= 11:
-                self.state = 2
+            if self.state < WALKING_1 or self.state >= WALKING_10:
+                self.state = WALKING_1
             else:
                 if self.timer % 10 == 0:
-                    self.state =+ 1
-                if self.state == 3:
-                    print(self.state)
+                    self.state += 1
 
         self.timer += 1
 
@@ -89,6 +97,16 @@ class Link(GameObject):
 
     # Move left
     def move_left(self, cam_pos):
+        self.facing_left = True
+        if self.is_grounded:
+            if self.state < WALKING_1 or self.state >= WALKING_10:
+                self.state = WALKING_1
+            else:
+                if self.timer % 10 == 0:
+                    self.state += 1
+
+        self.timer += 1
+
         self.direction.x = -self.speed
         if self.x > screen_width / 4 or cam_pos <= 0:
             self.x += self.direction.x
@@ -103,6 +121,7 @@ class Link(GameObject):
 
     # Let character jump
     def jump(self):
+        self.timer = 0
         self.state = JUMPING
         if self.is_grounded:
             self.direction.y = self.jump_speed
@@ -112,6 +131,5 @@ class Link(GameObject):
     # Draw Link
     def draw(self):
         sprite = self.sprites[self.state]
-        image(sprite, self.x, self.y, 1.28)
-        #self.timer += 1
+        image(sprite, self.x, self.y, 1.28, self.facing_left)
         # rect((255, 50, 50), self.x, self.y, self.width, self.height)

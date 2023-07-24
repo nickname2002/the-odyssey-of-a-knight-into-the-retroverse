@@ -91,8 +91,9 @@ class Text(DrawableObject):
 
 # Derived class - representing an image object
 class Image(DrawableObject):
-    def __init__(self, url, scale, x, y, rotation=0):
+    def __init__(self, url, scale, x, y, flipped, rotation=0):
         super().__init__(x, y, None, None, rotation)
+        self.flipped = flipped
         self.object_name = "Image"
         self.url = url
         self.scale = scale
@@ -110,6 +111,10 @@ class Image(DrawableObject):
         # Place image in center of specified coordinates
         image_rect = image.get_rect()
         image_rect.center = (self.x, self.y)
+
+        # If needed, flip an image
+        if self.flipped:
+            image = pygame.transform.flip(image, True, False)
 
         # Rotate image
         image = pygame.transform.rotate(image, self.rotation)
