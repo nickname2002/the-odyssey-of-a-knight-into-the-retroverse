@@ -1,13 +1,13 @@
 from settings import tile_size, screen_width
 from jorcademy import *
-from tile import Tile, StaticTile
+from tile import StaticTile, MysteryBox, Loot
 from link import Link
 from support import import_level_data, import_tileset
+from tile_data import *
 
 
 class Level:
 
-    # TODO: Make sure levels can be imported
     def __init__(self, level_name):
         self.level_name = level_name
         self.tiles = []
@@ -27,32 +27,46 @@ class Level:
         y = tile_size / 2
 
         # Read tiles into tiles list
-        for row in self.level_data:
+        for j, row in enumerate(self.level_data):
         
             # Initial x-coordinate of tile
             x = tile_size / 2
 
-            for tile in row:
+            for i, tile in enumerate(row):
                 pos = (x, y)
 
                 # Treat different tiles correctly
-                if tile != "-1" and tile != "0":
+                if tile == SKY_TILE:
                     sel_tile = tileset[int(tile)]
-                    self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile, False))
-                elif tile == "0":
-                    sel_tile = tileset[int(tile)]
-                    self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile, True))
-                elif tile == "-1":
+                    self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
+                
+                elif tile == PLAYER_TILE:
                     sel_tile = tileset[0]
-                    self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile, True))
+                    self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
                     self.link.x = pos[0]
                     self.link.y = pos[1]
+
+                elif tile == MYSTERY_BOX:
+                    # Setup loot
+                    loot_code = self.level_data[j + 1][i]
+                    loot_tile = tileset[int(loot_code)]
+                    loot = Loot(tile_size, pos, loot_tile, loot_code)
+
+                    # Setup tile
+                    self.level_data[j + 1][i] = SKY_TILE
+                    sel_tile = tileset[int(tile)]
+                    alt_tile = tileset[int(EMPTY_BOX)]
+                    self.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot))
+
+                else:
+                    sel_tile = tileset[int(tile)]
+                    self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
 
                 # Update tile x-coordinate
                 x += tile_size 
 
             # Update tile y-coordinate
-            y += tile_size
+            y += tile_size        
 
 
     # Update the camera position
@@ -70,18 +84,16 @@ class Level:
         for tile in self.tiles:
 
             # No collision when tile is part of backdrop
-            if tile.is_backdrop:
+            if tile.code in BACKDROP_TILES:
                 continue 
 
             # Handle collision on left side of Link
-            if player.collision_left(tile) and not tile.is_backdrop:
-                print("Left")
+            if player.collision_left(tile):
                 if player.direction.x < 0:
                     player.x = tile.x + tile.width / 2 + player.width / 2
         
             # Handle collision on right side of Link
             elif player.collision_right(tile):
-                print("Right")
                 if player.direction.x > 0:
                     player.x = tile.x - tile.width / 2 - player.width / 2
 
@@ -91,10 +103,10 @@ class Level:
         player = self.link
         player.apply_gravity()
 
-        for tile in self.tiles:
+        for i, tile in enumerate(self.tiles):
 
             # No collision when tile is part of backdrop
-            if tile.is_backdrop:
+            if tile.code in BACKDROP_TILES:
                 continue 
 
             # Handle collision on bottom side of Link
@@ -110,6 +122,11 @@ class Level:
                 if player.direction.y < 0:
                     player.y = tile.y + tile.height / 2 + player.height / 2
                     player.direction.y = 0
+
+                    # Handle collision with mystery box
+                    if tile.code == MYSTERY_BOX:
+                        loot = tile.give_loot()
+                        self.tiles.insert(i, loot)
             
     
     # Check whether shift of the tiles should be prevented
