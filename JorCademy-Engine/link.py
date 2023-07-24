@@ -9,7 +9,7 @@ class Link(GameObject):
         self.speed = 3
         self.direction = pygame.Vector2(0, 0)
         self.gravity = 0.2
-        self.jump_speed = -7
+        self.jump_speed = -8
         self.is_grounded = False
 
 
@@ -33,7 +33,7 @@ class Link(GameObject):
             self.jump()
 
         # Apply gravity to Link
-        #self.apply_gravity()
+        self.apply_gravity()
 
 
     # Move right

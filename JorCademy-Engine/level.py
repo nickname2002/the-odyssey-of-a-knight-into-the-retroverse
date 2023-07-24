@@ -36,10 +36,10 @@ class Level:
                 pos = (x, y)
 
                 # Treat different tiles correctly
-                if tile != "-1" and tile != 0:
+                if tile != "-1" and tile != "0":
                     sel_tile = tileset[int(tile)]
                     self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile, False))
-                elif tile == 0:
+                elif tile == "0":
                     sel_tile = tileset[int(tile)]
                     self.tiles.append(StaticTile((100, 100, 100), pos, sel_tile, True))
                 elif tile == "-1":
@@ -74,12 +74,14 @@ class Level:
                 continue 
 
             # Handle collision on left side of Link
-            if player.collision_left(tile):
+            if player.collision_left(tile) and not tile.is_backdrop:
+                print("Left")
                 if player.direction.x < 0:
                     player.x = tile.x + tile.width / 2 + player.width / 2
         
             # Handle collision on right side of Link
             elif player.collision_right(tile):
+                print("Right")
                 if player.direction.x > 0:
                     player.x = tile.x - tile.width / 2 - player.width / 2
 
@@ -107,6 +109,7 @@ class Level:
             elif player.collision_top(tile):
                 if player.direction.y < 0:
                     player.y = tile.y + tile.height / 2 + player.height / 2
+                    player.direction.y = 0
             
     
     # Check whether shift of the tiles should be prevented
@@ -118,6 +121,7 @@ class Level:
 
     # Update the state of the level
     def update(self):
+
         # == Player
         self.link.update(self.cam_pos, self.level_length)
         self.horizontal_collision()
