@@ -12,6 +12,7 @@ class Level:
     def __init__(self, level_name):
         self.level_name = level_name
         self.tiles = []
+        self.text_anomalies = []
         self.cam_pos = 0
         self.link = Link((100, 100), 32, 64)
 
@@ -144,12 +145,24 @@ class Level:
                     # Handle collision with mystery box
                     if tile.code == MYSTERY_BOX:
                         try:
-                            loot = tile.give_loot()
+                            loot = tile.give_loot(self)
                             self.tiles.insert(i, loot)
                         except:
                             pass
             
     
+    # Update text anomaly buffer
+    def update_text_anomalies(self, new_anomaly=None):
+        # Remove unactive text anomalies from buffer
+        for msg in self.text_anomalies:
+            if not msg.visible:
+                self.text_anomalies.remove(msg) 
+
+        # Add new anomaly to buffer
+        if new_anomaly != None:
+            self.text_anomalies.append(new_anomaly)
+    
+
     # Check whether shift of the tiles should be prevented
     def prevent_tile_shift(self):
         return (self.cam_pos <= 0 and self.link.direction.x < 0) or \
@@ -159,6 +172,10 @@ class Level:
 
     # Update the state of the level
     def update(self):
+
+        # UI
+        for msg in self.text_anomalies:
+            msg.update()
 
         # == Player
         self.link.update(self.cam_pos, self.level_length)
@@ -175,6 +192,38 @@ class Level:
 
     # Draw the state of the level
     def draw(self):
+
+        # == Player 
         self.link.draw()
+
+        # == Tiles
         for tile in self.tiles:
             tile.draw(self.screen)
+
+        # == UI
+        for message in self.text_anomalies:
+            message.draw()
+
+        # Coin amount
+        text(f"COINS: {str(self.link.coins)}", 
+             25, 
+             (255, 255, 255), 
+             75,
+             25, 
+             "fonts/pixel.ttf")
+        
+        # Lives amount
+        text(f"LIVES: {str(self.link.lives)}", 
+             25, 
+             (255, 255, 255), 
+             screen_width / 2,
+             25, 
+             "fonts/pixel.ttf")
+
+        # World number
+        text(f"WORLD: {str(self.level_name)}", 
+             25, 
+             (255, 255, 255), 
+             screen_width / 2 + 300,
+             25, 
+             "fonts/pixel.ttf")

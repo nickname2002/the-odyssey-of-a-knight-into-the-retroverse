@@ -42,15 +42,15 @@ class MysteryBox(StaticTile):
         self.alt_surface = alt_surface
 
 
-    def give_loot(self):
+    def give_loot(self, level):
         if self.image != self.alt_surface:
             self.image = self.alt_surface
             
             try:
-                self.loot.show()
+                self.loot.show(level)
             except:
                 pass 
-            
+
         return self.loot
     
 
