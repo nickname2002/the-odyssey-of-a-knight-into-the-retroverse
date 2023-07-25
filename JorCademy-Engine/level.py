@@ -1,6 +1,6 @@
 from settings import tile_size, screen_width
 from jorcademy import *
-from tile import StaticTile, MysteryBox
+from tile import StaticTile, MysteryBox, MovingTile
 from loot import Coin, ExtraLife, FireMario
 from link import Link
 from support import import_level_data, import_tileset
@@ -96,8 +96,21 @@ class Level:
             self.cam_pos -= self.link.speed
 
 
+    # Handle collision
+    def handle_collision(self):
+        self.horizontal_collision()
+        self.vertical_collision()
+
+
     # Change horizontal collision of player with the map
     def horizontal_collision(self):
+
+        for tile in self.tiles:
+            if issubclass(type(tile), MovingTile):
+                tile.horizontal_collision(self.tiles)
+
+
+        # TODO: wrap this inside class or something
         player = self.link
 
         for tile in self.tiles:
@@ -119,6 +132,13 @@ class Level:
 
     # Change vertical collision of player with the map
     def vertical_collision(self):
+
+        for tile in self.tiles:
+            if issubclass(type(tile), MovingTile):
+                tile.vertical_collision(self.tiles)
+
+
+        # TODO: wrap inside class or something
         player = self.link
         player.apply_gravity()
 

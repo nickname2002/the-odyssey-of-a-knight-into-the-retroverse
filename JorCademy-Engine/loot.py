@@ -1,10 +1,11 @@
-from tile import StaticTile
+from tile import MovingTile
 from settings import tile_size
 from text_anomaly import TextAnomaly
+from jorcademy import image
 import pygame
 
 
-class Loot(StaticTile):
+class Loot(MovingTile):
     
     def __init__(self, size, pos, surface, code, player):
         super().__init__(size, pos, surface, code)
@@ -89,15 +90,17 @@ class ExtraLife(Loot):
         super().__init__(size, pos, surface, code, player)
         self.message = "+1 UP"
         self.moving = False
-        self.speed = 1
+        self.speed = 2
 
 
     def update(self, shift_x):
         super().update(shift_x)
 
-        # TODO: Make mushroom move
+        # Move mushroom
         if self.moving:
-            self.x += self.speed
+            self.direction.x = self.speed
+            self.offset += self.direction.x
+            self.apply_gravity()
 
         # Process effect of the loot
         if self.activated and not self.looted:
@@ -115,8 +118,11 @@ class ExtraLife(Loot):
 
 
     def draw(self, shift_x):
-        self.make_image("assets/power_ups/1up.png")
-        super().draw(shift_x)
+        if self.moving:
+            image("power_ups/1up.png", self.x, self.y, 0.129)
+        else:
+            self.make_image("assets/power_ups/1up.png")
+            super().draw(shift_x)
 
 
 class FireMario(Loot):
@@ -134,9 +140,6 @@ class FireMario(Loot):
             if self.collision_with_player():
                 self.make_text_anomaly()
                 # TODO: Implement special looting behavior
-                # NOTE: Issue because x-position of tile is locked
-                # NOTE: Track extra offset from original update-set x (in StaticTile) 
-                # NOTE: Maybe create MovingTile class for looting items
                 self.looted = True
                 self.y = 800
 
