@@ -135,6 +135,8 @@ class FireMario(Loot):
                 self.make_text_anomaly()
                 # TODO: Implement special looting behavior
                 # NOTE: Issue because x-position of tile is locked
+                # NOTE: Track extra offset from original update-set x (in StaticTile) 
+                # NOTE: Maybe create MovingTile class for looting items
                 self.looted = True
                 self.y = 800
 
