@@ -178,7 +178,7 @@ class Level:
         text(f"LIVES: {str(self.link.lives)}", 
              25, 
              (255, 255, 255), 
-             screen_width / 2,
+             screen_width / 2 + 10,
              25, 
              "fonts/pixel.ttf")
 

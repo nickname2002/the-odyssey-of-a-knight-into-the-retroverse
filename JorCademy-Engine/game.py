@@ -6,6 +6,9 @@ from level import Level
 level = Level("1_1")
 
 
+# TODO: Optimize performance. Performance seems to drop linearly when getting loot from lootboxes.
+
+
 def setup() -> None:
     # Screen properties
     title("Link | The Rescue of Princess Zelda")
