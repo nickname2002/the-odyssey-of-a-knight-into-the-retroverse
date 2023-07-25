@@ -88,10 +88,16 @@ class ExtraLife(Loot):
     def __init__(self, size, pos, surface, code, player):
         super().__init__(size, pos, surface, code, player)
         self.message = "+1 UP"
+        self.moving = False
+        self.speed = 1
 
 
     def update(self, shift_x):
         super().update(shift_x)
+
+        # TODO: Make mushroom move
+        if self.moving:
+            self.x += self.speed
 
         # Process effect of the loot
         if self.activated and not self.looted:
@@ -100,6 +106,12 @@ class ExtraLife(Loot):
                 self.player.lives += 1
                 self.looted = True
                 self.y = 800
+
+
+    def rise_animation(self):
+        super().rise_animation()
+        if self.y == self.orig_position[1] - tile_size:
+            self.moving = True
 
 
     def draw(self, shift_x):
@@ -122,6 +134,7 @@ class FireMario(Loot):
             if self.collision_with_player():
                 self.make_text_anomaly()
                 # TODO: Implement special looting behavior
+                # NOTE: Issue because x-position of tile is locked
                 self.looted = True
                 self.y = 800
 
