@@ -1,4 +1,4 @@
-from settings import tile_size, screen_width
+from settings import tile_size, screen_width, screen_height
 from jorcademy import *
 from tile import StaticTile, MysteryBox, MovingTile
 from loot import Coin, ExtraLife, FireMario
@@ -14,7 +14,7 @@ class Level:
         self.tiles = []
         self.text_anomalies = []
         self.cam_pos = 0
-        self.link = Link((100, 100), 32, 64)
+        self.link = Link((100, screen_height / 2), 32, 64)
 
 
     # Initialize level
@@ -97,82 +97,24 @@ class Level:
 
 
     # Handle collision
-    def handle_collision(self):
-        self.horizontal_collision()
-        self.vertical_collision()
-
-
-    # Change horizontal collision of player with the map
-    def horizontal_collision(self):
-
-        for tile in self.tiles:
-            if issubclass(type(tile), MovingTile):
-                tile.horizontal_collision(self.tiles)
-
-
-        # TODO: wrap this inside class or something
-        player = self.link
-
-        for tile in self.tiles:
-
-            # No collision when tile is part of backdrop
-            if tile.code in BACKDROP_TILES:
-                continue 
-
-            # Handle collision on left side of Link
-            if player.collision_left(tile):
-                if player.direction.x < 0:
-                    player.x = tile.x + tile.width / 2 + player.width / 2
-        
-            # Handle collision on right side of Link
-            elif player.collision_right(tile):
-                if player.direction.x > 0:
-                    player.x = tile.x - tile.width / 2 - player.width / 2
-
-
-    # Change vertical collision of player with the map
-    def vertical_collision(self):
-
-        for tile in self.tiles:
-            if issubclass(type(tile), MovingTile):
-                tile.vertical_collision(self.tiles)
-
-
-        # TODO: wrap inside class or something
-        player = self.link
-        player.apply_gravity()
-
+    def handle_collision(self):        
         for i, tile in enumerate(self.tiles):
 
             # No collision when tile is part of backdrop
             if tile.code in BACKDROP_TILES:
                 continue 
 
-            # Handle collision on bottom side of Link
-            if player.collision_bottom(tile):
-                if player.direction.y > 0:
-                    player.y = tile.y - tile.height / 2 - player.height / 2
-                    player.direction.y = 0
-                    
-                player.is_grounded = True
+            # Moving tiles collision
+            if issubclass(type(tile), MovingTile):
+                tile.collision(self.tiles)
 
-            # Handle collision on top side of Link
-            elif player.collision_top(tile):
-                if player.direction.y < 0:
-                    player.y = tile.y + tile.height / 2 + player.height / 2
-                    player.direction.y = 0
-
-                    # Handle collision with mystery box
-                    if tile.code == MYSTERY_BOX:
-                        try:
-                            loot = tile.give_loot(self)
-                            self.tiles.insert(i, loot)
-                        except:
-                            pass
+            # Link collision
+            self.link.handle_collision(tile, i, self)
             
-    
+
     # Update text anomaly buffer
     def update_text_anomalies(self, new_anomaly=None):
+
         # Remove unactive text anomalies from buffer
         for msg in self.text_anomalies:
             if not msg.visible:
@@ -192,22 +134,22 @@ class Level:
 
     # Update the state of the level
     def update(self):
-
         # UI
         for msg in self.text_anomalies:
             msg.update()
 
         # == Player
         self.link.update(self.cam_pos, self.level_length)
-        self.horizontal_collision()
-        self.vertical_collision()
-
+    
         # == Tiles
         if not self.prevent_tile_shift():
             self.world_shift()
 
         for tile in self.tiles:
             tile.update(self.cam_pos)
+
+        # Collision
+        self.handle_collision()
 
 
     # Draw the state of the level

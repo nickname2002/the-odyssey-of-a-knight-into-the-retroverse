@@ -1,5 +1,6 @@
 from gameobject import GameObject
 from settings import screen_width
+from tile import MYSTERY_BOX
 from jorcademy import *
 
 # States for Link
@@ -26,8 +27,8 @@ class Link(GameObject):
         self.speed = 4
         self.direction = pygame.Vector2(0, 0)
         self.facing_left = False
-        self.gravity = 0.2
-        self.jump_speed = -8
+        self.gravity = 0.6
+        self.jump_speed = -13 
         self.is_grounded = False
         self.state = IDLE
         self.walk_animation_delay = 10
@@ -78,6 +79,9 @@ class Link(GameObject):
                 if self.state > WALKING_10:
                     self.state = WALKING_1
 
+        if self.timer == 100000:
+            self.timer = 0
+
         self.timer += 1
 
     # Move right
@@ -112,6 +116,40 @@ class Link(GameObject):
         self.direction.x = -self.speed
         if self.x > screen_width / 4 or cam_pos <= 0:
             self.x += self.direction.x
+
+
+    def handle_collision(self, tile, index, level):
+        # Handle collision on left side of Link
+        if self.collision_left(tile):
+            if self.direction.x < 0:
+                self.x = tile.x + tile.width / 2 + self.width / 2
+    
+        # Handle collision on right side of Link
+        elif self.collision_right(tile):
+            if self.direction.x > 0:
+                self.x = tile.x - tile.width / 2 - self.width / 2
+
+        # Handle collision on bottom side of Link
+        if self.collision_bottom(tile):
+            if self.direction.y > 0:
+                self.y = tile.y - tile.height / 2 - self.height / 2
+                self.direction.y = 0
+                
+            self.is_grounded = True
+
+        # Handle collision on top side of Link
+        elif self.collision_top(tile):
+            if self.direction.y < 0:
+                self.y = tile.y + tile.height / 2 + self.height / 2
+                self.direction.y = 0
+
+                # Handle collision with mystery box
+                if tile.code == MYSTERY_BOX:
+                    try:
+                        loot = tile.give_loot(level)
+                        level.tiles.insert(index, loot)
+                    except:
+                        pass
 
 
     # Applying gravity
