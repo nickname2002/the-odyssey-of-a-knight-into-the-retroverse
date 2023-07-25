@@ -21,7 +21,9 @@ class Link(GameObject):
 
     def __init__(self, pos, w, h):
         super().__init__(pos, w, h)
-        self.speed = 3
+        self.lives = 3
+        self.coins = 0
+        self.speed = 4
         self.direction = pygame.Vector2(0, 0)
         self.facing_left = False
         self.gravity = 0.2
@@ -132,4 +134,3 @@ class Link(GameObject):
     def draw(self):
         sprite = self.sprites[self.state]
         image(sprite, self.x, self.y, 1.28, self.facing_left)
-        # rect((255, 50, 50), self.x, self.y, self.width, self.height)

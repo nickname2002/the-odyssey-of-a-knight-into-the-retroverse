@@ -1,6 +1,7 @@
 from settings import tile_size, screen_width
 from jorcademy import *
-from tile import StaticTile, MysteryBox, Loot
+from tile import StaticTile, MysteryBox
+from loot import Coin, ExtraLife, FireMario
 from link import Link
 from support import import_level_data, import_tileset
 from tile_data import *
@@ -49,8 +50,7 @@ class Level:
                 elif tile == MYSTERY_BOX:
                     # Setup loot
                     loot_code = self.level_data[j + 1][i]
-                    loot_tile = tileset[int(loot_code)]
-                    loot = Loot(tile_size, pos, loot_tile, loot_code)
+                    loot = self.init_loot(loot_code, tileset, pos)
 
                     # Setup tile
                     self.level_data[j + 1][i] = SKY_TILE
@@ -67,6 +67,24 @@ class Level:
 
             # Update tile y-coordinate
             y += tile_size        
+
+
+    # Make loot object to be added to the world
+    def init_loot(self, loot_code, tileset, pos):
+        loot_tile = tileset[int(loot_code)]
+        loot = None
+
+        # Determine loot type
+        if loot_code == COIN:
+            loot = Coin(tile_size, pos, loot_tile, loot_code, self.link)
+        elif loot_code == EXTRA_LIFE:
+            loot = ExtraLife(tile_size, pos, loot_tile, loot_code, self.link)
+        elif loot_code == FIRE_MARIO:
+            loot = FireMario(tile_size, pos, loot_tile, loot_code, self.link)
+        else:
+            loot = Coin(tile_size, pos, loot_tile, loot_code, self.link)
+
+        return loot
 
 
     # Update the camera position
@@ -125,8 +143,11 @@ class Level:
 
                     # Handle collision with mystery box
                     if tile.code == MYSTERY_BOX:
-                        loot = tile.give_loot()
-                        self.tiles.insert(i, loot)
+                        try:
+                            loot = tile.give_loot()
+                            self.tiles.insert(i, loot)
+                        except:
+                            pass
             
     
     # Check whether shift of the tiles should be prevented

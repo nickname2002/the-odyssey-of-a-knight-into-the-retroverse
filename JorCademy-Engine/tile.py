@@ -45,37 +45,14 @@ class MysteryBox(StaticTile):
     def give_loot(self):
         if self.image != self.alt_surface:
             self.image = self.alt_surface
-            self.loot.show()
+            
+            try:
+                self.loot.show()
+            except:
+                pass 
+            
         return self.loot
-        
-
-class Loot(StaticTile):
     
-    def __init__(self, size, pos, surface, code):
-        super().__init__(size, pos, surface, code)
-        self.direction_y = 0
-        self.activated = False
-        self.speed = 1.5
-
-
-    def show(self):
-        self.activated = True
-        self.direction_y = -self.speed
-
-    
-    def rise_animation(self):
-        if self.activated and self.y > self.orig_position[1] - tile_size:
-            self.y += self.direction_y
-        else:
-            self.direction_y = 0
-
-
-    def update(self, shift_x):
-        super().update(shift_x)
-        self.rise_animation()
-
-
-
 
         
 
