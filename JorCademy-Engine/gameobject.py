@@ -77,4 +77,6 @@ class GameObject:
         # Check horizontally and vertically in range
         return in_x_range and in_y_range
 
+    # TODO: Add terrain collision
+
     

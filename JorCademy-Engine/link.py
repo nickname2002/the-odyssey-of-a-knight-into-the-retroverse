@@ -31,7 +31,7 @@ class Link(GameObject):
         self.jump_speed = -13 
         self.is_grounded = False
         self.state = IDLE
-        self.walk_animation_delay = 7
+        self.walk_animation_delay = 5
         self.timer = 0
         self.sprites = [
             'link/link_idle.png',

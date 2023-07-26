@@ -3,6 +3,7 @@ from jorcademy import *
 from tile import StaticTile, MysteryBox, MovingTile
 from loot import Coin, ExtraLife, FireMario
 from link import Link
+from monster import Bokoblin
 from support import import_level_data, import_tileset
 from tile_data import *
 
@@ -10,12 +11,16 @@ from tile_data import *
 class Level:
 
     def __init__(self, level_name):
+        # Properties
         self.level_name = level_name
-        self.tiles = []
-        self.text_anomalies = []
         self.cam_pos = 0
         self.link = Link((100, screen_height / 2), 32, 64)
         self.backdrop_color = (147, 187, 236)
+        
+        # Collections
+        self.tiles = []
+        self.text_anomalies = []
+        self.monsters = []
 
 
     # Initialize level
@@ -41,8 +46,6 @@ class Level:
                 # Treat different tiles correctly
                 if tile == SKY_TILE:
                     pass
-                    #sel_tile = tileset[int(tile)]
-                    #self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
                 
                 elif tile == PLAYER_TILE:
                     sel_tile = tileset[0]
@@ -61,6 +64,9 @@ class Level:
                     alt_tile = tileset[int(EMPTY_BOX)]
                     self.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot))
 
+                elif tile in MONSTERS:
+                    self.init_monster(tile, pos)
+
                 else:
                     sel_tile = tileset[int(tile)]
                     self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
@@ -70,6 +76,12 @@ class Level:
 
             # Update tile y-coordinate
             y += tile_size        
+
+
+    # Make new monster object and add it to the list of monsters 
+    def init_monster(self, tile_code, pos):
+        if tile_code == BOKOBLIN:
+            self.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5))
 
 
     # Make loot object to be added to the world
@@ -142,6 +154,10 @@ class Level:
 
         # == Player
         self.link.update(self.cam_pos, self.level_length)
+
+        # == Monsters
+        for monster in self.monsters:
+            monster.update(self.cam_pos)
     
         # == Tiles
         if not self.prevent_tile_shift():
@@ -159,6 +175,10 @@ class Level:
 
         # == Player 
         self.link.draw()
+
+        # == Monsters
+        for monster in self.monsters:
+            monster.draw()
 
         # == Tiles
         for tile in self.tiles:

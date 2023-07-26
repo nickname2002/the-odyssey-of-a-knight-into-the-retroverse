@@ -25,9 +25,6 @@ class Tile:
         rect(self.color, self.x, self.y, tile_size, tile_size)
 
 
-# TODO: Create backdrop tiles for potential performance improvement
-
-
 class StaticTile(Tile):
 
     def __init__(self, size, pos, surface, code):
