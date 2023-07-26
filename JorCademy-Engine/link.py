@@ -25,14 +25,11 @@ class Link(GameObject):
         self.lives = 3
         self.coins = 0
         self.speed = 4
-        self.direction = pygame.Vector2(0, 0)
         self.facing_left = False
-        self.gravity = 0.6
         self.jump_speed = -13 
         self.is_grounded = False
+        self.walk_animation_delay = 3
         self.state = IDLE
-        self.walk_animation_delay = 5
-        self.timer = 0
         self.sprites = [
             'link/link_idle.png',
             'link/link_fight.png',
@@ -50,12 +47,9 @@ class Link(GameObject):
         ]
 
 
-    # Update the state of Link
-    def update(self, cam_pos, level_length):
-        self.handle_movement(cam_pos, level_length)
-
-
     def handle_movement(self, cam_pos, level_length):
+        super().handle_movement(cam_pos, level_length)
+
         # Update horizontal direction and position of Link
         if is_key_down("d"):
             self.move_right(cam_pos, level_length)
@@ -69,20 +63,6 @@ class Link(GameObject):
         if is_key_down("space"):
             self.jump()
 
-        # Apply gravity to Link
-        self.apply_gravity()
-
-        # Update the walking animation state
-        if self.is_grounded and self.state >= WALKING_1 and self.state <= WALKING_10:
-            if self.timer % self.walk_animation_delay == 0:
-                self.state += 1
-                if self.state > WALKING_10:
-                    self.state = WALKING_1
-
-        if self.timer == 100000:
-            self.timer = 0
-
-        self.timer += 1
 
     # Move right
     def move_right(self, cam_pos, level_length):
@@ -91,7 +71,7 @@ class Link(GameObject):
             if self.state < WALKING_1 or self.state >= WALKING_10:
                 self.state = WALKING_1
             else:
-                if self.timer % 10 == 0:
+                if self.timer % self.walk_animation_delay == 0:
                     self.state += 1
 
         self.timer += 1
@@ -108,7 +88,7 @@ class Link(GameObject):
             if self.state < WALKING_1 or self.state >= WALKING_10:
                 self.state = WALKING_1
             else:
-                if self.timer % 10 == 0:
+                if self.timer % self.walk_animation_delay == 0:
                     self.state += 1
 
         self.timer += 1
@@ -116,47 +96,6 @@ class Link(GameObject):
         self.direction.x = -self.speed
         if self.x > screen_width / 4 or cam_pos <= 0:
             self.x += self.direction.x
-
-
-    def handle_collision(self, tile, index, level):
-        # Handle collision on left side of Link
-        if self.collision_left(tile):
-            if self.direction.x < 0:
-                self.x = tile.x + tile.width / 2 + self.width / 2
-    
-        # Handle collision on right side of Link
-        elif self.collision_right(tile):
-            if self.direction.x > 0:
-                self.x = tile.x - tile.width / 2 - self.width / 2
-
-        # Handle collision on bottom side of Link
-        if self.collision_bottom(tile):
-            if self.direction.y > 0:
-                self.y = tile.y - tile.height / 2 - self.height / 2
-                self.direction.y = 0
-                
-            self.is_grounded = True
-
-        # Handle collision on top side of Link
-        elif self.collision_top(tile):
-            if self.direction.y < 0:
-                self.y = tile.y + tile.height / 2 + self.height / 2
-                self.direction.y = 0
-
-                # Handle collision with mystery box
-                if tile.code == MYSTERY_BOX:
-                    try:
-                        loot = tile.give_loot(level)
-                        level.tiles.insert(index, loot)
-                    except:
-                        pass
-
-
-    # Applying gravity
-    def apply_gravity(self):
-        if self.direction.y < 5:
-            self.direction.y += self.gravity
-        self.y += self.direction.y
 
 
     # Let character jump

@@ -122,6 +122,10 @@ class Level:
             if issubclass(type(tile), MovingTile):
                 tile.collision(self.tiles)
 
+            # Monsters collision
+            for monster in self.monsters:
+                monster.handle_collision(tile, i, self)
+
             # Link collision
             self.link.handle_collision(tile, i, self)
             
@@ -157,7 +161,7 @@ class Level:
 
         # == Monsters
         for monster in self.monsters:
-            monster.update(self.cam_pos)
+            monster.update(self.cam_pos, self.level_length, self.link)
     
         # == Tiles
         if not self.prevent_tile_shift():
