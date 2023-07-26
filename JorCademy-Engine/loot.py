@@ -16,6 +16,7 @@ class Loot(MovingTile):
         self.looted = False
         self.message = "SAMPLE_MESSAGE"
         self.level = None
+        self.coins = 0
 
 
     def show(self, level):
@@ -50,6 +51,12 @@ class Loot(MovingTile):
         return self.player.collision(self)
 
 
+    def process_loot(self):
+        self.player.coins += self.coins
+        self.make_text_anomaly()
+        self.looted = True
+
+
     def update(self, shift_x):
         super().update(shift_x)
         self.rise_animation()
@@ -61,7 +68,8 @@ class Coin(Loot):
         super().__init__(size, pos, surface, code, player)
         self.timer = 0
         self.disappear_delay = 20
-        self.message = "+1 COIN"
+        self.message = "+200 COIN"
+        self.coins = 200
 
 
     def show(self, level):
@@ -70,8 +78,7 @@ class Coin(Loot):
 
         # Process effect of the loot
         if not self.looted:
-            self.player.coins += 1
-            self.looted = True
+            self.process_loot()
 
 
     def update(self, shift_x):
@@ -105,10 +112,13 @@ class ExtraLife(Loot):
         # Process effect of the loot
         if self.activated and not self.looted:
             if self.collision_with_player():
-                self.make_text_anomaly()
-                self.player.lives += 1
-                self.looted = True
+                self.process_loot()
                 self.y = 800
+
+
+    def process_loot(self):
+        super().process_loot()
+        self.player.lives += 1
 
 
     def rise_animation(self):
@@ -129,7 +139,8 @@ class FireMario(Loot):
 
     def __init__(self, size, pos, surface, code, player):
         super().__init__(size, pos, surface, code, player)
-        self.message = ""
+        self.message = "+1000 COINS"
+        self.coins = 1000
 
 
     def update(self, shift_x):
@@ -139,9 +150,14 @@ class FireMario(Loot):
         if self.activated and not self.looted:
             if self.collision_with_player():
                 self.make_text_anomaly()
-                # TODO: Implement special looting behavior
+                self.player.coins += self.coins
                 self.looted = True
                 self.y = 800
+
+
+    def process_loot(self):
+        super().process_loot()
+        # TODO: Implement special looting behavior
 
 
     def draw(self, screen):

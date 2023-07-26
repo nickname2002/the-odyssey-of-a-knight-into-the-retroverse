@@ -21,8 +21,9 @@ class Link(GameObject):
 
     def __init__(self, pos, w, h):
         super().__init__(pos, w, h)
+        self.score = 0
         self.lives = 3
-        self.coins = 0
+        self.coins = 0                  # NOTE: maybe change coins into rupees
         self.orig_speed = 4
         self.speed = 4
         self.facing_left = False

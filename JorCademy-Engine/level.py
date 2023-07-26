@@ -203,7 +203,7 @@ class Level:
         text(f"COINS: {str(self.link.coins)}", 
              25, 
              (255, 255, 255), 
-             75,
+             100,
              25, 
              "fonts/pixel.ttf")
         

@@ -21,6 +21,7 @@ class Monster(GameObject):
         self.message = "+20 SCORE"
         self.level = level
         self.killed = False
+        self.loot = 100
 
 
     def is_out_of_frame(self):
@@ -58,6 +59,8 @@ class Monster(GameObject):
 
 class Bokoblin(Monster):
 
+    # TODO: Add cool dying animation 
+
     def __init__(self, pos, w, h, player, level):
         super().__init__(pos, w, h, player, level)
         self.spriteset = [
@@ -66,6 +69,14 @@ class Bokoblin(Monster):
         ]
         self.speed = 1
         self.direction = pygame.Vector2(-self.speed, 0)
+
+
+    def die(self):
+        if not self.killed:
+            self.make_text_anomaly()
+            self.player.coins += self.loot
+
+        self.killed = True
 
 
     def make_text_anomaly(self):    
@@ -106,10 +117,10 @@ class Bokoblin(Monster):
     
     def handle_collision_with_player(self, level):
         if self.collision_top(self.player) and self.player.collision_bottom(self):
+            
             if not self.killed:
-                self.make_text_anomaly()
-                # TODO: Add score to player
-                self.killed = True
+                self.die()
+
             self.player.is_grounded = True
             self.player.jump()
         elif self.collision(self.player):
@@ -121,7 +132,7 @@ class Bokoblin(Monster):
         # TODO: collision when walking left is not working properly
         if self.player.master_sword.collision(self) and \
            self.player.master_sword.visible == True:
-            self.killed = True
+            self.die()
 
 
     def handle_movement(self, cam_pos, level_length):
