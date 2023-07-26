@@ -4,7 +4,7 @@ from jorcademy import *
 
 # States for Link
 IDLE = 0
-FIGHT = 1
+ATTACK = 1
 WALKING_1 = 2
 WALKING_2 = 3
 WALKING_3 = 4
@@ -23,12 +23,16 @@ class Link(GameObject):
         super().__init__(pos, w, h)
         self.lives = 3
         self.coins = 0
+        self.orig_speed = 4
         self.speed = 4
         self.facing_left = False
         self.jump_speed = -13 
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE
+        self.attack_cooldown = 50
+        self.active_cooldown = 0
+        self.master_sword= MasterSword((self.x, self.y), 45, 33, self)
         self.sprites = [
             'link/link_idle.png',
             'link/link_fight.png',
@@ -52,7 +56,7 @@ class Link(GameObject):
         # Update horizontal direction and position of Link
         if is_key_down("d"):
             self.move_right(cam_pos, level_length)
-        elif is_key_down("a"):
+        elif is_key_down("a") and not is_key_down("shift"):
             self.move_left(cam_pos)
         elif self.is_grounded: 
             self.direction.x = 0
@@ -97,6 +101,20 @@ class Link(GameObject):
             self.x += self.direction.x
 
 
+    def activate_attack_cooldown(self):
+        # TODO: make sure the player cannot attack for some time
+        self.state = IDLE
+        self.active_cooldown = self.attack_cooldown
+        pass
+
+
+    # Attack action
+    def attack(self):
+        if self.active_cooldown <= 0:
+            self.master_sword.attack()
+            self.state = ATTACK
+
+
     # Let character jump
     def jump(self):
         self.timer = 0
@@ -106,12 +124,76 @@ class Link(GameObject):
             self.is_grounded = False
 
 
+    def update(self, cam_pos, level_length):
+        super().update(cam_pos, level_length)
+
+        if is_key_down("shift") and self.is_grounded:
+            self.attack()
+
+        if self.active_cooldown > 0:
+            self.active_cooldown -= 1
+
+        self.master_sword.update(cam_pos, level_length)
+
+
     # Draw Link
     def draw(self):
         sprite = self.sprites[self.state]
         image(sprite, self.x, self.y, 1.28, self.facing_left)
+        self.master_sword.draw()
 
 
     def hit(self, level):
         # TODO: make sure player has less lives and level is reset
         pass 
+
+
+class MasterSword(GameObject):
+
+    def __init__(self, pos, w, h, player):
+        super().__init__(pos, w, h)
+        self.visible = False
+        self.timer = 0 
+        self.attack_animation_delay = 20
+        self.sword_reach = 10
+        self.sprite = "link/master_sword.png"
+        self.player = player
+        self.gravity = 0
+        self.rotation = 100
+
+
+    def attack(self):
+        self.x = self.player.x + 30
+        self.y = self.player.y + 10
+        self.visible = True 
+        
+
+    def update(self, cam_pos, level_length):
+        super().update(cam_pos, level_length)
+        self.x = self.player.x + 30
+
+        if self.visible:
+            self.timer += 1
+
+            if is_key_down("shift"):
+                if self.timer == 100000:
+                    self.timer = 0
+                if self.timer % self.attack_animation_delay == 0:
+                    self.player.activate_attack_cooldown()
+                    self.visible = False
+            else:
+                self.timer = 0
+                self.visible = False
+                self.player.state = IDLE
+
+
+    def draw(self):
+        if self.visible:
+            if self.player.facing_left == False:
+                image(self.sprite, self.x, self.y, 0.15, False, self.rotation)
+            else:
+                image(self.sprite, self.x - self.width * 2, self.y, 0.15, False, self.rotation + 160)
+        else: 
+            self.x = self.player.x
+            self.y = self.player.y
+

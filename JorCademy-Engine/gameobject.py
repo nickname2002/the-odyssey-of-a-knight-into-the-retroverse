@@ -8,6 +8,8 @@ class GameObject:
     def __init__(self, pos, w, h):
         self.x = pos[0]
         self.y = pos[1]
+        self.orig_pos = pos
+        self.offset = 0
         self.width = w
         self.height = h
         self.direction = pygame.Vector2(0, 0)
@@ -15,6 +17,11 @@ class GameObject:
         self.walk_animation_delay = 5
         self.timer = 0
         self.speed = 4
+
+
+    def out_of_screen(self):
+        return (self.x - self.width < 0 or self.x + self.width > screen_width) or \
+               (self.y - self.height < 0 or self.y + self.height > screen_height)
 
 
     def update(self, cam_pos, level_length):
