@@ -94,7 +94,7 @@ class Link(GameObject):
         self.timer += 1
 
         self.direction.x = -self.speed
-        if self.x > screen_width / 4 or cam_pos <= 0:
+        if self.x > 0 or cam_pos <= 0:
             self.x += self.direction.x
 
 

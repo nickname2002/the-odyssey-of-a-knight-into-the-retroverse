@@ -1,7 +1,7 @@
 from gameobject import GameObject
 from tile_data import *
 from jorcademy import image
-from settings import screen_width
+from settings import screen_width, screen_height
 import pygame
 
 
@@ -17,6 +17,13 @@ class Monster(GameObject):
         self.offset = 0
         self.moving = False
 
+
+    def is_out_of_frame(self):
+        if self.moving:
+            return \
+                self.x < 0 - self.width and \
+                (self.y < 0 - self.width or self.y > screen_height + self.height)
+                
 
     def update(self, cam_pos, level_length, player):
         super().update(cam_pos, level_length)

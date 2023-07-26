@@ -106,8 +106,6 @@ class Level:
     def world_shift(self):
         if is_key_down("d") and self.link.x >= screen_width / 2:
             self.cam_pos += self.link.speed
-        if is_key_down("a") and self.link.x <= screen_width / 4 and self.cam_pos > 0:         
-            self.cam_pos -= self.link.speed
 
 
     # Handle collision
@@ -161,6 +159,9 @@ class Level:
 
         # == Monsters
         for monster in self.monsters:
+            if monster.is_out_of_frame():
+                self.monsters.remove(monster)
+                
             monster.update(self.cam_pos, self.level_length, self.link)
     
         # == Tiles
@@ -168,6 +169,10 @@ class Level:
             self.world_shift()
 
         for tile in self.tiles:
+            if tile.is_out_of_frame():
+                self.tiles.remove(tile)
+                continue 
+
             tile.update(self.cam_pos)
 
         # Collision

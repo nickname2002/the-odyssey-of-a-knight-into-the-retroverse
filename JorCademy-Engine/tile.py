@@ -1,4 +1,4 @@
-from settings import tile_size
+from settings import tile_size, screen_height
 from jorcademy import rect
 from tile_data import *
 import pygame
@@ -13,6 +13,12 @@ class Tile:
         self.y = pos[1]
         self.width = tile_size
         self.height = tile_size
+
+
+    def is_out_of_frame(self):
+        return \
+            self.x < 0 - self.width and \
+            (self.y < 0 - self.width or self.y > screen_height + self.height)
 
 
     # Update the state of the tile
