@@ -41,7 +41,7 @@ class Monster(GameObject):
         self.x += self.offset
         self.timer += 1
 
-        if self.x - self.player.x < screen_width / 2:
+        if (self.x - self.width) - self.player.x < screen_width / 2:
             self.moving = True
 
 
@@ -118,18 +118,21 @@ class Bokoblin(Monster):
     def handle_collision_with_player(self, level):
         if self.collision_top(self.player) and self.player.collision_bottom(self):
             
+            # Kill monster
             if not self.killed:
                 self.die()
 
+            # Make player jump when landing on top of monster
             self.player.is_grounded = True
-            self.player.jump()
+            self.player.jump(self.player.jump_speed + 4)
+
+        # Process player damage
         elif self.collision(self.player):
             self.player.hit(level)
             pass
 
 
     def handle_collision_with_sword(self):
-        # TODO: collision when walking left is not working properly
         if self.player.master_sword.collision(self) and \
            self.player.master_sword.visible == True:
             self.die()
@@ -144,6 +147,7 @@ class Bokoblin(Monster):
     def draw(self): 
         super().draw()
 
+        # Make sure the monster is drawn facing the right direction
         if self.direction.x > 0:
             image(self.spriteset[self.sel_sprite_index], self.x, self.y, 3) 
         else:

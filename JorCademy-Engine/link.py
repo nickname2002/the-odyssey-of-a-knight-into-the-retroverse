@@ -65,7 +65,7 @@ class Link(GameObject):
 
         # Update the vertical position of Link
         if is_key_down("space"):
-            self.jump()
+            self.jump(self.jump_speed)
 
 
     # Move right
@@ -115,11 +115,11 @@ class Link(GameObject):
 
 
     # Let character jump
-    def jump(self):
+    def jump(self, speed):
         self.timer = 0
         self.state = JUMPING
         if self.is_grounded:
-            self.direction.y = self.jump_speed
+            self.direction.y = speed
             self.is_grounded = False
 
 
