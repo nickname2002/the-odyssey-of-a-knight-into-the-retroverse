@@ -99,6 +99,12 @@ class Bokoblin(Monster):
                 self.y = tile.y + tile.height / 2 + self.height / 2
                 self.direction.y = 0
 
+        # Player game events
+        self.handle_collision_with_player(level)
+        self.handle_collision_with_sword()
+        
+    
+    def handle_collision_with_player(self, level):
         if self.collision_top(self.player) and self.player.collision_bottom(self):
             if not self.killed:
                 self.make_text_anomaly()
@@ -109,7 +115,14 @@ class Bokoblin(Monster):
         elif self.collision(self.player):
             self.player.hit(level)
             pass
-        
+
+
+    def handle_collision_with_sword(self):
+        # TODO: collision when walking left is not working properly
+        if self.player.master_sword.collision(self) and \
+           self.player.master_sword.visible == True:
+            self.killed = True
+
 
     def handle_movement(self, cam_pos, level_length):
         super().handle_movement(cam_pos, level_length)

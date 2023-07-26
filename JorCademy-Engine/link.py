@@ -54,7 +54,7 @@ class Link(GameObject):
         super().handle_movement(cam_pos, level_length)
 
         # Update horizontal direction and position of Link
-        if is_key_down("d"):
+        if is_key_down("d") and not is_key_down('shift'):
             self.move_right(cam_pos, level_length)
         elif is_key_down("a") and not is_key_down("shift"):
             self.move_left(cam_pos)
@@ -102,10 +102,8 @@ class Link(GameObject):
 
 
     def activate_attack_cooldown(self):
-        # TODO: make sure the player cannot attack for some time
         self.state = IDLE
         self.active_cooldown = self.attack_cooldown
-        pass
 
 
     # Attack action
@@ -170,17 +168,25 @@ class MasterSword(GameObject):
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
-        self.x = self.player.x + 30
+
+        # Make sure the collider is positioned properly
+        # based on the orientation of the player
+        if self.player.facing_left == False:
+            self.x = self.player.x + self.width
+        else:
+            self.x = self.player.x - self.width
 
         if self.visible:
             self.timer += 1
 
+            # Make sure cooldown for weapon usage is activated when triggered too long
             if is_key_down("shift"):
                 if self.timer == 100000:
                     self.timer = 0
                 if self.timer % self.attack_animation_delay == 0:
                     self.player.activate_attack_cooldown()
                     self.visible = False
+            # Move back to idle state when shift is not pressed
             else:
                 self.timer = 0
                 self.visible = False
@@ -190,10 +196,7 @@ class MasterSword(GameObject):
     def draw(self):
         if self.visible:
             if self.player.facing_left == False:
-                image(self.sprite, self.x, self.y, 0.15, False, self.rotation)
+                image(self.sprite, self.x - 20, self.y, 0.15, False, self.rotation)
             else:
-                image(self.sprite, self.x - self.width * 2, self.y, 0.15, False, self.rotation + 160)
-        else: 
-            self.x = self.player.x
-            self.y = self.player.y
+                image(self.sprite, self.x, self.y, 0.15, False, self.rotation + 160)
 
