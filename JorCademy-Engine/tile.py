@@ -3,6 +3,7 @@ from jorcademy import rect
 from tile_data import *
 import pygame
 
+
 class Tile:
 
     def __init__(self, color, pos):
@@ -22,6 +23,9 @@ class Tile:
     # Draw the tile
     def draw(self):
         rect(self.color, self.x, self.y, tile_size, tile_size)
+
+
+# TODO: Create backdrop tiles for potential performance improvement
 
 
 class StaticTile(Tile):

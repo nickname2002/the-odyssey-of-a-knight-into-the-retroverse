@@ -15,6 +15,7 @@ class Level:
         self.text_anomalies = []
         self.cam_pos = 0
         self.link = Link((100, screen_height / 2), 32, 64)
+        self.backdrop_color = (147, 187, 236)
 
 
     # Initialize level
@@ -39,8 +40,9 @@ class Level:
 
                 # Treat different tiles correctly
                 if tile == SKY_TILE:
-                    sel_tile = tileset[int(tile)]
-                    self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
+                    pass
+                    #sel_tile = tileset[int(tile)]
+                    #self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
                 
                 elif tile == PLAYER_TILE:
                     sel_tile = tileset[0]

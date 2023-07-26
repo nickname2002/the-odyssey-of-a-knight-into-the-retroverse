@@ -13,11 +13,13 @@ def setup() -> None:
     # Screen properties
     title("Link | The Rescue of Princess Zelda")
     screen(screen_width, screen_height)
-    backdrop((255, 255, 255))
     # NOTE: setting up level happend in main.py
 
 
 def update() -> None:
+    # Draw sky backdrop
+    backdrop(level.backdrop_color)
+
     # Update levels
     level.update()
 
