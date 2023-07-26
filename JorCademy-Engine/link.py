@@ -71,6 +71,8 @@ class Link(GameObject):
     # Move right
     def move_right(self, cam_pos, level_length):
         self.facing_left = False
+
+        # Handle animation
         if self.is_grounded:
             if self.state < WALKING_1 or self.state >= WALKING_10:
                 self.state = WALKING_1
@@ -80,6 +82,7 @@ class Link(GameObject):
 
         self.timer += 1
 
+        # Update coordinates
         self.direction.x = self.speed
         if self.x < screen_width / 2 or cam_pos >= (level_length - screen_width):
             self.x += self.direction.x
@@ -88,6 +91,8 @@ class Link(GameObject):
     # Move left
     def move_left(self, cam_pos):
         self.facing_left = True
+
+        # Handle animation
         if self.is_grounded:
             if self.state < WALKING_1 or self.state >= WALKING_10:
                 self.state = WALKING_1
@@ -97,6 +102,7 @@ class Link(GameObject):
 
         self.timer += 1
 
+        # Update coordinates
         self.direction.x = -self.speed
         if self.x > 0 or cam_pos <= 0:
             self.x += self.direction.x
@@ -126,12 +132,15 @@ class Link(GameObject):
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
 
+        # Start attack
         if is_key_down("shift") and self.is_grounded:
             self.attack()
 
+        # Update weapon attack cooldown
         if self.active_cooldown > 0:
             self.active_cooldown -= 1
 
+        # Update state of the master sword
         self.master_sword.update(cam_pos, level_length)
 
 
@@ -143,8 +152,9 @@ class Link(GameObject):
 
 
     def hit(self, level):
-        # TODO: make sure player has less lives and level is reset
-        pass 
+        # TODO: add cool dying animation
+        self.lives -= 1
+        level.reset()
 
 
 class MasterSword(GameObject):

@@ -148,6 +148,23 @@ class Level:
                 self.link.direction.x > 0)
 
 
+    def reset(self):
+        # Properties
+        self.cam_pos = 0
+
+        # Reset link pos
+        self.link.x = 100
+        self.link.y = screen_height / 2
+        
+        # Collections
+        self.tiles = []
+        self.text_anomalies = []
+        self.monsters = []
+
+        # Execute setup again to reset map
+        self.setup(self.screen)
+
+
     # Update the state of the level
     def update(self):
         # UI
