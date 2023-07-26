@@ -81,7 +81,7 @@ class Level:
     # Make new monster object and add it to the list of monsters 
     def init_monster(self, tile_code, pos):
         if tile_code == BOKOBLIN:
-            self.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5))
+            self.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5, self.link, self))
 
 
     # Make loot object to be added to the world
@@ -159,10 +159,10 @@ class Level:
 
         # == Monsters
         for monster in self.monsters:
-            if monster.is_out_of_frame():
+            if monster.is_out_of_frame() or monster.killed:
                 self.monsters.remove(monster)
-                
-            monster.update(self.cam_pos, self.level_length, self.link)
+
+            monster.update(self.cam_pos, self.level_length)
     
         # == Tiles
         if not self.prevent_tile_shift():
@@ -187,11 +187,13 @@ class Level:
 
         # == Monsters
         for monster in self.monsters:
-            monster.draw()
+            if monster.in_frame():
+                monster.draw()
 
         # == Tiles
         for tile in self.tiles:
-            tile.draw(self.screen)
+            if tile.in_frame():
+                tile.draw(self.screen)
 
         # == UI
         for message in self.text_anomalies:

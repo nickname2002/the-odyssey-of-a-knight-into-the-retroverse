@@ -1,6 +1,5 @@
 from gameobject import GameObject
 from settings import screen_width
-from tile import MYSTERY_BOX
 from jorcademy import *
 
 # States for Link
@@ -55,7 +54,7 @@ class Link(GameObject):
             self.move_right(cam_pos, level_length)
         elif is_key_down("a"):
             self.move_left(cam_pos)
-        else: 
+        elif self.is_grounded: 
             self.direction.x = 0
             self.state = IDLE
 
@@ -111,3 +110,8 @@ class Link(GameObject):
     def draw(self):
         sprite = self.sprites[self.state]
         image(sprite, self.x, self.y, 1.28, self.facing_left)
+
+
+    def hit(self, level):
+        # TODO: make sure player has less lives and level is reset
+        pass 

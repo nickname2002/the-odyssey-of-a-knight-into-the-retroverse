@@ -1,13 +1,14 @@
 from gameobject import GameObject
 from tile_data import *
 from jorcademy import image
-from settings import screen_width, screen_height
+from text_anomaly import TextAnomaly
+from settings import screen_width, screen_height, tile_size
 import pygame
 
 
 class Monster(GameObject):
 
-    def __init__(self, pos, w, h):
+    def __init__(self, pos, w, h, player, level):
         super().__init__(pos, w, h)
         self.orig_pos = pos
         self.spriteset = []
@@ -16,6 +17,10 @@ class Monster(GameObject):
         self.sel_sprite_index = 0
         self.offset = 0
         self.moving = False
+        self.player = player
+        self.message = "+20 SCORE"
+        self.level = level
+        self.killed = False
 
 
     def is_out_of_frame(self):
@@ -25,13 +30,17 @@ class Monster(GameObject):
                 (self.y < 0 - self.width or self.y > screen_height + self.height)
                 
 
-    def update(self, cam_pos, level_length, player):
+    def in_frame(self):
+        return self.x + self.width > 0 and self.x - self.width < screen_width
+
+
+    def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
         self.x = self.orig_pos[0] - cam_pos
         self.x += self.offset
         self.timer += 1
 
-        if self.x - player.x < screen_width / 2:
+        if self.x - self.player.x < screen_width / 2:
             self.moving = True
 
 
@@ -49,8 +58,8 @@ class Monster(GameObject):
 
 class Bokoblin(Monster):
 
-    def __init__(self, pos, w, h):
-        super().__init__(pos, w, h)
+    def __init__(self, pos, w, h, player, level):
+        super().__init__(pos, w, h, player, level)
         self.spriteset = [
             "monsters/bokoblin/bokoblin_1.png",
             "monsters/bokoblin/bokoblin_2.png"
@@ -59,18 +68,24 @@ class Bokoblin(Monster):
         self.direction = pygame.Vector2(-self.speed, 0)
 
 
-    def handle_collision(self, tile, index, level):
-        # Handle collision on left side of Link
+    def make_text_anomaly(self):    
+        anomaly_pos = (self.level.link.x, self.y - tile_size)
+        new_text_anomaly = TextAnomaly(anomaly_pos, self.message, 20, (255, 255, 255))
+        self.level.update_text_anomalies(new_text_anomaly)
+
+
+    def handle_collision(self, tile, _, level):
+        # Handle collision on left side of monster
         if self.collision_left(tile):
             if self.direction.x < 0:
                 self.direction.x *= -1
     
-        # Handle collision on right side of Link
+        # Handle collision on right side of monster
         elif self.collision_right(tile):
             if self.direction.x > 0:
                 self.direction.x *= -1
 
-        # Handle collision on bottom side of Link
+        # Handle collision on bottom side of monster
         if self.collision_bottom(tile):
             if self.direction.y > 0:
                 self.y = tile.y - tile.height / 2 - self.height / 2
@@ -78,19 +93,22 @@ class Bokoblin(Monster):
                 
             self.is_grounded = True
 
-        # Handle collision on top side of Link
+        # Handle collision on top side of monster
         elif self.collision_top(tile):
             if self.direction.y < 0:
                 self.y = tile.y + tile.height / 2 + self.height / 2
                 self.direction.y = 0
 
-                # Handle collision with mystery box
-                if tile.code == MYSTERY_BOX:
-                    try:
-                        loot = tile.give_loot(level)
-                        level.tiles.insert(index, loot)
-                    except:
-                        pass
+        if self.collision_top(self.player) and self.player.collision_bottom(self):
+            if not self.killed:
+                self.make_text_anomaly()
+                # TODO: Add score to player
+                self.killed = True
+            self.player.is_grounded = True
+            self.player.jump()
+        elif self.collision(self.player):
+            self.player.hit(level)
+            pass
         
 
     def handle_movement(self, cam_pos, level_length):

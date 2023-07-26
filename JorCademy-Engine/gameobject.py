@@ -99,17 +99,17 @@ class GameObject:
 
 
     def handle_collision(self, tile, index, level):
-        # Handle collision on left side of Link
+        # Handle collision on left side of object
         if self.collision_left(tile):
             if self.direction.x < 0:
                 self.x = tile.x + tile.width / 2 + self.width / 2
     
-        # Handle collision on right side of Link
+        # Handle collision on right side of object
         elif self.collision_right(tile):
             if self.direction.x > 0:
                 self.x = tile.x - tile.width / 2 - self.width / 2
 
-        # Handle collision on bottom side of Link
+        # Handle collision on bottom side of object
         if self.collision_bottom(tile):
             if self.direction.y > 0:
                 self.y = tile.y - tile.height / 2 - self.height / 2
@@ -117,7 +117,7 @@ class GameObject:
                 
             self.is_grounded = True
 
-        # Handle collision on top side of Link
+        # Handle collision on top side of object
         elif self.collision_top(tile):
             if self.direction.y < 0:
                 self.y = tile.y + tile.height / 2 + self.height / 2

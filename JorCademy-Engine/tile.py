@@ -1,4 +1,4 @@
-from settings import tile_size, screen_height
+from settings import tile_size, screen_height, screen_width
 from jorcademy import rect
 from tile_data import *
 import pygame
@@ -19,6 +19,10 @@ class Tile:
         return \
             self.x < 0 - self.width and \
             (self.y < 0 - self.width or self.y > screen_height + self.height)
+    
+
+    def in_frame(self):
+        return self.x + self.width > 0 and self.x - self.width < screen_width
 
 
     # Update the state of the tile
