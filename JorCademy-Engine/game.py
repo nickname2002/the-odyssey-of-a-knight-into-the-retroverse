@@ -13,7 +13,7 @@ def setup() -> None:
     # Screen properties
     title("Link | The Rescue of Princess Zelda")
     screen(screen_width, screen_height)
-    # NOTE: setting up level happend in main.py
+    # NOTE: setting up level happened in main.py
 
 
 def update() -> None:

@@ -6,39 +6,37 @@ import pygame
 
 
 class Loot(MovingTile):
-    
+
     def __init__(self, size, pos, surface, code, player):
         super().__init__(size, pos, surface, code)
         self.direction_y = 0
         self.activated = False
-        self.speed = 2 
+        self.speed = 2
         self.player = player
         self.looted = False
         self.message = "SAMPLE_MESSAGE"
         self.level = None
         self.coins = 0
-
+        self.triggered_representation = "SAMPLE_TRIGGERED_REPRESENTATION"
 
     def show(self, level):
         self.activated = True
         self.direction_y = -self.speed
         self.level = level
 
-
     def make_text_anomaly(self):
         anomaly_pos = (self.level.link.x, self.y - tile_size)
         new_text_anomaly = TextAnomaly(anomaly_pos, self.message, 20, (255, 255, 255))
         self.level.update_text_anomalies(new_text_anomaly)
 
-    
     def make_image(self, path):
         surface = pygame.image.load(path).convert_alpha()
         factor = tile_size / int(surface.get_width())
-        resized_surface = pygame.transform.scale(surface, (int(surface.get_width() * factor), surface.get_height() * factor))
+        resized_surface = pygame.transform.scale(surface,
+                                                 (int(surface.get_width() * factor), surface.get_height() * factor))
         new_surf = pygame.Surface((tile_size, tile_size), pygame.SRCALPHA)
         new_surf.blit(resized_surface, (0, 0))
         self.image = new_surf
-
 
     def rise_animation(self):
         if self.activated and self.y > self.orig_position[1] - tile_size:
@@ -46,16 +44,13 @@ class Loot(MovingTile):
         else:
             self.direction_y = 0
 
-
     def collision_with_player(self):
         return self.player.collision(self)
-
 
     def process_loot(self):
         self.player.coins += self.coins
         self.make_text_anomaly()
         self.looted = True
-
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -71,7 +66,6 @@ class Coin(Loot):
         self.message = "+200 COIN"
         self.coins = 200
 
-
     def show(self, level):
         super().show(level)
         self.make_text_anomaly()
@@ -79,7 +73,6 @@ class Coin(Loot):
         # Process effect of the loot
         if not self.looted:
             self.process_loot()
-
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -99,7 +92,6 @@ class ExtraLife(Loot):
         self.moving = False
         self.speed = 2
 
-
     def update(self, shift_x):
         super().update(shift_x)
 
@@ -115,17 +107,14 @@ class ExtraLife(Loot):
                 self.process_loot()
                 self.y = 800
 
-
     def process_loot(self):
         super().process_loot()
         self.player.lives += 1
-
 
     def rise_animation(self):
         super().rise_animation()
         if self.y == self.orig_position[1] - tile_size:
             self.moving = True
-
 
     def draw(self, shift_x):
         if self.moving:
@@ -141,7 +130,7 @@ class FireMario(Loot):
         super().__init__(size, pos, surface, code, player)
         self.message = "+1000 COINS"
         self.coins = 1000
-
+        self.triggered_representation = "FIRE_MARIO"
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -150,17 +139,13 @@ class FireMario(Loot):
         if self.activated and not self.looted:
             if self.collision_with_player():
                 self.make_text_anomaly()
-                self.player.coins += self.coins
-                self.looted = True
+                self.process_loot()
                 self.y = 800
-
 
     def process_loot(self):
         super().process_loot()
-        # TODO: Implement special looting behavior
-
+        self.player.trigger_new_representation(self.triggered_representation)
 
     def draw(self, screen):
         self.make_image("assets/power_ups/flower_power.png")
         super().draw(screen)
-            

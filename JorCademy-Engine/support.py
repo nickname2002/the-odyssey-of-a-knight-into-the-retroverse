@@ -17,7 +17,7 @@ def import_level_data(path):
     return data
 
 
-def import_tileset(path):
+def import_tile_set(path):
     surface = pygame.image.load(path)
     resized_surface = pygame.transform.scale(surface, (int(surface.get_width() * 2), surface.get_height() * 2))
 

@@ -1,6 +1,7 @@
 from jorcademy import text
 from settings import tile_size
 
+
 class TextAnomaly:
 
     def __init__(self, pos, content, size, color):
@@ -14,20 +15,18 @@ class TextAnomaly:
         self.color = color
         self.speed = 0.5
 
-
     def update(self):
         if self.timer % self.disappear_delay == 0:
-           self.visible = False 
+            self.visible = False
 
         self.y -= self.speed
         self.timer += 1
 
-    
     def draw(self):
         if self.visible:
-            text(str(self.content), 
-                self.size, 
-                self.color, 
-                self.x, 
-                self.y - tile_size, 
-                "fonts/pixel.ttf")
+            text(str(self.content),
+                 self.size,
+                 self.color,
+                 self.x,
+                 self.y - tile_size,
+                 "fonts/pixel.ttf")
