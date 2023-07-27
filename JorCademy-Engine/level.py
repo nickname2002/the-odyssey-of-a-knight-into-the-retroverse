@@ -1,7 +1,7 @@
 from settings import tile_size, screen_width, screen_height
 from jorcademy import *
 from tile import StaticTile, MysteryBox, MovingTile
-from loot import Coin, ExtraLife, FireMario
+from loot import Coin, ExtraLife, FireFlower
 from link import Link
 from monster import Bokoblin
 from support import import_level_data, import_tile_set
@@ -95,7 +95,7 @@ class Level:
         elif loot_code == EXTRA_LIFE:
             loot = ExtraLife(tile_size, pos, loot_tile, loot_code, self.link)
         elif loot_code == FIRE_MARIO:
-            loot = FireMario(tile_size, pos, loot_tile, loot_code, self.link)
+            loot = FireFlower(tile_size, pos, loot_tile, loot_code, self.link)
         else:
             loot = Coin(tile_size, pos, loot_tile, loot_code, self.link)
 

@@ -46,6 +46,8 @@ class Link(GameObject):
         self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
         self.visible = True
         self.fire_mario = FireMario((self.x, self.y), 32, 64, self)
+        self.representation_change_timer = 0
+        self.representation_change_delay = 1000
         self.sprites = [
             'link/link_idle.png',
             'link/link_fight.png',
@@ -122,7 +124,7 @@ class Link(GameObject):
 
     # Attack action
     def attack(self):
-        if self.active_cooldown <= 0:
+        if self.active_cooldown <= 0 and self.visible:
             self.master_sword.attack()
             self.state = ATTACK
 
@@ -137,7 +139,6 @@ class Link(GameObject):
     def trigger_new_representation(self, representation):
         if representation == "FIRE_MARIO":
             self.representation = FIRE_MARIO
-
         # TODO: set timer for representation change
 
     def update(self, cam_pos, level_length):
@@ -156,13 +157,25 @@ class Link(GameObject):
         self.master_sword.update(cam_pos, level_length)
 
     def handle_representation(self):
+        # Check if representation should change
+        if self.representation_change_timer >= self.representation_change_delay:
+            self.representation = LINK
+            self.representation_change_timer = 0
+
+            # Disable other representations
+            self.fire_mario.visible = False
+
+        # Determine which representation to show
         if self.representation == LINK:
+            self.representation_change_timer = 0
             self.visible = True
         elif self.representation == FIRE_MARIO:
             self.visible = False
+            self.representation_change_timer += 1
             self.fire_mario.visible = True
         else:
             self.visible = True
+            self.representation_change_timer += 1
 
     # Draw Link
     def draw(self):

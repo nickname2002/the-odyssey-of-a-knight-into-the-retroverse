@@ -124,7 +124,7 @@ class ExtraLife(Loot):
             super().draw(shift_x)
 
 
-class FireMario(Loot):
+class FireFlower(Loot):
 
     def __init__(self, size, pos, surface, code, player):
         super().__init__(size, pos, surface, code, player)
