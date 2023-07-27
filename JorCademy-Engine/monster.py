@@ -22,6 +22,7 @@ class Monster(GameObject):
         self.level = level
         self.killed = False
         self.loot = 100
+        self.health = 1
 
     def is_out_of_frame(self):
         if self.moving:
@@ -29,8 +30,49 @@ class Monster(GameObject):
                 self.x < 0 - self.width and \
                 (self.y < 0 - self.width or self.y > screen_height + self.height)
 
+    def make_text_anomaly(self):
+        anomaly_pos = (self.level.link.x, self.y - tile_size)
+        new_text_anomaly = TextAnomaly(anomaly_pos, self.message, 20, (255, 255, 255))
+        self.level.update_text_anomalies(new_text_anomaly)
+
     def in_frame(self):
         return self.x + self.width > 0 and self.x - self.width < screen_width
+
+    def die(self):
+        if not self.killed:
+            self.make_text_anomaly()
+            self.player.coins += self.loot
+
+        self.killed = True
+
+    def handle_collision_with_player(self, level):
+        fireball = self.player.fire_mario.fireball
+
+        # Check if fireball is visible and if it collides with the monster
+        if fireball.visible:
+            if self.collision(fireball):
+                self.health -= 1
+                fireball.visible = False
+
+        # Process this object's damage
+        if self.collision_top(self.player) and self.player.collision_bottom(self):
+
+            # Kill monster
+            if not self.killed:
+                self.health -= 1
+
+            # Make player jump when landing on top of monster
+            self.player.is_grounded = True
+            self.player.jump(self.player.jump_speed + 4)
+
+        # Process player damage
+        elif self.collision(self.player):
+            self.player.hit(level)
+            pass
+
+        # Make sure to die if health is 0
+        if self.health <= 0:
+            self.die()
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
@@ -65,18 +107,6 @@ class Bokoblin(Monster):
         self.speed = 1
         self.direction = pygame.Vector2(-self.speed, 0)
 
-    def die(self):
-        if not self.killed:
-            self.make_text_anomaly()
-            self.player.coins += self.loot
-
-        self.killed = True
-
-    def make_text_anomaly(self):
-        anomaly_pos = (self.level.link.x, self.y - tile_size)
-        new_text_anomaly = TextAnomaly(anomaly_pos, self.message, 20, (255, 255, 255))
-        self.level.update_text_anomalies(new_text_anomaly)
-
     def handle_collision(self, tile, _, level):
         # Handle collision on left side of monster
         if self.collision_left(tile):
@@ -106,25 +136,9 @@ class Bokoblin(Monster):
         self.handle_collision_with_player(level)
         self.handle_collision_with_sword()
 
-    def handle_collision_with_player(self, level):
-        if self.collision_top(self.player) and self.player.collision_bottom(self):
-
-            # Kill monster
-            if not self.killed:
-                self.die()
-
-            # Make player jump when landing on top of monster
-            self.player.is_grounded = True
-            self.player.jump(self.player.jump_speed + 4)
-
-        # Process player damage
-        elif self.collision(self.player):
-            self.player.hit(level)
-            pass
-
     def handle_collision_with_sword(self):
         if self.player.master_sword.collision(self) and \
-                self.player.master_sword.visible == True:
+                self.player.master_sword.visible:
             self.die()
 
     def handle_movement(self, cam_pos, level_length):

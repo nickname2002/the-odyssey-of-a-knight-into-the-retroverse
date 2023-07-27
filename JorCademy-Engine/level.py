@@ -114,7 +114,7 @@ class Level:
             if tile.code in BACKDROP_TILES:
                 continue
 
-                # Moving tiles collision
+            # Moving tiles collision
             if issubclass(type(tile), MovingTile):
                 tile.collision(self.tiles)
 

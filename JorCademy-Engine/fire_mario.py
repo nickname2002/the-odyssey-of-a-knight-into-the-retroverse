@@ -54,6 +54,10 @@ class FireMario(GameObject):
         if is_key_down("space"):
             self.jump(self.player.jump_speed)
 
+    def handle_collision(self, tile, index, level):
+        if self.visible:
+            self.fireball.handle_collision(tile, index, level)
+
     # Move right
     def move_right(self, cam_pos, level_length):
         self.facing_left = False

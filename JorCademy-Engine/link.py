@@ -2,6 +2,7 @@ from gameobject import GameObject
 from settings import screen_width
 from fire_mario import FireMario
 from master_sword import MasterSword
+from tile_data import *
 from jorcademy import *
 
 # States for Link
@@ -39,7 +40,7 @@ class Link(GameObject):
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE
-        self.representation = LINK  # TODO: change to FIRE_MARIO for debugging Mario behavior
+        self.representation = LINK  # TODO: change for debugging other representation's behavior
         self.attack_cooldown = 50
         self.active_cooldown = 0
         self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
@@ -62,6 +63,42 @@ class Link(GameObject):
             'link/link_walking_10.png',
             'link/link_jumping.png'
         ]
+
+    def handle_collision(self, tile, index, level):
+        # Handle collision on left side of object
+        if self.collision_left(tile):
+            if self.direction.x < 0:
+                self.x = tile.x + tile.width / 2 + self.width / 2
+
+        # Handle collision on right side of object
+        elif self.collision_right(tile):
+            if self.direction.x > 0:
+                self.x = tile.x - tile.width / 2 - self.width / 2
+
+        # Handle collision on bottom side of object
+        if self.collision_bottom(tile):
+            if self.direction.y > 0:
+                self.y = tile.y - tile.height / 2 - self.height / 2
+                self.direction.y = 0
+
+            self.is_grounded = True
+
+        # Handle collision on top side of object
+        elif self.collision_top(tile):
+            if self.direction.y < 0:
+                self.y = tile.y + tile.height / 2 + self.height / 2
+                self.direction.y = 0
+
+                # Handle collision with mystery box
+                if tile.code == MYSTERY_BOX:
+                    try:
+                        loot = tile.give_loot(level)
+                        level.tiles.insert(index, loot)
+                    except:
+                        pass
+
+        # Handle collision of linked objects
+        self.fire_mario.handle_collision(tile, index, level)
 
     def handle_movement(self, cam_pos, level_length):
         super().handle_movement(cam_pos, level_length)
