@@ -1,5 +1,6 @@
 from gameobject import GameObject
 from settings import screen_width, screen_height
+from fireball import FireBall
 from jorcademy import *
 
 # States for FireMario
@@ -8,6 +9,7 @@ JUMPING = 1
 WALKING_1 = 2
 WALKING_2 = 3
 WALKING_3 = 4
+ATTACK = 5
 
 
 class FireMario(GameObject):
@@ -20,7 +22,8 @@ class FireMario(GameObject):
             'fire_mario/fire_mario_jumping.png',
             'fire_mario/fire_mario_walking_1.png',
             'fire_mario/fire_mario_walking_2.png',
-            'fire_mario/fire_mario_walking_3.png'
+            'fire_mario/fire_mario_walking_3.png',
+            'fire_mario/fire_mario_attack.png'
         ]
         self.attack_cooldown = 50
         self.active_cooldown = 0
@@ -28,15 +31,22 @@ class FireMario(GameObject):
         self.facing_left = self.player.facing_left
         self.is_grounded = False
         self.visible = False
+        self.attack_cooldown = 20
+        self.active_cooldown = 0
+        self.fireball_thrown = False
+        self.fireball = FireBall((self.x, self.y), 16, 16, self.player)
         # TODO: add fireball
 
     def handle_movement(self, cam_pos, level_length):
+        if self.active_cooldown > 0:
+            self.active_cooldown -= 1
+
         # Update horizontal direction and position of Link
         if is_key_down("d") and not is_key_down('shift'):
             self.move_right(cam_pos, level_length)
         elif is_key_down("a") and not is_key_down("shift"):
             self.move_left(cam_pos)
-        elif self.is_grounded:
+        elif self.is_grounded and not self.active_cooldown > 0:
             self.direction.x = 0
             self.state = IDLE
 
@@ -77,6 +87,17 @@ class FireMario(GameObject):
 
         self.timer += 1
 
+    def activate_attack_cooldown(self):
+        self.active_cooldown = self.attack_cooldown
+
+    # Attack action
+    def attack(self):
+        if self.active_cooldown <= 0 and self.visible:
+            self.state = ATTACK
+            # TODO: throw fireball
+            self.fireball.attack()
+            self.activate_attack_cooldown()
+
     # Let character jump
     def jump(self, speed):
         self.timer = 0
@@ -89,11 +110,24 @@ class FireMario(GameObject):
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
 
+        # Start attack
+        if is_key_down("shift") and \
+           self.is_grounded and \
+           self.active_cooldown <= 0:
+            self.attack()
+
+        # Update weapon attack cooldown
+        if self.active_cooldown > 0:
+            self.active_cooldown -= 1
+
         # Derive properties from player
         self.facing_left = self.player.facing_left
         self.is_grounded = self.player.is_grounded
         self.x = self.player.x
         self.y = self.player.y
+
+        # Update linked objects
+        self.fireball.update(cam_pos, level_length)
 
     # Draw FireMario
     def draw(self):
@@ -101,3 +135,6 @@ class FireMario(GameObject):
 
         if self.visible:
             image(sprite, self.x, self.y, 2, self.facing_left)
+
+        # Draw linked objects
+        self.fireball.draw()

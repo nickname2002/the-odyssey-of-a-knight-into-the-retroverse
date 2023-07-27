@@ -1,6 +1,7 @@
 from gameobject import GameObject
 from settings import screen_width
 from fire_mario import FireMario
+from master_sword import MasterSword
 from jorcademy import *
 
 # States for Link
@@ -21,8 +22,6 @@ JUMPING = 12
 # Representations for Link
 LINK = 0
 FIRE_MARIO = 1
-
-
 # TODO: add Pac-Man representation
 
 
@@ -40,7 +39,7 @@ class Link(GameObject):
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE
-        self.representation = LINK
+        self.representation = LINK  # TODO: change to FIRE_MARIO for debugging Mario behavior
         self.attack_cooldown = 50
         self.active_cooldown = 0
         self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
@@ -195,54 +194,3 @@ class Link(GameObject):
         self.lives -= 1
         level.reset()
 
-
-class MasterSword(GameObject):
-
-    def __init__(self, pos, w, h, player):
-        super().__init__(pos, w, h)
-        self.visible = False
-        self.timer = 0
-        self.attack_animation_delay = 20
-        self.sword_reach = 10
-        self.sprite = "link/master_sword.png"
-        self.player = player
-        self.gravity = 0
-        self.rotation = 100
-
-    def attack(self):
-        self.x = self.player.x + 30
-        self.y = self.player.y + 10
-        self.visible = True
-
-    def update(self, cam_pos, level_length):
-        super().update(cam_pos, level_length)
-
-        # Make sure the collider is positioned properly
-        # based on the orientation of the player
-        if not self.player.facing_left:
-            self.x = self.player.x + self.width
-        else:
-            self.x = self.player.x - self.width
-
-        if self.visible:
-            self.timer += 1
-
-            # Make sure cooldown for weapon usage is activated when triggered too long
-            if is_key_down("shift"):
-                if self.timer == 100000:
-                    self.timer = 0
-                if self.timer % self.attack_animation_delay == 0:
-                    self.player.activate_attack_cooldown()
-                    self.visible = False
-            # Move back to idle state when shift is not pressed
-            else:
-                self.timer = 0
-                self.visible = False
-                self.player.state = IDLE
-
-    def draw(self):
-        if self.visible:
-            if not self.player.facing_left:
-                image(self.sprite, self.x - 20, self.y, 0.15, False, self.rotation)
-            else:
-                image(self.sprite, self.x, self.y, 0.15, False, self.rotation + 160)
