@@ -67,7 +67,8 @@ class Monster(GameObject):
 
         # Process player damage
         elif self.collision(self.player):
-            self.player.hit(level)
+            if not self.player.killed:
+                self.player.die(level)
             pass
 
         # Make sure to die if health is 0

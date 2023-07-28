@@ -72,10 +72,14 @@ class Level:
             sel_tile = tile_set[int(tile)]
             self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
 
+    def transition_requested(self):
+        return self.link.killed or self.end_game_triforce.reached
+
     # Initialize level
     def setup(self, screen):
 
         self.screen = screen
+        self.backdrop_color = (147, 187, 236)
         self.level_data = import_level_data(f"maps/level_{self.level_name}.csv")
         self.level_length = len(self.level_data[0] * tile_size)
         tile_set = import_tile_set("maps/tileset.png")
@@ -172,9 +176,10 @@ class Level:
         # Properties
         self.cam_pos = 0
 
-        # Reset link pos
+        # Reset link
         self.link.x = 100
         self.link.y = screen_height / 2
+        self.link.killed = False
 
         # Collections
         self.tiles = []

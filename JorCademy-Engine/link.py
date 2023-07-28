@@ -1,5 +1,5 @@
 from gameobject import GameObject
-from settings import screen_width
+from settings import screen_width, screen_height
 from fire_mario import FireMario
 from master_sword import MasterSword
 from tile_data import *
@@ -50,6 +50,7 @@ class Link(GameObject):
         self.fire_mario = FireMario((self.x, self.y), 32, 64, self)
         self.representation_change_timer = 0
         self.representation_change_delay = 1000
+        self.killed = False
         self.sprites = [
             'link/link_idle.png',
             'link/link_fight.png',
@@ -189,6 +190,10 @@ class Link(GameObject):
     def update(self, cam_pos, level_length, at_level_end=False):
         self.handle_movement(cam_pos, level_length, at_level_end)
 
+        # Die when out of screen
+        if self.y > screen_height:
+            self.die()
+
         # Start attack
         if is_key_down("shift") and self.is_grounded:
             self.attack()
@@ -235,7 +240,7 @@ class Link(GameObject):
         # Draw alternative representations
         self.fire_mario.draw()
 
-    def hit(self, level):
+    def die(self, level=None):
         # TODO: add cool dying animation
         self.lives -= 1
-        level.reset()
+        self.killed = True
