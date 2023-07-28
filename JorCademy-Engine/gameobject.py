@@ -25,6 +25,10 @@ class GameObject:
         return (self.x - self.width < 0 or self.x + self.width > screen_width) or \
                (self.y - self.height < 0 or self.y + self.height > screen_height)
 
+    def correct_position_with_camera(self, cam_pos):
+        self.x = self.orig_pos[0] - cam_pos
+        self.x += self.offset
+
     def update(self, cam_pos, level_length):
         self.handle_movement(cam_pos, level_length)
 

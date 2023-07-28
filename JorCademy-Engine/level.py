@@ -1,5 +1,6 @@
 from settings import tile_size, screen_width, screen_height
 from jorcademy import *
+from triforce import Triforce
 from tile import StaticTile, MysteryBox, MovingTile, BreakableTile
 from loot import Coin, ExtraLife, FireFlower
 from link import Link
@@ -19,11 +20,57 @@ class Level:
         self.cam_pos = 0
         self.link = Link((100, screen_height / 2), 32, 64)
         self.backdrop_color = (147, 187, 236)
+        self.end_game_triforce = None
 
         # Collections
         self.tiles = []
         self.text_anomalies = []
         self.monsters = []
+
+    def init_tile(self, tile, tile_set, pos, i, j):
+
+        # Initialize player
+        if tile == PLAYER_TILE:
+            sel_tile = tile_set[0]
+            self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
+            self.link.x = pos[0]
+            self.link.y = pos[1]
+
+        # Initialize mystery boxes
+        elif tile == MYSTERY_BOX:
+            # Setup loot
+            loot_code = self.level_data[j + 1][i]
+            loot = self.init_loot(loot_code, tile_set, pos)
+
+            # Setup tile
+            self.level_data[j + 1][i] = SKY_TILE
+            sel_tile = tile_set[int(tile)]
+            alt_tile = tile_set[int(EMPTY_BOX)]
+            self.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot))
+
+        # Initialize monsters
+        elif tile in MONSTERS:
+            self.init_monster(tile, pos)
+
+        # Initialize breakable tiles
+        elif tile in BREAKABLE:
+            sel_tile = tile_set[int(tile)]
+            alt_tile = tile_set[int(SKY_TILE)]
+            self.tiles.append(BreakableTile(tile_size, pos, sel_tile, alt_tile, tile))
+
+        # Initialize end of game
+        elif tile == END_OF_GAME:
+            # Make end-of-game
+            self.end_game_triforce = Triforce((pos[0], 230), 481, 371, self.link)
+
+            # Make sky tile
+            sel_tile = tile_set[int(SKY_TILE)]
+            self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
+
+        # Initialize normal static tiles
+        else:
+            sel_tile = tile_set[int(tile)]
+            self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
 
     # Initialize level
     def setup(self, screen):
@@ -49,34 +96,8 @@ class Level:
                 if tile == SKY_TILE:
                     pass
 
-                elif tile == PLAYER_TILE:
-                    sel_tile = tile_set[0]
-                    self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
-                    self.link.x = pos[0]
-                    self.link.y = pos[1]
-
-                elif tile == MYSTERY_BOX:
-                    # Setup loot
-                    loot_code = self.level_data[j + 1][i]
-                    loot = self.init_loot(loot_code, tile_set, pos)
-
-                    # Setup tile
-                    self.level_data[j + 1][i] = SKY_TILE
-                    sel_tile = tile_set[int(tile)]
-                    alt_tile = tile_set[int(EMPTY_BOX)]
-                    self.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot))
-
-                elif tile in MONSTERS:
-                    self.init_monster(tile, pos)
-
-                elif tile in BREAKABLE:
-                    sel_tile = tile_set[int(tile)]
-                    alt_tile = tile_set[int(SKY_TILE)]
-                    self.tiles.append(BreakableTile(tile_size, pos, sel_tile, alt_tile, tile))
-
-                else:
-                    sel_tile = tile_set[int(tile)]
-                    self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
+                # Treat different tiles correctly
+                self.init_tile(tile, tile_set, pos, i, j)
 
                 # Update tile x-coordinate
                 x += tile_size
@@ -169,8 +190,12 @@ class Level:
         for msg in self.text_anomalies:
             msg.update()
 
+        # TODO: Handle end of level reached (properly)
+        if self.end_game_triforce.reached:
+            self.reset()
+
         # == Player
-        self.link.update(self.cam_pos, self.level_length)
+        self.link.update(self.cam_pos, self.level_length, self.end_game_triforce.reached)
 
         # == Monsters
         for monster in self.monsters:
@@ -189,6 +214,9 @@ class Level:
                 continue
 
             tile.update(self.cam_pos)
+
+        # Other
+        self.end_game_triforce.update(self.cam_pos, self.level_length)
 
         # Collision
         self.handle_collision()
@@ -212,6 +240,9 @@ class Level:
         # == UI
         for message in self.text_anomalies:
             message.draw()
+
+        # == Other
+        self.end_game_triforce.draw()
 
         # Coin amount
         text(f"COINS: {str(self.link.coins)}",

@@ -23,6 +23,8 @@ JUMPING = 12
 # Representations for Link
 LINK = 0
 FIRE_MARIO = 1
+
+
 # TODO: add Pac-Man representation
 
 
@@ -96,14 +98,20 @@ class Link(GameObject):
                         level.tiles.insert(index, loot)
                     except:
                         pass
+
                 elif tile.code in BREAKABLE:
                     tile.break_tile()
 
         # Handle collision of linked objects
         self.fire_mario.handle_collision(tile, index, level)
 
-    def handle_movement(self, cam_pos, level_length):
+    def handle_movement(self, cam_pos, level_length, at_level_end=False):
         super().handle_movement(cam_pos, level_length)
+
+        # Prevent movement if at end of level
+        if at_level_end:
+            self.state = IDLE
+            return
 
         # Update horizontal direction and position of Link
         if is_key_down("d") and not is_key_down('shift'):
@@ -177,10 +185,9 @@ class Link(GameObject):
     def trigger_new_representation(self, representation):
         if representation == "FIRE_MARIO":
             self.representation = FIRE_MARIO
-        # TODO: set timer for representation change
 
-    def update(self, cam_pos, level_length):
-        super().update(cam_pos, level_length)
+    def update(self, cam_pos, level_length, at_level_end=False):
+        self.handle_movement(cam_pos, level_length, at_level_end)
 
         # Start attack
         if is_key_down("shift") and self.is_grounded:
@@ -232,4 +239,3 @@ class Link(GameObject):
         # TODO: add cool dying animation
         self.lives -= 1
         level.reset()
-

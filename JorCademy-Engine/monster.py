@@ -76,8 +76,7 @@ class Monster(GameObject):
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
-        self.x = self.orig_pos[0] - cam_pos
-        self.x += self.offset
+        self.correct_position_with_camera(cam_pos)
         self.timer += 1
 
         if (self.x - self.width) - self.player.x < screen_width / 2:
