@@ -190,7 +190,7 @@ class MovingTile(Tile):
             if tile.code in BACKDROP_TILES:
                 continue
 
-                # Handle collision on bottom side of Link
+            # Handle collision on bottom side of Link
             if self.collision_bottom(tile):
                 if self.direction.y > 0:
                     self.y = tile.y - tile.height / 2 - self.height / 2
@@ -209,6 +209,17 @@ class MovingTile(Tile):
                             self.tiles.insert(i, loot)
                         except:
                             pass
+
+
+class BreakableTile(StaticTile):
+
+    def __init__(self, size, pos, surface, alt_surface, code):
+        super().__init__(size, pos, surface, code)
+        self.alt_surface = alt_surface
+
+    def break_tile(self):
+        self.image = self.alt_surface
+        self.code = SKY_TILE
 
 
 class MysteryBox(StaticTile):

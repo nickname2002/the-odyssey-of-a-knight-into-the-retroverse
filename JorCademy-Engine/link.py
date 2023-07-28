@@ -96,6 +96,8 @@ class Link(GameObject):
                         level.tiles.insert(index, loot)
                     except:
                         pass
+                elif tile.code in BREAKABLE:
+                    tile.break_tile()
 
         # Handle collision of linked objects
         self.fire_mario.handle_collision(tile, index, level)

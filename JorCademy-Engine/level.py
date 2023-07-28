@@ -1,6 +1,6 @@
 from settings import tile_size, screen_width, screen_height
 from jorcademy import *
-from tile import StaticTile, MysteryBox, MovingTile
+from tile import StaticTile, MysteryBox, MovingTile, BreakableTile
 from loot import Coin, ExtraLife, FireFlower
 from link import Link
 from monster import Bokoblin
@@ -69,6 +69,11 @@ class Level:
                 elif tile in MONSTERS:
                     self.init_monster(tile, pos)
 
+                elif tile in BREAKABLE:
+                    sel_tile = tile_set[int(tile)]
+                    alt_tile = tile_set[int(SKY_TILE)]
+                    self.tiles.append(BreakableTile(tile_size, pos, sel_tile, alt_tile, tile))
+
                 else:
                     sel_tile = tile_set[int(tile)]
                     self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
@@ -76,11 +81,10 @@ class Level:
                 # Update tile x-coordinate
                 x += tile_size
 
-                # Update tile y-coordinate
+            # Update tile y-coordinate
             y += tile_size
 
-            # Make new monster object and add it to the list of monsters 
-
+    # Make new monster object and add it to the list of monsters
     def init_monster(self, tile_code, pos):
         if tile_code == BOKOBLIN:
             self.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5, self.link, self))
