@@ -260,18 +260,19 @@ class Level:
         # == Player 
         self.link.draw()
 
-        # Create threads for all update methods
-        draw_monsters_thread = threading.Thread(target=self.draw_monsters)
-        draw_tiles_thread = threading.Thread(target=self.draw_tiles)
-        draw_text_anomalies_thread = threading.Thread(target=self.draw_text_anomalies)
+        # == Monsters
+        for monster in self.monsters:
+            if monster.in_frame():
+                monster.draw()
 
-        # Start & join threads for all update methods
-        draw_monsters_thread.start()
-        draw_tiles_thread.start()
-        draw_text_anomalies_thread.start()
-        draw_monsters_thread.join()
-        draw_tiles_thread.join()
-        draw_text_anomalies_thread.join()
+        # == Tiles
+        for tile in self.tiles:
+            if tile.in_frame():
+                tile.draw(self.screen)
+
+        # == Text anomalies
+        for message in self.text_anomalies:
+            message.draw()
 
         # == Other
         self.end_game_triforce.draw()

@@ -41,7 +41,7 @@ class Link(GameObject):
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE
-        self.representation = LINK  # TODO: change for debugging other representation's behavior
+        self.representation = PAC_MAN  # TODO: change for debugging other representation's behavior
         self.attack_cooldown = 50
         self.active_cooldown = 0
         self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
@@ -210,7 +210,9 @@ class Link(GameObject):
         self.master_sword.update(cam_pos, level_length)
 
     def activate_main_representation(self):
+        self.jump(self.jump_speed)
         self.representation = LINK
+        self.height = 64
         self.representation_change_timer = 0
 
         # Disable other representations
@@ -222,10 +224,11 @@ class Link(GameObject):
         self.representation_change_timer += 1
 
         # Activate alt representation
-        if self.representation == FIRE_MARIO:
+        if representation == FIRE_MARIO:
             self.fire_mario.visible = True
             self.pac_man.visible = False
-        elif self.representation == PAC_MAN:
+        elif representation == PAC_MAN:
+            self.height = self.pac_man.height
             self.fire_mario.visible = False
             self.pac_man.visible = True
 
@@ -245,15 +248,6 @@ class Link(GameObject):
         else:
             self.visible = True
             self.representation_change_timer += 1
-
-    # TODO: use this to fix Pac-Man collision
-    def get_representation_object(self):
-        if self.representation == LINK:
-            return self
-        elif self.representation == PAC_MAN:
-            return self.pac_man
-        elif self.representation == FIRE_MARIO:
-            return self.fire_mario
 
     # Draw Link
     def draw(self):
