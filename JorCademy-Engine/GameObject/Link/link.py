@@ -1,6 +1,3 @@
-import sys
-
-sys.path.append('../..')
 from GameObject.gameobject import GameObject
 from Support.settings import screen_width, screen_height
 from GameObject.Link.fire_mario import FireMario

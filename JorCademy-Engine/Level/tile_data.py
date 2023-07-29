@@ -1,4 +1,3 @@
-
 # Terrain & sky
 SKY_TILE = '0'
 BREAKABLE_BRICK = '1'
@@ -16,11 +15,10 @@ EXTRA_LIFE = '194'
 FIRE_MARIO = '1944'
 
 # NPCs
-BOKOBLIN = '-20'
-GHOST = '240'
+BOKOBLIN = '240'
+GHOST = '-20'  # TODO: assign true code to ghost
 
 # Collections
 BACKDROP_TILES = [SKY_TILE, '397', '398', '399']
-# MONSTERS = [BOKOBLIN]
-MONSTERS = [GHOST]
+MONSTERS = [BOKOBLIN, GHOST]
 BREAKABLE = [BREAKABLE_BRICK]

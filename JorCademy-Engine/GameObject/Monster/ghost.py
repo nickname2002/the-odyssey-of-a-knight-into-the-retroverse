@@ -23,7 +23,7 @@ class Ghost(Monster):
             "monsters/ghost/ghost_vertical.png",
             "monsters/ghost/ghost_vulnerable.png"
         ]
-        self.speed = 2
+        self.speed = 1.5
         self.direction = pygame.Vector2(-self.speed, 0)
         self.amplitude = 2
         self.frequency = 1
@@ -33,31 +33,18 @@ class Ghost(Monster):
 
         # Check if fireball is visible and if it collides with the monster
         if fireball.visible:
-            if self.collision(fireball):
-                self.health -= 1
-                fireball.visible = False
+            fireball.visible = False
 
-        # Process this object's damage
-        if self.collision_top(self.player) and self.player.collision_bottom(self):
-
-            # Kill monster
-            if not self.killed:
-                self.health -= 1
-
-            # Make player jump when landing on top of monster
-            self.player.is_grounded = True
-            self.player.jump(self.player.jump_speed + 4)
-
-        # Process player damage
+        # Process player damage & damage from player
         elif self.collision(self.player):
-            if not self.player.killed:
+            if self.player.representation == PAC_MAN:
+                self.health -= 1
+            elif not self.player.killed:
                 self.player.die(level)
-            pass
 
         # Make sure to die if health is 0
         if self.health <= 0:
             self.die()
-
 
     def handle_collision(self, tile, _, level):
         # Handle collision on left side of monster

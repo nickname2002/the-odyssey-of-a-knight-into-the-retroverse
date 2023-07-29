@@ -66,7 +66,6 @@ class Monster(GameObject):
         elif self.collision(self.player):
             if not self.player.killed:
                 self.player.die(level)
-            pass
 
         # Make sure to die if health is 0
         if self.health <= 0:
