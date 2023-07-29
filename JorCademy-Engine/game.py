@@ -1,6 +1,6 @@
 from jorcademy import *
-from settings import screen_width, screen_height
-from level import Level
+from Support.settings import screen_width, screen_height
+from Level.level import Level
 
 # Levels
 level = Level("1_1")

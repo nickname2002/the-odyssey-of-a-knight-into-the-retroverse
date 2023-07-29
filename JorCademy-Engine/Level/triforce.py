@@ -1,5 +1,5 @@
 from jorcademy import *
-from gameobject import GameObject
+from GameObject.gameobject import GameObject
 
 
 class Triforce(GameObject):

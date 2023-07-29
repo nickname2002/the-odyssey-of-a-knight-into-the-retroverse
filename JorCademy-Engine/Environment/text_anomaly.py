@@ -1,5 +1,5 @@
 from jorcademy import text
-from settings import tile_size
+from Support.settings import tile_size
 
 
 class TextAnomaly:

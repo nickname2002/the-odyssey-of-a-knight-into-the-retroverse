@@ -1,5 +1,5 @@
 import csv 
-from settings import tile_size 
+from Support.settings import tile_size
 import pygame
 
 

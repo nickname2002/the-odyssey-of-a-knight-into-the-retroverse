@@ -1,9 +1,12 @@
-from gameobject import GameObject
-from settings import screen_width, screen_height
-from fire_mario import FireMario
-from pac_man import PacMan
-from master_sword import MasterSword
-from tile_data import *
+import sys
+
+sys.path.append('../..')
+from GameObject.gameobject import GameObject
+from Support.settings import screen_width, screen_height
+from GameObject.Link.fire_mario import FireMario
+from GameObject.Link.pac_man import PacMan
+from GameObject.Link.Weapons.master_sword import MasterSword
+from Level.tile_data import *
 from jorcademy import *
 
 # States for Link
@@ -41,7 +44,7 @@ class Link(GameObject):
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE
-        self.representation = PAC_MAN  # TODO: change for debugging other representation's behavior
+        self.representation = LINK  # TODO: change for debugging other representation's behavior
         self.attack_cooldown = 50
         self.active_cooldown = 0
         self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
@@ -67,7 +70,6 @@ class Link(GameObject):
             'link/link_jumping.png'
         ]
 
-    # TODO: refactor cases using new collision function
     def handle_collision(self, tile, index, level):
         # Handle collision on left side of object
         if self.collision_left(tile):

@@ -1,12 +1,14 @@
-from settings import tile_size, screen_width, screen_height
+from Support.settings import tile_size, screen_width, screen_height
 from jorcademy import *
-from triforce import Triforce
-from tile import StaticTile, MysteryBox, MovingTile, BreakableTile
-from loot import Coin, ExtraLife, FireFlower
-from link import Link
-from monster import Bokoblin
-from support import import_level_data, import_tile_set
-from tile_data import *
+from Level.triforce import Triforce
+from Level.tile import StaticTile, MysteryBox, MovingTile, BreakableTile
+from Loot.fire_flower import FireFlower
+from Loot.coin import Coin
+from Loot.extra_life import ExtraLife
+from GameObject.Link.link import Link
+from GameObject.Monster.bokoblin import Bokoblin
+from Support.support import import_level_data, import_tile_set
+from Level.tile_data import *
 import threading
 
 
@@ -81,9 +83,9 @@ class Level:
 
         self.screen = screen
         self.backdrop_color = (147, 187, 236)
-        self.level_data = import_level_data(f"maps/level_{self.level_name}.csv")
+        self.level_data = import_level_data(f"Maps/level_{self.level_name}.csv")
         self.level_length = len(self.level_data[0] * tile_size)
-        tile_set = import_tile_set("maps/tileset.png")
+        tile_set = import_tile_set("Maps/tileset.png")
 
         # Initial y-coordinate of tile
         y = tile_size / 2

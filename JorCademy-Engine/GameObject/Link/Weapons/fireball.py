@@ -1,5 +1,5 @@
 import math
-from gameobject import GameObject
+from GameObject.gameobject import GameObject
 from jorcademy import *
 
 
@@ -9,7 +9,7 @@ class FireBall(GameObject):
         super().__init__(pos, w, h)
         self.visible = False
         self.player = player
-        self.sprite = "fire_mario/fireball.png"  # TODO: add transparent sprite
+        self.sprite = "fire_mario/fireball.png"
         self.speed = 5
         self.amplitude = 5
         self.frequency = 0.1

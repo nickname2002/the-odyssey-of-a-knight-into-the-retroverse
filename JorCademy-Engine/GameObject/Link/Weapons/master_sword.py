@@ -1,6 +1,5 @@
-from gameobject import GameObject
+from GameObject.gameobject import GameObject
 from jorcademy import *
-
 
 # States for Link
 IDLE = 0
