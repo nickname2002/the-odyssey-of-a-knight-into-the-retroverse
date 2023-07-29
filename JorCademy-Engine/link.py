@@ -1,6 +1,7 @@
 from gameobject import GameObject
 from settings import screen_width, screen_height
 from fire_mario import FireMario
+from pac_man import PacMan
 from master_sword import MasterSword
 from tile_data import *
 from jorcademy import *
@@ -23,9 +24,7 @@ JUMPING = 12
 # Representations for Link
 LINK = 0
 FIRE_MARIO = 1
-
-
-# TODO: add Pac-Man representation
+PAC_MAN = 2
 
 
 class Link(GameObject):
@@ -48,6 +47,7 @@ class Link(GameObject):
         self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
         self.visible = True
         self.fire_mario = FireMario((self.x, self.y), 32, 64, self)
+        self.pac_man = PacMan((self.x, self.y), 32, 32, self)
         self.representation_change_timer = 0
         self.representation_change_delay = 1000
         self.killed = False
@@ -67,6 +67,7 @@ class Link(GameObject):
             'link/link_jumping.png'
         ]
 
+    # TODO: refactor cases using new collision function
     def handle_collision(self, tile, index, level):
         # Handle collision on left side of object
         if self.collision_left(tile):
@@ -127,7 +128,6 @@ class Link(GameObject):
         if is_key_down("space"):
             self.jump(self.jump_speed)
 
-    # Move right
     def move_right(self, cam_pos, level_length):
         self.facing_left = False
 
@@ -186,6 +186,8 @@ class Link(GameObject):
     def trigger_new_representation(self, representation):
         if representation == "FIRE_MARIO":
             self.representation = FIRE_MARIO
+        elif representation == "PAC_MAN":
+            self.representation = PAC_MAN
 
     def update(self, cam_pos, level_length, at_level_end=False):
         self.handle_movement(cam_pos, level_length, at_level_end)
@@ -204,28 +206,54 @@ class Link(GameObject):
 
         # Update state of linked objects
         self.fire_mario.update(cam_pos, level_length)
+        self.pac_man.update(cam_pos, level_length)
         self.master_sword.update(cam_pos, level_length)
+
+    def activate_main_representation(self):
+        self.representation = LINK
+        self.representation_change_timer = 0
+
+        # Disable other representations
+        self.fire_mario.visible = False
+        self.pac_man.visible = False
+
+    def activate_alt_representation(self, representation):
+        self.visible = False
+        self.representation_change_timer += 1
+
+        # Activate alt representation
+        if self.representation == FIRE_MARIO:
+            self.fire_mario.visible = True
+            self.pac_man.visible = False
+        elif self.representation == PAC_MAN:
+            self.fire_mario.visible = False
+            self.pac_man.visible = True
 
     def handle_representation(self):
         # Check if representation should change
         if self.representation_change_timer >= self.representation_change_delay:
-            self.representation = LINK
-            self.representation_change_timer = 0
-
-            # Disable other representations
-            self.fire_mario.visible = False
+            self.activate_main_representation()
 
         # Determine which representation to show
         if self.representation == LINK:
             self.representation_change_timer = 0
             self.visible = True
         elif self.representation == FIRE_MARIO:
-            self.visible = False
-            self.representation_change_timer += 1
-            self.fire_mario.visible = True
+            self.activate_alt_representation(FIRE_MARIO)
+        elif self.representation == PAC_MAN:
+            self.activate_alt_representation(PAC_MAN)
         else:
             self.visible = True
             self.representation_change_timer += 1
+
+    # TODO: use this to fix Pac-Man collision
+    def get_representation_object(self):
+        if self.representation == LINK:
+            return self
+        elif self.representation == PAC_MAN:
+            return self.pac_man
+        elif self.representation == FIRE_MARIO:
+            return self.fire_mario
 
     # Draw Link
     def draw(self):
@@ -239,6 +267,7 @@ class Link(GameObject):
 
         # Draw alternative representations
         self.fire_mario.draw()
+        self.pac_man.draw()
 
     def die(self, level=None):
         # TODO: add cool dying animation
