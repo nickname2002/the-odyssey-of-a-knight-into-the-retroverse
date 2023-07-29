@@ -3,7 +3,8 @@ from Support.settings import screen_width, screen_height
 from Level.level import Level
 
 # Levels
-level = Level("1_1")
+# level = Level("1_1")
+level = Level("1_2_0")
 
 # TODO: Optimize performance. Performance seems to drop linearly when getting loot from lootboxes.
 

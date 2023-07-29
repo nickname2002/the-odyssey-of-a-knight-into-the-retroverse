@@ -5,6 +5,7 @@ from Level.tile import StaticTile, MysteryBox, MovingTile, BreakableTile
 from Loot.fire_flower import FireFlower
 from Loot.coin import Coin
 from Loot.extra_life import ExtraLife
+from Loot.cherry import Cherry
 from GameObject.Link.link import Link
 from GameObject.Monster.bokoblin import Bokoblin
 from GameObject.Monster.ghost import Ghost
@@ -131,6 +132,8 @@ class Level:
             loot = ExtraLife(tile_size, pos, loot_tile, loot_code, self.link)
         elif loot_code == FIRE_MARIO:
             loot = FireFlower(tile_size, pos, loot_tile, loot_code, self.link)
+        elif loot_code == PAC_MAN:
+            loot = Cherry(tile_size, pos, loot_tile, loot_code, self.link)
         else:
             loot = Coin(tile_size, pos, loot_tile, loot_code, self.link)
 

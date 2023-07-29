@@ -13,10 +13,11 @@ PLAYER_TILE = '-1'
 COIN = '39'
 EXTRA_LIFE = '194'
 FIRE_MARIO = '1944'
+PAC_MAN = '1714'
 
 # NPCs
 BOKOBLIN = '240'
-GHOST = '-20'  # TODO: assign true code to ghost
+GHOST = '294'
 
 # Collections
 BACKDROP_TILES = [SKY_TILE, '397', '398', '399']

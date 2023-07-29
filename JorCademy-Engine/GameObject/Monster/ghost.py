@@ -25,7 +25,7 @@ class Ghost(Monster):
         ]
         self.speed = 1.5
         self.direction = pygame.Vector2(-self.speed, 0)
-        self.amplitude = 2
+        self.amplitude = 1
         self.frequency = 1
 
     def handle_collision_with_player(self, level):
