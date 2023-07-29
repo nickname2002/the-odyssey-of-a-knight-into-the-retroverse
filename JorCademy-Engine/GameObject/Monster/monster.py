@@ -1,6 +1,5 @@
-from GameObject.gameobject import GameObject
-from Level.tile_data import *
 from Environment.text_anomaly import TextAnomaly
+from GameObject.gameobject import GameObject
 from Support.settings import screen_width, screen_height, tile_size
 
 
