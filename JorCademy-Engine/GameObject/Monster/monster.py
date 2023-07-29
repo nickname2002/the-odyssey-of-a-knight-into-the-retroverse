@@ -79,13 +79,3 @@ class Monster(GameObject):
 
         if (self.x - self.width) - self.player.x < screen_width / 2:
             self.moving = True
-
-    def draw(self):
-        if self.timer % self.walk_animation_delay == 0:
-            self.update_sprite_state()
-
-    def update_sprite_state(self):
-        if self.sel_sprite_index < len(self.sprite_set) - 1:
-            self.sel_sprite_index += 1
-        else:
-            self.sel_sprite_index = 0

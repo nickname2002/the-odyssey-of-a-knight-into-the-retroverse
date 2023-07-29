@@ -56,10 +56,17 @@ class Bokoblin(Monster):
             self.offset += self.direction.x * self.speed
 
     def draw(self):
-        super().draw()
+        if self.timer % self.walk_animation_delay == 0:
+            self.update_sprite_state()
 
         # Make sure the monster is drawn facing the right direction
         if self.direction.x > 0:
             image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3)
         else:
             image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3, True)
+
+    def update_sprite_state(self):
+        if self.sel_sprite_index < len(self.sprite_set) - 1:
+            self.sel_sprite_index += 1
+        else:
+            self.sel_sprite_index = 0
