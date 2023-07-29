@@ -7,6 +7,7 @@ from link import Link
 from monster import Bokoblin
 from support import import_level_data, import_tile_set
 from tile_data import *
+import threading
 
 
 class Level:
@@ -157,14 +158,17 @@ class Level:
     # Update text anomaly buffer
     def update_text_anomalies(self, new_anomaly=None):
 
+        # Add new anomaly to buffer
+        if new_anomaly is not None:
+            self.text_anomalies.append(new_anomaly)
+
         # Remove inactive text anomalies from buffer
         for msg in self.text_anomalies:
             if not msg.visible:
                 self.text_anomalies.remove(msg)
+                continue
 
-                # Add new anomaly to buffer
-        if new_anomaly is not None:
-            self.text_anomalies.append(new_anomaly)
+            msg.update()
 
     # Check whether shift of the tiles should be prevented
     def prevent_tile_shift(self):
@@ -189,36 +193,46 @@ class Level:
         # Execute setup again to reset map
         self.setup(self.screen)
 
-    # Update the state of the level
-    def update(self):
-        # UI
-        for msg in self.text_anomalies:
-            msg.update()
-
-        # TODO: Handle end of level reached (properly)
-        if self.end_game_triforce.reached:
-            self.reset()
-
-        # == Player
-        self.link.update(self.cam_pos, self.level_length, self.end_game_triforce.reached)
-
-        # == Monsters
+    def update_monsters(self):
         for monster in self.monsters:
             if monster.is_out_of_frame() or monster.killed:
                 self.monsters.remove(monster)
 
             monster.update(self.cam_pos, self.level_length)
 
-        # == Tiles
-        if not self.prevent_tile_shift():
-            self.world_shift()
-
+    def update_tiles(self):
         for tile in self.tiles:
             if tile.is_out_of_frame():
                 self.tiles.remove(tile)
                 continue
 
             tile.update(self.cam_pos)
+
+    # Update the state of the level
+    def update(self):
+
+        # TODO: Handle end of level reached (properly)
+        if self.end_game_triforce.reached:
+            self.reset()
+
+        # Create threads
+        update_monsters_thread = threading.Thread(target=self.update_monsters)
+        update_tiles_thread = threading.Thread(target=self.update_tiles)
+        update_text_anomalies_thread = threading.Thread(target=self.update_text_anomalies)
+
+        # == Player
+        self.link.update(self.cam_pos, self.level_length, self.end_game_triforce.reached)
+
+        if not self.prevent_tile_shift():
+            self.world_shift()
+
+        # Update tiles and monsters in parallel
+        update_monsters_thread.start()
+        update_tiles_thread.start()
+        update_text_anomalies_thread.start()
+        update_monsters_thread.join()
+        update_monsters_thread.join()
+        update_text_anomalies_thread.join()
 
         # Other
         self.end_game_triforce.update(self.cam_pos, self.level_length)
