@@ -155,21 +155,6 @@ class Level:
             # Link collision
             self.link.handle_collision(tile, i, self)
 
-    # Update text anomaly buffer
-    def update_text_anomalies(self, new_anomaly=None):
-
-        # Add new anomaly to buffer
-        if new_anomaly is not None:
-            self.text_anomalies.append(new_anomaly)
-
-        # Remove inactive text anomalies from buffer
-        for msg in self.text_anomalies:
-            if not msg.visible:
-                self.text_anomalies.remove(msg)
-                continue
-
-            msg.update()
-
     # Check whether shift of the tiles should be prevented
     def prevent_tile_shift(self):
         return (self.cam_pos <= 0 and self.link.direction.x < 0) or \
@@ -192,6 +177,21 @@ class Level:
 
         # Execute setup again to reset map
         self.setup(self.screen)
+
+    # Update text anomaly buffer
+    def update_text_anomalies(self, new_anomaly=None):
+
+        # Add new anomaly to buffer
+        if new_anomaly is not None:
+            self.text_anomalies.append(new_anomaly)
+
+        # Remove inactive text anomalies from buffer
+        for msg in self.text_anomalies:
+            if not msg.visible:
+                self.text_anomalies.remove(msg)
+                continue
+
+            msg.update()
 
     def update_monsters(self):
         for monster in self.monsters:
@@ -240,25 +240,38 @@ class Level:
         # Collision
         self.handle_collision()
 
+    def draw_monsters(self):
+        for monster in self.monsters:
+            if monster.in_frame():
+                monster.draw()
+
+    def draw_tiles(self):
+        for tile in self.tiles:
+            if tile.in_frame():
+                tile.draw(self.screen)
+
+    def draw_text_anomalies(self):
+        for message in self.text_anomalies:
+            message.draw()
+
     # Draw the state of the level
     def draw(self):
 
         # == Player 
         self.link.draw()
 
-        # == Monsters
-        for monster in self.monsters:
-            if monster.in_frame():
-                monster.draw()
+        # Create threads for all update methods
+        draw_monsters_thread = threading.Thread(target=self.draw_monsters)
+        draw_tiles_thread = threading.Thread(target=self.draw_tiles)
+        draw_text_anomalies_thread = threading.Thread(target=self.draw_text_anomalies)
 
-        # == Tiles
-        for tile in self.tiles:
-            if tile.in_frame():
-                tile.draw(self.screen)
-
-        # == UI
-        for message in self.text_anomalies:
-            message.draw()
+        # Start & join threads for all update methods
+        draw_monsters_thread.start()
+        draw_tiles_thread.start()
+        draw_text_anomalies_thread.start()
+        draw_monsters_thread.join()
+        draw_tiles_thread.join()
+        draw_text_anomalies_thread.join()
 
         # == Other
         self.end_game_triforce.draw()

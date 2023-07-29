@@ -41,7 +41,7 @@ class Link(GameObject):
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE
-        self.representation = PAC_MAN  # TODO: change for debugging other representation's behavior
+        self.representation = LINK  # TODO: change for debugging other representation's behavior
         self.attack_cooldown = 50
         self.active_cooldown = 0
         self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
