@@ -3,12 +3,8 @@ from Support.settings import screen_width, screen_height
 from Level.level import Level
 
 # Levels
-level_1_1 = Level("1_1")
-level_1_2_0 = Level("1_2_0")
 active_level_index = 0
-
-# Store levels in order
-levels = [level_1_1, level_1_2_0]
+levels = [Level("1_1"), Level("1_2_0")]
 
 # Transition properties
 transition_started = False
@@ -62,7 +58,7 @@ def transition_screen() -> None:
 def get_next_level_index() -> int:
     global active_level_index
 
-    if active_level_index == len(levels):
+    if active_level_index == (len(levels) - 1):
         return 0  # NOTE: find right behavior when outplayed all levels
     else:
         return active_level_index + 1
