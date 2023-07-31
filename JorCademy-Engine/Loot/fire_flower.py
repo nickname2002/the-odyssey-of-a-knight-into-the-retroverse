@@ -3,8 +3,8 @@ from Loot.loot import Loot
 
 class FireFlower(Loot):
 
-    def __init__(self, size, pos, surface, code, player):
-        super().__init__(size, pos, surface, code, player)
+    def __init__(self, size, pos, surface, code, player, index):
+        super().__init__(size, pos, surface, code, player, index)
         self.message = "+1000 COINS"
         self.coins = 1000
         self.triggered_representation = "FIRE_MARIO"

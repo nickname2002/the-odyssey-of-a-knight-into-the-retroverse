@@ -6,11 +6,12 @@ import pygame
 
 class Tile:
 
-    def __init__(self, color, pos):
+    def __init__(self, color, pos, index):
         self.color = color
         self.orig_position = pos
         self.x = pos[0]
         self.y = pos[1]
+        self.index = index
         self.width = tile_size
         self.height = tile_size
 
@@ -33,8 +34,8 @@ class Tile:
 
 class StaticTile(Tile):
 
-    def __init__(self, size, pos, surface, code):
-        super().__init__(size, pos)
+    def __init__(self, size, pos, surface, code, index):
+        super().__init__(size, pos, index)
         self.image = surface
         self.code = code
 
@@ -44,8 +45,8 @@ class StaticTile(Tile):
 
 class MovingTile(Tile):
 
-    def __init__(self, size, pos, surface, code):
-        super().__init__(size, pos)
+    def __init__(self, size, pos, surface, code, index):
+        super().__init__(size, pos, index)
         self.tiles = None
         self.image = surface
         self.code = code
@@ -199,8 +200,8 @@ class MovingTile(Tile):
 
 class BreakableTile(StaticTile):
 
-    def __init__(self, size, pos, surface, alt_surface, code):
-        super().__init__(size, pos, surface, code)
+    def __init__(self, size, pos, surface, alt_surface, code, index):
+        super().__init__(size, pos, surface, code, index)
         self.alt_surface = alt_surface
 
     def break_tile(self):
@@ -210,8 +211,8 @@ class BreakableTile(StaticTile):
 
 class MysteryBox(StaticTile):
 
-    def __init__(self, size, pos, surface, alt_surface, code, loot):
-        super().__init__(size, pos, surface, code)
+    def __init__(self, size, pos, surface, alt_surface, code, loot, index):
+        super().__init__(size, pos, surface, code, index)
         self.loot = loot
         self.alt_surface = alt_surface
 

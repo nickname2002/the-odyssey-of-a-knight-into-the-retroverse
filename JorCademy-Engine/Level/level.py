@@ -1,3 +1,4 @@
+from Loot.loot import Loot
 from Support.settings import tile_size, screen_width, screen_height
 from jorcademy import *
 from Level.chunk import Chunk
@@ -32,12 +33,12 @@ class Level:
         # Collections
         self.chunks = []
 
-    def init_tile(self, tile, tile_set, pos, i, j, chunk):
+    def init_tile(self, tile, tile_set, pos, i, j, chunk, tile_index):
 
         # Initialize player
         if tile == PLAYER_TILE:
             sel_tile = tile_set[0]
-            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
+            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, tile_index))
             self.link.x = pos[0]
             self.link.y = pos[1]
 
@@ -45,13 +46,13 @@ class Level:
         elif tile == MYSTERY_BOX:
             # Setup loot
             loot_code = self.level_data[j + 1][i]
-            loot = self.init_loot(loot_code, tile_set, pos)
+            loot = self.init_loot(loot_code, tile_set, pos, tile_index)
 
             # Setup tile
             self.level_data[j + 1][i] = SKY_TILE
             sel_tile = tile_set[int(tile)]
             alt_tile = tile_set[int(EMPTY_BOX)]
-            chunk.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot))
+            chunk.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot, tile_index))
 
         # Initialize monsters
         elif tile in MONSTERS:
@@ -61,7 +62,7 @@ class Level:
         elif tile in BREAKABLE:
             sel_tile = tile_set[int(tile)]
             alt_tile = tile_set[int(SKY_TILE)]
-            chunk.tiles.append(BreakableTile(tile_size, pos, sel_tile, alt_tile, tile))
+            chunk.tiles.append(BreakableTile(tile_size, pos, sel_tile, alt_tile, tile, tile_index))
 
         # Initialize end of game
         elif tile == END_OF_GAME:
@@ -70,12 +71,12 @@ class Level:
 
             # Make sky tile
             sel_tile = tile_set[int(SKY_TILE)]
-            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
+            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, tile_index))
 
         # Initialize normal static tiles
         else:
             sel_tile = tile_set[int(tile)]
-            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
+            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, tile_index))
 
     def init_link(self, new_link):
         self.link = new_link
@@ -94,7 +95,7 @@ class Level:
                 chunk_end = self.level_length
 
             # Make chunk
-            self.chunks.append(Chunk(i * self.chunk_size, chunk_end))
+            self.chunks.append(Chunk(i * self.chunk_size, chunk_end, i))
 
     # Determine chunk the player is currently in
     def get_current_chunk(self):
@@ -103,7 +104,7 @@ class Level:
                 return chunk
 
     # Determine the chunks to draw
-    def get_chunks_to_draw(self):
+    def get_chunks_in_range(self):
         chunks_to_draw = []
 
         # Determine the chunks to draw
@@ -135,22 +136,25 @@ class Level:
 
             # Current chunk index
             current_chunk_index = 0
+            tile_index = 0
 
             for i, tile in enumerate(row):
                 pos = (x, y)
 
                 if x > self.chunks[current_chunk_index].end:
                     current_chunk_index += 1
+                    tile_index = 0
 
                 # Treat different tiles correctly
                 if tile == SKY_TILE:
                     pass
 
                 # Treat different tiles correctly
-                self.init_tile(tile, tile_set, pos, i, j, self.chunks[current_chunk_index])
+                self.init_tile(tile, tile_set, pos, i, j, self.chunks[current_chunk_index], tile_index)
 
-                # Update tile x-coordinate
+                # Update tile x-coordinate & tile index
                 x += tile_size
+                tile_index += 1
 
             # Update tile y-coordinate
             y += tile_size
@@ -167,20 +171,20 @@ class Level:
             chunk.monsters.append(Ghost(pos, 48, 48, self.link, self))
 
     # Make loot object to be added to the world
-    def init_loot(self, loot_code, tile_set, pos):
+    def init_loot(self, loot_code, tile_set, pos, tile_index):
         loot_tile = tile_set[int(loot_code)]
 
         # Determine loot type
         if loot_code == COIN:
-            loot = Coin(tile_size, pos, loot_tile, loot_code, self.link)
+            loot = Coin(tile_size, pos, loot_tile, loot_code, self.link, tile_index)
         elif loot_code == EXTRA_LIFE:
-            loot = ExtraLife(tile_size, pos, loot_tile, loot_code, self.link)
+            loot = ExtraLife(tile_size, pos, loot_tile, loot_code, self.link, tile_index)
         elif loot_code == FIRE_MARIO:
-            loot = FireFlower(tile_size, pos, loot_tile, loot_code, self.link)
+            loot = FireFlower(tile_size, pos, loot_tile, loot_code, self.link, tile_index)
         elif loot_code == PAC_MAN:
-            loot = Cherry(tile_size, pos, loot_tile, loot_code, self.link)
+            loot = Cherry(tile_size, pos, loot_tile, loot_code, self.link, tile_index)
         else:
-            loot = Coin(tile_size, pos, loot_tile, loot_code, self.link)
+            loot = Coin(tile_size, pos, loot_tile, loot_code, self.link, tile_index)
 
         return loot
 
@@ -191,25 +195,37 @@ class Level:
 
     # Handle collision
     def handle_collision(self):
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
 
+        # Gather all tiles to check for collision
+        tiles_to_check = []
         for chunk in chunks_to_draw:
-            for i, tile in enumerate(chunk.tiles):
+            tiles_to_check.extend(chunk.tiles)
 
-                # No collision when tile is part of backdrop
-                if tile.code in BACKDROP_TILES:
-                    continue
+        # Sort list so that tiles with parent type Loot are checked first
+        tiles_to_check.sort(key=lambda x: issubclass(type(x), Loot), reverse=True)
 
-                # Moving tiles collision
-                if issubclass(type(tile), MovingTile):
-                    tile.collision(chunk.tiles)
+        for i, tile in enumerate(tiles_to_check):
 
-                # Monsters collision
+            # No collision when tile is part of backdrop
+            if tile.code in BACKDROP_TILES:
+                continue
+
+            # Moving tiles collision
+            if issubclass(type(tile), MovingTile):
+                tile.collision(tiles_to_check)
+
+            # Monsters collision
+            for chunk in chunks_to_draw:
                 for monster in chunk.monsters:
                     monster.handle_collision(tile, i, self)
 
-                # Link collision
-                self.link.handle_collision(tile, i, self)
+            print(i - self.chunk_size * self.get_current_chunk().index)
+
+            # TODO: get index of the tile in the chunk tile list
+
+            # Link collision
+            self.link.handle_collision(tile, i, self)
 
     # Check whether shift of the tiles should be prevented
     def prevent_tile_shift(self):
@@ -234,7 +250,7 @@ class Level:
 
     # Update text anomaly buffer
     def update_text_anomalies(self, new_anomaly=None):
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
         current_chunk = self.get_current_chunk()
 
         # Add new anomaly to buffer
@@ -252,7 +268,7 @@ class Level:
                 msg.update()
 
     def update_monsters(self):
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
 
         for chunk in chunks_to_draw:
             for monster in chunk.monsters:
@@ -261,7 +277,7 @@ class Level:
                 monster.update(self.cam_pos, self.level_length)
 
     def update_tiles(self):
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
 
         for chunk in chunks_to_draw:
             for tile in chunk.tiles:
@@ -277,7 +293,7 @@ class Level:
             self.reset()
 
         # Update chunks to draw
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
         for chunk in chunks_to_draw:
             chunk.update(self.cam_pos, self.level_length)
 
@@ -294,7 +310,7 @@ class Level:
         self.handle_collision()
 
     def draw_monsters(self):
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
 
         for chunk in chunks_to_draw:
             for monster in chunk.monsters:
@@ -302,7 +318,7 @@ class Level:
                     monster.draw()
 
     def draw_tiles(self):
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
 
         for chunk in chunks_to_draw:
             for tile in chunk.tiles:
@@ -310,7 +326,7 @@ class Level:
                     tile.draw(self.screen)
 
     def draw_text_anomalies(self):
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
 
         for chunk in chunks_to_draw:
             for message in chunk.text_anomalies:
@@ -323,7 +339,7 @@ class Level:
         self.link.draw()
 
         # Draw necessary tiles and monsters
-        chunks_to_draw = self.get_chunks_to_draw()
+        chunks_to_draw = self.get_chunks_in_range()
         for chunk in chunks_to_draw:
             chunk.draw(self.screen)
 

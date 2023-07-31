@@ -6,8 +6,8 @@ from Support.settings import tile_size
 
 class Loot(MovingTile):
 
-    def __init__(self, size, pos, surface, code, player):
-        super().__init__(size, pos, surface, code)
+    def __init__(self, size, pos, surface, code, player, index):
+        super().__init__(size, pos, surface, code, index)
         self.direction_y = 0
         self.activated = False
         self.speed = 2

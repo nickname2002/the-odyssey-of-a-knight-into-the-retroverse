@@ -4,8 +4,8 @@ from Support.settings import tile_size
 
 class Coin(Loot):
 
-    def __init__(self, size, pos, surface, code, player):
-        super().__init__(size, pos, surface, code, player)
+    def __init__(self, size, pos, surface, code, player, index):
+        super().__init__(size, pos, surface, code, player, index)
         self.timer = 0
         self.disappear_delay = 20
         self.message = "+200 COIN"

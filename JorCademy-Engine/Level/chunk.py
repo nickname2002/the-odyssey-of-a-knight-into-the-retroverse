@@ -1,11 +1,12 @@
 class Chunk:
 
-    def __init__(self, chunk_start, chunk_end):
+    def __init__(self, chunk_start, chunk_end, index):
         self.start = chunk_start
         self.end = chunk_end  # Chunk end is exclusive
         self.tiles = []
         self.monsters = []
         self.text_anomalies = []
+        self.index = index
 
     # Update text anomaly buffer
     def update_text_anomalies(self, new_anomaly=None):

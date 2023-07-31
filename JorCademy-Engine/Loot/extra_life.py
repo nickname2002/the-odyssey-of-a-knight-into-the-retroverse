@@ -1,6 +1,3 @@
-import sys
-
-sys.path.append('..')
 from Loot.loot import Loot
 from jorcademy import *
 from Support.settings import tile_size
@@ -8,8 +5,8 @@ from Support.settings import tile_size
 
 class ExtraLife(Loot):
 
-    def __init__(self, size, pos, surface, code, player):
-        super().__init__(size, pos, surface, code, player)
+    def __init__(self, size, pos, surface, code, player, index):
+        super().__init__(size, pos, surface, code, player, index)
         self.message = "+1 UP"
         self.moving = False
         self.speed = 2
