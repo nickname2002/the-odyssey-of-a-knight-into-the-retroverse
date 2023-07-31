@@ -1,11 +1,7 @@
-import sys
-
-sys.path.append('..')
+import pygame
+from Environment.text_anomaly import TextAnomaly
 from Level.tile import MovingTile
 from Support.settings import tile_size
-from Environment.text_anomaly import TextAnomaly
-from jorcademy import image
-import pygame
 
 
 class Loot(MovingTile):

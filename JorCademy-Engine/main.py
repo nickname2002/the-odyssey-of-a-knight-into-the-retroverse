@@ -17,7 +17,12 @@ game.setup()
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode(jc.screen_size)
-game.level.setup(screen)
+
+# Setup levels
+for level in game.levels:
+    level.setup(screen)
+
+# Setup game loop
 clock = pygame.time.Clock()
 running = True
 

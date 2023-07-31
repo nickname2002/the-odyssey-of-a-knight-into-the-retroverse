@@ -21,6 +21,7 @@ WALKING_9 = 10
 WALKING_10 = 11
 JUMPING = 12
 
+
 # Representations for Link
 LINK = 0
 FIRE_MARIO = 1
@@ -47,7 +48,7 @@ class Link(GameObject):
         self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
         self.visible = True
         self.fire_mario = FireMario((self.x, self.y), 32, 64, self)
-        self.pac_man = PacMan((self.x, self.y), 32, 32, self)
+        self.pac_man = PacMan((self.x, self.y), 48, 48, self)
         self.representation_change_timer = 0
         self.representation_change_delay = 1000
         self.killed = False

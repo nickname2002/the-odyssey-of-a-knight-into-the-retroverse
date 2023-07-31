@@ -101,4 +101,4 @@ class PacMan(GameObject):
         sprite = self.sprites[self.state]
 
         if self.visible:
-            image(sprite, self.x, self.y, 32 / 26, self.facing_left)
+            image(sprite, self.x, self.y, self.width / 26, self.facing_left)

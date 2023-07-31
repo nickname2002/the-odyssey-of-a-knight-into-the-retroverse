@@ -77,6 +77,9 @@ class Level:
             sel_tile = tile_set[int(tile)]
             self.tiles.append(StaticTile(tile_size, pos, sel_tile, tile))
 
+    def init_link(self, new_link):
+        self.link = new_link
+
     def transition_requested(self):
         return self.link.killed or self.end_game_triforce.reached
 
