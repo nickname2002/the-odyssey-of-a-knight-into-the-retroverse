@@ -220,8 +220,10 @@ class MysteryBox(StaticTile):
         if self.image != self.alt_surface:
             self.image = self.alt_surface
 
+            self.loot.show(level)
             try:
-                self.loot.show(level)
+                pass
+                #self.loot.show(level)
             except:
                 pass
 
