@@ -1,6 +1,3 @@
-import sys
-
-sys.path.append('..')
 from Loot.loot import Loot
 from Support.settings import tile_size
 

@@ -97,7 +97,7 @@ class Link(GameObject):
                 if tile.code == MYSTERY_BOX:
                     try:
                         loot = tile.give_loot(level)
-                        level.tiles.insert(index, loot)
+                        level.get_current_chunk().tiles.insert(index, loot)
                     except:
                         pass
 

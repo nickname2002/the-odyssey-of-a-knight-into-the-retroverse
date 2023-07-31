@@ -89,25 +89,11 @@ class MovingTile(Tile):
                     self.speed *= -1
                     self.x = tile.x - tile.width / 2 - self.width / 2
 
-            # Handle collision on bottom side of Link
+            # Handle collision on bottom side of tile
             if self.collision_bottom(tile):
                 if self.direction.y > 0:
                     self.y = tile.y - tile.height / 2 - self.height / 2
                     self.direction.y = 0
-
-            # Handle collision on top side of Link
-            elif self.collision_top(tile):
-                if self.direction.y < 0:
-                    self.y = tile.y + tile.height / 2 + self.height / 2
-                    self.direction.y = 0
-
-                    # Handle collision with mystery box
-                    if tile.code == MYSTERY_BOX:
-                        try:
-                            loot = tile.give_loot(self)
-                            self.tiles.insert(i, loot)
-                        except:
-                            pass
 
     def collision_top(self, other):
         # Check in range horizontally
