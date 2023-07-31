@@ -33,12 +33,12 @@ class Level:
         # Collections
         self.chunks = []
 
-    def init_tile(self, tile, tile_set, pos, i, j, chunk, tile_index):
+    def init_tile(self, tile, tile_set, pos, i, j, chunk):
 
         # Initialize player
         if tile == PLAYER_TILE:
             sel_tile = tile_set[0]
-            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, tile_index))
+            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, len(chunk.tiles)))
             self.link.x = pos[0]
             self.link.y = pos[1]
 
@@ -46,13 +46,13 @@ class Level:
         elif tile == MYSTERY_BOX:
             # Setup loot
             loot_code = self.level_data[j + 1][i]
-            loot = self.init_loot(loot_code, tile_set, pos, tile_index)
+            loot = self.init_loot(loot_code, tile_set, pos, len(chunk.tiles))
 
             # Setup tile
             self.level_data[j + 1][i] = SKY_TILE
             sel_tile = tile_set[int(tile)]
             alt_tile = tile_set[int(EMPTY_BOX)]
-            chunk.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot, tile_index))
+            chunk.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot, len(chunk.tiles)))
 
         # Initialize monsters
         elif tile in MONSTERS:
@@ -62,7 +62,7 @@ class Level:
         elif tile in BREAKABLE:
             sel_tile = tile_set[int(tile)]
             alt_tile = tile_set[int(SKY_TILE)]
-            chunk.tiles.append(BreakableTile(tile_size, pos, sel_tile, alt_tile, tile, tile_index))
+            chunk.tiles.append(BreakableTile(tile_size, pos, sel_tile, alt_tile, tile, len(chunk.tiles)))
 
         # Initialize end of game
         elif tile == END_OF_GAME:
@@ -71,12 +71,12 @@ class Level:
 
             # Make sky tile
             sel_tile = tile_set[int(SKY_TILE)]
-            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, tile_index))
+            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, len(chunk.tiles)))
 
         # Initialize normal static tiles
         else:
             sel_tile = tile_set[int(tile)]
-            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, tile_index))
+            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, len(chunk.tiles)))
 
     def init_link(self, new_link):
         self.link = new_link
@@ -150,7 +150,7 @@ class Level:
                     pass
 
                 # Treat different tiles correctly
-                self.init_tile(tile, tile_set, pos, i, j, self.chunks[current_chunk_index], tile_index)
+                self.init_tile(tile, tile_set, pos, i, j, self.chunks[current_chunk_index])
 
                 # Update tile x-coordinate & tile index
                 x += tile_size
@@ -158,10 +158,6 @@ class Level:
 
             # Update tile y-coordinate
             y += tile_size
-
-        # Print chunk properties
-        for chunk in self.chunks:
-            print(chunk.start, chunk.end)
 
     # Make new monster object and add it to the list of monsters
     def init_monster(self, tile_code, pos, chunk):
@@ -219,10 +215,6 @@ class Level:
             for chunk in chunks_to_draw:
                 for monster in chunk.monsters:
                     monster.handle_collision(tile, i, self)
-
-            print(i - self.chunk_size * self.get_current_chunk().index)
-
-            # TODO: get index of the tile in the chunk tile list
 
             # Link collision
             self.link.handle_collision(tile, i, self)
