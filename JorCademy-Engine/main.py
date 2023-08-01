@@ -107,6 +107,9 @@ async def main():
         pygame.display.set_caption(jc.screen_title)
         screen.fill(jc.background_color)
 
+        # Update mouse position
+        jc.mouse_position = pygame.mouse.get_pos()
+
         # Render game
         game.update()
         __render_objects_on_screen()

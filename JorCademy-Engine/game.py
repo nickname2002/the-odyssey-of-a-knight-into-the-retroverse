@@ -1,3 +1,5 @@
+import pygame.mouse
+
 from jorcademy import *
 from Support.settings import screen_width, screen_height
 from Level.level import Level
@@ -10,6 +12,26 @@ levels = [Level("1_1", 10), Level("1_2_0", 2)]
 transition_started = False
 transition_timer = 0
 transition_time = 60 * 3
+
+# Menu
+show_main_menu = True
+
+
+# Show main menu screen
+def show_main_menu_screen() -> None:
+    global show_main_menu
+
+    # Draw menu
+    backdrop((255, 255, 255))
+    image("other/main_menu_backdrop.png", screen_width / 2, screen_height / 2, 0.7)
+    image("icons/odyssey-of-link-into-retroverse.png", screen_width / 2, screen_height / 2 - 90, 0.8)
+    text("START NEW GAME", 30, (255, 255, 255), screen_width / 2, screen_height / 2 + 90, "fonts/pixel.ttf")
+
+    # Check if user clicked on start new game
+    if is_mouse_button_down("left"):
+        if screen_height / 2 + 80 < pygame.mouse.get_pos()[1] < screen_height / 2 + 120 and \
+                screen_width / 2 - 140 < pygame.mouse.get_pos()[0] < screen_width / 2 + 140:
+            show_main_menu = False
 
 
 # Show game over screen
@@ -83,6 +105,10 @@ def update() -> None:
     global transition_started, \
         transition_timer, \
         active_level_index
+
+    if show_main_menu:
+        show_main_menu_screen()
+        return
 
     # Check if game is over
     if levels[active_level_index].link.lives == 0:

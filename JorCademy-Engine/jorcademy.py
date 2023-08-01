@@ -1,3 +1,5 @@
+import pygame
+
 from primitives import *
 from typing import Tuple
 
@@ -32,7 +34,7 @@ def is_key_down(key: str) -> bool:
 __mouse_status = {}
 __scroll_up: bool = False
 __scroll_down: bool = False
-mouse_position: (int, int) = (0, 0)
+mouse_position = pygame.Vector2(0, 0)
 
 
 # Get whether a specific mouse button is down
