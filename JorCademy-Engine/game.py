@@ -25,7 +25,7 @@ def show_main_menu_screen() -> None:
     backdrop((255, 255, 255))
     image("other/main_menu_backdrop.png", screen_width / 2, screen_height / 2, 0.7)
     image("icons/odyssey-of-link-into-retroverse.png", screen_width / 2, screen_height / 2 - 90, 0.8)
-    text("START NEW GAME", 30, (255, 255, 255), screen_width / 2, screen_height / 2 + 90, "fonts/pixel.ttf")
+    text("START NEW GAME", 30, (0, 255, 255), screen_width / 2, screen_height / 2 + 90, "fonts/pixel.ttf")
 
     # Check if user clicked on start new game
     if is_mouse_button_down("left"):
@@ -96,7 +96,7 @@ def activate_next_level() -> None:
 
 def setup() -> None:
     # Screen properties
-    title("Link | The Rescue of Princess Zelda")
+    title("The Odyssey of Link | Into The Retro-Verse")
     screen(screen_width, screen_height)
     # NOTE: setting up level happened in main.py
 
