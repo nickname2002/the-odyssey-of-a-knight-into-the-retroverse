@@ -267,3 +267,9 @@ class Link(GameObject):
         # TODO: add cool dying animation
         self.lives -= 1
         self.killed = True
+
+    def reset(self):
+        self.lives = 3
+        self.killed = False
+        self.coins = 0
+        self.representation = LINK

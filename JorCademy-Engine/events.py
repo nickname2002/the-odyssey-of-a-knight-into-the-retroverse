@@ -93,6 +93,8 @@ def key_to_str(key: int) -> str:
         return "shift"
     elif key == 1073741881:
         return "caps"
+    elif key == 27:
+        return "esc"
     elif key == 9:
         return "tab"
     #TODO

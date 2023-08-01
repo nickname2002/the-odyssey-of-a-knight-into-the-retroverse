@@ -1,5 +1,4 @@
 import pygame.mouse
-
 from jorcademy import *
 from Support.settings import screen_width, screen_height
 from Level.level import Level
@@ -13,13 +12,34 @@ transition_started = False
 transition_timer = 0
 transition_time = 60 * 3
 
-# Menu
+# Menu flags
 show_main_menu = True
+game_paused = False
+
+# Additional timers
+pause_cooldown = 30
+pause_timer = 0
+
+
+def show_paused_screen() -> None:
+    global show_main_menu, game_paused, active_level_index
+
+    text("PAUSED", 50, (0, 0, 0), screen_width / 2, screen_height / 2 - 30, "fonts/pixel.ttf")
+
+    # Go back to main menu
+    text("GO TO MAIN MENU", 30, (0, 255, 255), screen_width / 2, screen_height / 2 + 20, "fonts/pixel.ttf")
+
+    # Check if user clicked on start new game
+    if is_mouse_button_down("left"):
+        if screen_height / 2 < pygame.mouse.get_pos()[1] < screen_height / 2 + 40 and \
+                screen_width / 2 - 140 < pygame.mouse.get_pos()[0] < screen_width / 2 + 140:
+            show_main_menu = True
+            game_paused = False
 
 
 # Show main menu screen
 def show_main_menu_screen() -> None:
-    global show_main_menu
+    global show_main_menu, active_level_index
 
     # Draw menu
     backdrop((255, 255, 255))
@@ -32,6 +52,9 @@ def show_main_menu_screen() -> None:
         if screen_height / 2 + 80 < pygame.mouse.get_pos()[1] < screen_height / 2 + 120 and \
                 screen_width / 2 - 140 < pygame.mouse.get_pos()[0] < screen_width / 2 + 140:
             show_main_menu = False
+            active_level_index = 0
+            levels[active_level_index].link.reset()
+            levels[active_level_index].reset()
 
 
 # Show game over screen
@@ -45,6 +68,30 @@ def show_game_over_screen() -> None:
          screen_height / 2 + 20, "fonts/pixel.ttf")
 
 
+# Pause/play game
+def toggle_pause_game() -> None:
+    global game_paused, pause_timer
+
+    # Toggle pause
+    if not game_paused:
+        if pause_timer <= 0:
+            game_paused = True
+            pause_timer = pause_cooldown
+    else:
+        if pause_timer <= 0:
+            game_paused = False
+            pause_timer = pause_cooldown
+
+
+# Update game timers
+def update_timers() -> None:
+    global pause_timer
+
+    # Update pause timer
+    if pause_timer > 0:
+        pause_timer -= 1
+
+
 # Get name of the current level (might be different from active level)
 def get_current_level_name() -> int:
     if levels[active_level_index].link.killed:
@@ -55,7 +102,9 @@ def get_current_level_name() -> int:
 
 # Show game over screen
 def transition_screen() -> None:
-    global transition_started, transition_timer, transition_time
+    global transition_started, \
+        transition_timer, \
+        transition_time
 
     # Set backdrop to black
     backdrop((0, 0, 0))
@@ -104,7 +153,9 @@ def setup() -> None:
 def update() -> None:
     global transition_started, \
         transition_timer, \
-        active_level_index
+        active_level_index, \
+        game_paused, \
+        pause_timer
 
     if show_main_menu:
         show_main_menu_screen()
@@ -116,10 +167,9 @@ def update() -> None:
         return
 
     # Check if level is over
-    if levels[active_level_index].transition_requested():
+    if levels[active_level_index].transition_requested():  # TODO: Add transition from main menu
         transition_screen()
 
-        # TODO: Make sure to transition to right destination when level succeeded
         # Reset level if timer is over
         if transition_timer <= 0:
             transition_started = False
@@ -135,8 +185,20 @@ def update() -> None:
     # Draw sky backdrop
     backdrop(levels[active_level_index].backdrop_color)
 
-    # Update levels
-    levels[active_level_index].update()
-
     # Draw levels
     levels[active_level_index].draw()
+
+    # Update timers
+    update_timers()
+
+    # Check if game paused needs to be toggled
+    if is_key_down("esc"):
+        toggle_pause_game()
+
+    # Show paused screen if game is paused
+    if game_paused:
+        show_paused_screen()
+        return
+
+    # Update levels
+    levels[active_level_index].update()
