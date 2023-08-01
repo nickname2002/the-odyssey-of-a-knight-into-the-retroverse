@@ -14,6 +14,7 @@ transition_time = 60 * 3
 
 # Menu flags
 show_main_menu = True
+transitioning_from_main_menu = False
 game_paused = False
 
 # Additional timers
@@ -39,7 +40,7 @@ def show_paused_screen() -> None:
 
 # Show main menu screen
 def show_main_menu_screen() -> None:
-    global show_main_menu, active_level_index
+    global show_main_menu, active_level_index, transitioning_from_main_menu
 
     # Draw menu
     backdrop((255, 255, 255))
@@ -52,8 +53,9 @@ def show_main_menu_screen() -> None:
         if screen_height / 2 + 80 < pygame.mouse.get_pos()[1] < screen_height / 2 + 120 and \
                 screen_width / 2 - 140 < pygame.mouse.get_pos()[0] < screen_width / 2 + 140:
             show_main_menu = False
+            transitioning_from_main_menu = True
             active_level_index = 0
-            levels[active_level_index].link.reset()
+            levels[active_level_index].link.hard_reset()
             levels[active_level_index].reset()
 
 
@@ -155,7 +157,8 @@ def update() -> None:
         transition_timer, \
         active_level_index, \
         game_paused, \
-        pause_timer
+        pause_timer, \
+        transitioning_from_main_menu
 
     if show_main_menu:
         show_main_menu_screen()
@@ -167,7 +170,7 @@ def update() -> None:
         return
 
     # Check if level is over
-    if levels[active_level_index].transition_requested():  # TODO: Add transition from main menu
+    if levels[active_level_index].transition_requested() or transitioning_from_main_menu:  # TODO: Add transition from main menu
         transition_screen()
 
         # Reset level if timer is over
@@ -180,6 +183,7 @@ def update() -> None:
 
             # Reset level
             levels[active_level_index].reset()
+            transitioning_from_main_menu = False
         return
 
     # Draw sky backdrop

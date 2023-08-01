@@ -268,7 +268,13 @@ class Link(GameObject):
         self.lives -= 1
         self.killed = True
 
-    def reset(self):
+    def soft_reset(self):
+        self.x = 100
+        self.y = screen_height / 2
+        self.killed = False
+        self.representation = LINK
+
+    def hard_reset(self):
         self.lives = 3
         self.killed = False
         self.coins = 0

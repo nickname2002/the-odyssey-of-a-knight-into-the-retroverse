@@ -229,10 +229,8 @@ class Level:
         # Properties
         self.cam_pos = 0
 
-        # Reset link
-        self.link.x = 100
-        self.link.y = screen_height / 2
-        self.link.killed = False
+        # Reset link for new level
+        self.link.soft_reset()
 
         # Collections
         self.chunks = []
