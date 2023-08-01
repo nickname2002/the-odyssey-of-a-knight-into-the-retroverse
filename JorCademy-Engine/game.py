@@ -44,7 +44,7 @@ def show_main_menu_screen() -> None:
 
     # Draw menu
     backdrop((255, 255, 255))
-    image("other/main_menu_backdrop.png", screen_width / 2, screen_height / 2, 0.7)
+    image("other/main_menu_backdrop_light.png", screen_width / 2, screen_height / 2, 1)
     image("icons/odyssey-of-link-into-retroverse.png", screen_width / 2, screen_height / 2 - 90, 0.8)
     text("START NEW GAME", 30, (0, 255, 255), screen_width / 2, screen_height / 2 + 90, "fonts/pixel.ttf")
 
@@ -96,7 +96,7 @@ def update_timers() -> None:
 
 # Get name of the current level (might be different from active level)
 def get_current_level_name() -> int:
-    if levels[active_level_index].link.killed:
+    if levels[active_level_index].link.killed or transitioning_from_main_menu:
         return levels[active_level_index].level_name
     else:
         return levels[get_next_level_index()].level_name
