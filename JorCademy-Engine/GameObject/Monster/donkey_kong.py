@@ -32,6 +32,7 @@ class DonkeyKong(Monster):
         self.random_jump_delay = random.randint(self.min_jump_delay, self.max_jump_delay)
 
         # Attack delay
+        self.invincible_delay = 1000
         self.attack_timer = 0
         self.min_attack_delay = 60 * 5
         self.max_attack_delay = 60 * 10
@@ -85,7 +86,8 @@ class DonkeyKong(Monster):
 
     def handle_collision_with_sword(self):
         if self.player.master_sword.collision(self) and \
-                self.player.master_sword.visible:
+                self.player.master_sword.visible and \
+                self.invincible_timer <= 0:
             self.health -= 1
             self.invincible_timer = self.invincible_delay
 
