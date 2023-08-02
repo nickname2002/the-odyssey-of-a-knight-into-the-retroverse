@@ -163,11 +163,11 @@ class Level:
     # Make new monster object and add it to the list of monsters
     def init_monster(self, tile_code, pos, chunk):
         if tile_code == BOKOBLIN:
-            chunk.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5, self.link, self))
+            chunk.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5, self.link, self, chunk))
         elif tile_code == GHOST:
-            chunk.monsters.append(Ghost(pos, 48, 48, self.link, self))
+            chunk.monsters.append(Ghost(pos, 48, 48, self.link, self, chunk))
         elif tile_code == DONKEY_KONG:
-            chunk.monsters.append(DonkeyKong(pos, 46 * 3, 32 * 3, self.link, self))
+            chunk.monsters.append(DonkeyKong(pos, 46 * 3, 32 * 3, self.link, self, chunk))
 
     # Make loot object to be added to the world
     def init_loot(self, loot_code, tile_set, pos, tile_index):

@@ -7,8 +7,8 @@ class Bokoblin(Monster):
 
     # TODO: Add cool dying animation
 
-    def __init__(self, pos, w, h, player, level):
-        super().__init__(pos, w, h, player, level)
+    def __init__(self, pos, w, h, player, level, chunk):
+        super().__init__(pos, w, h, player, level, chunk)
         self.sprite_set = [
             "monsters/bokoblin/bokoblin_1.png",
             "monsters/bokoblin/bokoblin_2.png"

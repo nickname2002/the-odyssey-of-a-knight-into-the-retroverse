@@ -5,8 +5,9 @@ from Support.settings import screen_width, screen_height, tile_size
 
 class Monster(GameObject):
 
-    def __init__(self, pos, w, h, player, level):
+    def __init__(self, pos, w, h, player, level, chunk):
         super().__init__(pos, w, h)
+        self.chunk = chunk
         self.orig_pos = pos
         self.sprite_set = []
         self.timer = 0
