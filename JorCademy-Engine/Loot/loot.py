@@ -26,7 +26,7 @@ class Loot(MovingTile):
     def make_text_anomaly(self):
         anomaly_pos = (self.level.link.x, self.y - tile_size)
         new_text_anomaly = TextAnomaly(anomaly_pos, self.message, 20, (255, 255, 255))
-        self.level.update_text_anomalies(new_text_anomaly)
+        self.level.get_current_chunk().update_text_anomalies(new_text_anomaly)
 
     def make_image(self, path):
         surface = pygame.image.load(path).convert_alpha()

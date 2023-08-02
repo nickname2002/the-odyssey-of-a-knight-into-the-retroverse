@@ -241,45 +241,6 @@ class Level:
         # Execute setup again to reset map
         self.setup(self.screen)
 
-    # Update text anomaly buffer
-    def update_text_anomalies(self, new_anomaly=None):
-        chunks_to_draw = self.get_chunks_in_range()
-        current_chunk = self.get_current_chunk()
-
-        # Add new anomaly to buffer
-        if new_anomaly is not None:
-            current_chunk.text_anomalies.append(new_anomaly)
-
-        for chunk in chunks_to_draw:
-
-            # Remove inactive text anomalies from buffer
-            for msg in chunk.text_anomalies:
-                if not msg.visible:
-                    chunk.text_anomalies.remove(msg)
-                    continue
-
-                msg.update()
-
-    def update_monsters(self):
-        chunks_to_draw = self.get_chunks_in_range()
-
-        for chunk in chunks_to_draw:
-            for monster in chunk.monsters:
-                if monster.is_out_of_frame() or monster.killed:
-                    chunk.monsters.remove(monster)
-                monster.update(self.cam_pos, self.level_length)
-
-    def update_tiles(self):
-        chunks_to_draw = self.get_chunks_in_range()
-
-        for chunk in chunks_to_draw:
-            for tile in chunk.tiles:
-                if tile.is_out_of_frame():
-                    chunk.tiles.remove(tile)
-                    continue
-
-                tile.update(self.cam_pos)
-
     # Update the state of the level
     def update(self):
         if self.end_game_triforce.reached:
@@ -301,29 +262,6 @@ class Level:
 
         # Collision
         self.handle_collision()
-
-    def draw_monsters(self):
-        chunks_to_draw = self.get_chunks_in_range()
-
-        for chunk in chunks_to_draw:
-            for monster in chunk.monsters:
-                if monster.in_frame():
-                    monster.draw()
-
-    def draw_tiles(self):
-        chunks_to_draw = self.get_chunks_in_range()
-
-        for chunk in chunks_to_draw:
-            for tile in chunk.tiles:
-                if tile.in_frame():
-                    tile.draw(self.screen)
-
-    def draw_text_anomalies(self):
-        chunks_to_draw = self.get_chunks_in_range()
-
-        for chunk in chunks_to_draw:
-            for message in chunk.text_anomalies:
-                message.draw()
 
     # Draw the state of the level
     def draw(self):
