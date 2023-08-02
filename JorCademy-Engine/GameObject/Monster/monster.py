@@ -20,6 +20,8 @@ class Monster(GameObject):
         self.killed = False
         self.loot = 100
         self.health = 1
+        self.invincible_timer = 0
+        self.invincible_delay = 1000
 
     def is_out_of_frame(self):
         if self.moving:
@@ -44,18 +46,21 @@ class Monster(GameObject):
 
     def handle_collision_with_player(self, level):
         fireball = self.player.fire_mario.fireball
+        self.invincible_timer -= 1
 
         # Check if fireball is visible and if it collides with the monster
         if fireball.visible:
-            if self.collision(fireball):
+            if self.collision(fireball) and self.invincible_timer <= 0:
                 self.health -= 1
+                self.invincible_timer = self.invincible_delay
                 fireball.visible = False
 
         # Process this object's damage
         if self.collision_top(self.player) and self.player.collision_bottom(self):
 
             # Kill monster
-            if not self.killed:
+            if not self.killed and self.invincible_timer <= 0:
+                self.invincible_timer = self.invincible_delay
                 self.health -= 1
 
             # Make player jump when landing on top of monster

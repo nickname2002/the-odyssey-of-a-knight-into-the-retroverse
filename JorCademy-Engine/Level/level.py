@@ -11,6 +11,7 @@ from Loot.cherry import Cherry
 from GameObject.Link.link import Link
 from GameObject.Monster.bokoblin import Bokoblin
 from GameObject.Monster.ghost import Ghost
+from GameObject.Monster.donkey_kong import DonkeyKong
 from Support.support import import_level_data, import_tile_set
 from Level.tile_data import *
 
@@ -165,6 +166,8 @@ class Level:
             chunk.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5, self.link, self))
         elif tile_code == GHOST:
             chunk.monsters.append(Ghost(pos, 48, 48, self.link, self))
+        elif tile_code == DONKEY_KONG:
+            chunk.monsters.append(DonkeyKong(pos, 46 * 3, 32 * 3, self.link, self))
 
     # Make loot object to be added to the world
     def init_loot(self, loot_code, tile_set, pos, tile_index):

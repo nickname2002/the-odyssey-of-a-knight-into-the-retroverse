@@ -5,7 +5,8 @@ from Level.level import Level
 
 # Levels
 active_level_index = 0
-levels = [Level("1_1", 10), Level("1_2_0", 2)]
+# levels = [Level("1_1", 10), Level("1_2_0", 2)]
+levels = [Level("1_2_0", 2), Level("1_1", 10)]
 
 # Transition properties
 transition_started = False
@@ -170,7 +171,7 @@ def update() -> None:
         return
 
     # Check if level is over
-    if levels[active_level_index].transition_requested() or transitioning_from_main_menu:  # TODO: Add transition from main menu
+    if levels[active_level_index].transition_requested() or transitioning_from_main_menu:  
         transition_screen()
 
         # Reset level if timer is over
