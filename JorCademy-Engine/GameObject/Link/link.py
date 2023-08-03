@@ -272,10 +272,10 @@ class Link(GameObject):
         self.x = 100
         self.y = screen_height / 2
         self.killed = False
-        self.representation = LINK
+        self.activate_main_representation()
 
     def hard_reset(self):
         self.lives = 3
         self.killed = False
         self.coins = 0
-        self.representation = LINK
+        self.activate_main_representation()
