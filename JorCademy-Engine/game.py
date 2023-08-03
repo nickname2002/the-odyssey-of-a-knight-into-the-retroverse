@@ -5,7 +5,7 @@ from Level.level import Level
 
 # Levels
 active_level_index = 0
-levels = [Level("1_1", 10), Level("1_2_0", 2)]
+levels = [Level("1_1", 10), Level("1_2", 10)]
 
 # Transition properties
 transition_started = False
