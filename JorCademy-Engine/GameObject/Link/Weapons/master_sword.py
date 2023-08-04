@@ -16,7 +16,7 @@ class MasterSword(GameObject):
         self.sprite = "link/master_sword.png"
         self.player = player
         self.gravity = 0
-        self.rotation = 100
+        self.rotation = -75
 
     def attack(self):
         self.x = self.player.x + 30
@@ -52,6 +52,6 @@ class MasterSword(GameObject):
     def draw(self):
         if self.visible:
             if not self.player.facing_left:
-                image(self.sprite, self.x - 20, self.y, 0.15, False, self.rotation)
+                image(self.sprite, self.x - 32, self.y, 1, False, self.rotation)
             else:
-                image(self.sprite, self.x, self.y, 0.15, False, self.rotation + 160)
+                image(self.sprite, self.x, self.y, 1, False, self.rotation + -(self.rotation * 2))
