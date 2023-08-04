@@ -3,7 +3,7 @@ from Support.settings import tile_size, screen_width, screen_height
 from jorcademy import *
 from Level.chunk import Chunk
 from Level.triforce import Triforce
-from Level.tile import StaticTile, MysteryBox, MovingTile, BreakableTile
+from Level.Tiles.tile import StaticTile, MysteryBox, MovingTile, BreakableTile
 from Loot.fire_flower import FireFlower
 from Loot.coin import Coin
 from Loot.extra_life import ExtraLife
@@ -13,7 +13,7 @@ from GameObject.Monster.bokoblin import Bokoblin
 from GameObject.Monster.ghost import Ghost
 from GameObject.Monster.donkey_kong import DonkeyKong
 from Support.support import import_level_data, import_tile_set
-from Level.tile_data import *
+from Level.Tiles.tile_data import *
 
 
 class Level:

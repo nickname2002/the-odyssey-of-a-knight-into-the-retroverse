@@ -1,6 +1,6 @@
 import pygame
 from Environment.text_anomaly import TextAnomaly
-from Level.tile import MovingTile
+from Level.Tiles.tile import MovingTile
 from Support.settings import tile_size
 
 

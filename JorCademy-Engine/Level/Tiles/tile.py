@@ -1,6 +1,6 @@
 from Support.settings import tile_size, screen_height, screen_width
 from jorcademy import rect
-from Level.tile_data import *
+from Level.Tiles.tile_data import *
 import pygame
 
 

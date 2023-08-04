@@ -3,7 +3,7 @@ from Support.settings import screen_width, screen_height
 from GameObject.Link.fire_mario import FireMario
 from GameObject.Link.pac_man import PacMan
 from GameObject.Link.Weapons.master_sword import MasterSword
-from Level.tile_data import *
+from Level.Tiles.tile_data import *
 from jorcademy import *
 
 # States for Link
