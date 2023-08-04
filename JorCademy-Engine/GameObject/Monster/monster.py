@@ -77,6 +77,13 @@ class Monster(GameObject):
         if self.health <= 0:
             self.die()
 
+    def handle_collision_with_sword(self):
+        if self.player.master_sword.collision(self) and \
+                self.player.master_sword.visible and \
+                self.invincible_timer <= 0:
+            self.health -= 1
+            self.invincible_timer = self.invincible_delay
+
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
         self.correct_position_with_camera(cam_pos)
