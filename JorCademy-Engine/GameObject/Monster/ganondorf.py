@@ -10,6 +10,10 @@ WALKING_3 = 3
 WALKING_4 = 4
 WALKING_5 = 5
 WALKING_6 = 6
+SHORT_RANGE_ATTACK_1 = 7
+SHORT_RANGE_ATTACK_2 = 8
+SHORT_RANGE_ATTACK_3 = 9
+LONG_RANGE_ATTACK = 10
 
 
 class Ganondorf(Monster):
@@ -24,12 +28,32 @@ class Ganondorf(Monster):
             "monsters/ganondorf/ganondorf_walking_4.png",
             "monsters/ganondorf/ganondorf_walking_5.png",
             "monsters/ganondorf/ganondorf_walking_6.png",
+            "monsters/ganondorf/ganondorf_short_attack_1.png",
+            "monsters/ganondorf/ganondorf_short_attack_2.png",
+            "monsters/ganondorf/ganondorf_short_attack_3.png"
         ]
-        self.state = WALKING_1
+        self.state = IDLE
+        self.speed = 1
+        self.health = 10
+
+        # Idle delay
+        self.idle_timer = 0
+        self.random_idle_delay = random.randint(150, 600)
 
         # Walking delay
+        self.walk_animation_delay = 10
+        self.walk_animation_timer = 0
         self.walking_timer = 0
-        self.walking_delay = 10
+        self.random_walking_delay = random.randint(100, 150)
+
+        # Short range attack
+        self.short_range_attack_activated = False
+        self.short_range_attack_speed = 3
+        self.short_range_attack_timer = 0
+        self.short_range_attack_delay = 50
+        self.short_range_attack_activation_distance = 200
+        self.short_range_attack_animation_delay = 50 / 3
+        self.short_range_attack_animation_timer = 0
 
         # Attack delay
         self.invincible_delay = 1000
@@ -38,16 +62,38 @@ class Ganondorf(Monster):
         self.max_attack_delay = 60 * 10
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
-    def update(self, cam_pos, level_length):
-        super().update(cam_pos, level_length)
-        self.handle_movement(cam_pos, level_length)
-        self.update_sprite_state()
-
     def update_sprite_state(self):
-        if self.state != IDLE:
-            self.walking_timer += 1
-            if self.walking_timer >= self.walking_delay:
-                self.walking_timer = 0
+
+        # Idle
+        if self.state == IDLE:
+            return
+
+        # Short range attack
+        elif self.short_range_attack_activated:
+
+            # Activate first short range attack state by default
+            if self.state < SHORT_RANGE_ATTACK_1 or self.state > SHORT_RANGE_ATTACK_3:
+                self.state = SHORT_RANGE_ATTACK_1
+
+            # Change state
+            if self.short_range_attack_timer >= self.short_range_attack_animation_delay:
+                self.short_range_attack_animation_timer = 0
+
+                # Activate next frame
+                if self.state < SHORT_RANGE_ATTACK_3:
+                    self.state += 1
+
+            # Update timer
+            self.short_range_attack_animation_timer += 1
+
+        # Walking
+        else:
+            # Increase timers
+            self.walk_animation_timer += 1
+
+            # Switch states
+            if self.walk_animation_timer >= self.walk_animation_delay:
+                self.walk_animation_timer = 0
                 self.state += 1
                 if self.state > WALKING_6:
                     self.state = WALKING_1
@@ -81,14 +127,116 @@ class Ganondorf(Monster):
         self.handle_collision_with_player(level)
         self.handle_collision_with_sword()
 
+    def face_towards_player(self):
+        if self.player.x > self.x:
+            self.direction.x = 1
+        else:
+            self.direction.x = -1
+
+    def get_distance_from_player(self):
+        return abs(self.player.x - self.x)
+
     def attack(self):
         pass
 
-    def init_new_attack_delay(self):
-        pass
+    def init_new_walking_delay(self):
+        self.random_walking_delay = random.randint(150, 600)
 
-    def init_new_jump_delay(self):
-        pass
+    def init_idle_delay(self):
+        self.random_idle_delay = random.randint(100, 150)
+
+    def handle_movement(self, cam_pos, level_length):
+        super().handle_movement(cam_pos, level_length)
+
+        # Perform short range attack if needed
+        if self.get_distance_from_player() < self.short_range_attack_activation_distance and \
+                self.attack_timer >= self.random_attack_delay:
+            self.perform_short_range_attack()
+            return
+
+        # Update attack cooldown timer
+        self.attack_timer += 1
+
+        # Movement behavior based on state
+        if self.state == IDLE:
+            self.process_idle_state()
+        else:
+            self.process_walk_state()
+
+    def process_idle_state(self):
+        # Check if the timer is up
+        if self.idle_timer >= self.random_idle_delay:
+            # Reset timer
+            self.idle_timer = 0
+
+            # Reset state
+            self.state = WALKING_1
+
+            # Reset idle delay
+            self.init_idle_delay()
+
+        # Stop moving
+        self.direction.x = 0
+
+        # Update timer
+        self.idle_timer += 1
+
+    def process_walk_state(self):
+        # Check if the timer is up
+        if self.walking_timer >= self.random_walking_delay:
+            # Reset timer
+            self.walking_timer = 0
+
+            # Reset state
+            self.state = IDLE
+
+            # Reset walking delay
+            self.init_new_walking_delay()
+
+        # Move monster
+        self.face_towards_player()
+        self.move_horizontally()
+
+        # Update walking timer
+        self.walking_timer += 1
+
+    def perform_short_range_attack(self):
+        # Check if the timer is up
+        if self.short_range_attack_timer >= self.short_range_attack_delay:
+            # Reset timer
+            self.short_range_attack_timer = 0
+
+            # Reset state
+            self.state = IDLE
+            self.short_range_attack_activated = False
+
+            # Reset attack delay
+            self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
+            self.attack_timer = 0
+            self.short_range_attack_animation_timer = 0
+
+            # Reset speed
+            self.speed = 1
+            return
+
+        self.short_range_attack_activated = True
+        if self.state == IDLE:
+            self.state = SHORT_RANGE_ATTACK_1
+
+        # Change movement speed
+        self.speed = self.short_range_attack_speed
+
+        # Move monster
+        self.face_towards_player()
+        self.move_horizontally()
+
+        # Update timer
+        self.short_range_attack_timer += 1
+
+    def update(self, cam_pos, level_length):
+        super().update(cam_pos, level_length)
+        self.handle_movement(cam_pos, level_length)
+        self.update_sprite_state()
 
     def draw(self):
         # Make sure the monster is drawn facing the right direction

@@ -3,6 +3,7 @@ from GameObject.gameobject import GameObject
 from Support.settings import screen_width, screen_height, tile_size
 import random
 
+
 class Monster(GameObject):
 
     def __init__(self, pos, w, h, player, level, chunk):
@@ -104,6 +105,9 @@ class Monster(GameObject):
 
     def init_new_jump_speed(self):
         self.jump_speed = random.randint(-13, -5)
+
+    def move_horizontally(self):
+        self.offset += self.direction.x * self.speed
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)

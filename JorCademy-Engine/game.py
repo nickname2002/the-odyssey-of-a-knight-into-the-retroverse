@@ -6,6 +6,7 @@ from Level.level import Level
 # Levels
 active_level_index = 0
 levels = [
+    Level("1_4_0", 1),
     Level("1_1", 10),
     Level("1_2", 10),
     Level("1_3", 10)
