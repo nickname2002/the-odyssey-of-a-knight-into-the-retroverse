@@ -27,6 +27,7 @@ class FireBall(GameObject):
                 self.direction.x = 1
 
     def handle_movement(self, cam_pos, level_length):
+        # TODO: think this should be offset instead of x
         self.x += self.direction.x * self.speed
 
         # Update timer

@@ -1,5 +1,5 @@
 from GameObject.Monster.monster import Monster
-from GameObject.Monster.Weapons.Barrel import Barrel
+from GameObject.Monster.Weapons.barrel import Barrel
 from jorcademy import *
 import random
 

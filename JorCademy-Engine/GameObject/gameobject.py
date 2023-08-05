@@ -13,7 +13,7 @@ class GameObject:
         self.offset = 0
         self.width = w
         self.height = h
-        self.direction = pygame.Vector2(0, 0)
+        self.direction: pygame.Vector2 = pygame.Vector2(0, 0)
         self.gravity = 0.8
         self.walk_animation_delay = 5
         self.timer = 0
@@ -24,8 +24,8 @@ class GameObject:
         self.speed = 4
 
     def out_of_screen(self):
-        return (self.x - self.width < 0 or self.x + self.width > screen_width) or \
-               (self.y - self.height < 0 or self.y + self.height > screen_height)
+        return (self.x + self.width < 0 or self.x - self.width > screen_width) or \
+               (self.y - self.height < 0 or self.y - self.height > screen_height)
 
     def correct_position_with_camera(self, cam_pos):
         self.x = self.orig_pos[0] - cam_pos

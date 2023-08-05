@@ -1,4 +1,5 @@
 from GameObject.Monster.monster import Monster
+from GameObject.Monster.Weapons.enemy_fireball import EnemyFireBall
 from jorcademy import *
 import random
 
@@ -30,7 +31,8 @@ class Ganondorf(Monster):
             "monsters/ganondorf/ganondorf_walking_6.png",
             "monsters/ganondorf/ganondorf_short_attack_1.png",
             "monsters/ganondorf/ganondorf_short_attack_2.png",
-            "monsters/ganondorf/ganondorf_short_attack_3.png"
+            "monsters/ganondorf/ganondorf_short_attack_3.png",
+            "monsters/ganondorf/ganondorf_long_attack.png"
         ]
         self.state = IDLE
         self.speed = 1
@@ -54,6 +56,15 @@ class Ganondorf(Monster):
         self.short_range_attack_activation_distance = 200
         self.short_range_attack_animation_delay = 50 / 3
         self.short_range_attack_animation_timer = 0
+
+        # Long range attack
+        self.long_range_attack_activated = False
+        self.long_range_attack_speed = 3
+        self.long_range_attack_timer = 0
+        self.long_range_attack_delay = 50
+        self.long_range_attack_activation_distance = 200
+        self.long_range_attack_animation_delay = 50 / 3
+        self.long_range_attack_animation_timer = 0
 
         # Attack delay
         self.invincible_delay = 1000
@@ -85,6 +96,10 @@ class Ganondorf(Monster):
 
             # Update timer
             self.short_range_attack_animation_timer += 1
+
+        # Long range attack
+        elif self.long_range_attack_activated:
+            pass
 
         # Walking
         else:
@@ -133,6 +148,17 @@ class Ganondorf(Monster):
         else:
             self.direction.x = -1
 
+    def get_direction(self):
+        # Get the difference between the monster and the player positions
+        x_diff = self.player.x - self.x
+        y_diff = self.player.y - self.y
+
+        # Form vector
+        vec = pygame.Vector2(x_diff, y_diff)
+        vec.normalize_ip()
+
+        return vec
+
     def get_distance_from_player(self):
         return abs(self.player.x - self.x)
 
@@ -152,6 +178,10 @@ class Ganondorf(Monster):
         if self.get_distance_from_player() < self.short_range_attack_activation_distance and \
                 self.attack_timer >= self.random_attack_delay:
             self.perform_short_range_attack()
+            return
+        # Perform long range attack
+        elif self.attack_timer >= self.random_attack_delay:
+            self.perform_long_range_attack()
             return
 
         # Update attack cooldown timer
@@ -232,6 +262,38 @@ class Ganondorf(Monster):
 
         # Update timer
         self.short_range_attack_timer += 1
+
+    def perform_long_range_attack(self):
+        # Check if the timer is up
+        if self.long_range_attack_timer >= self.long_range_attack_delay:
+            # Reset timer
+            self.long_range_attack_timer = 0
+
+            # Reset state
+            self.state = IDLE
+            self.long_range_attack_activated = False
+
+            # Reset attack delay
+            self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
+            self.attack_timer = 0
+
+            # Reset speed
+            self.speed = 1
+            return
+
+        # Activate long range attack state
+        self.long_range_attack_activated = True
+        self.state = LONG_RANGE_ATTACK
+
+        # Make monster stand still
+        self.direction.x = 0
+
+        # Shoot fireball
+        self.chunk.monsters.append(
+            EnemyFireBall((self.x, self.y), 16, 16, self, self.player, self.get_direction()))
+
+        # Update timer
+        self.long_range_attack_timer += 1
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
