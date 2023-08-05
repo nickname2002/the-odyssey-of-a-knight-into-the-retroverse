@@ -17,14 +17,8 @@ class EnemyFireBall(Monster):
         self.player = player
         self.shooting_direction = shooting_direction
 
-    def attack(self):
-        if self.player.facing_left:
-            self.direction.x = -1
-        else:
-            self.direction.x = 1
-
     def handle_movement(self, cam_pos, level_length):
-        self.offset += self.shooting_direction.x * self.speed
+        self.x += self.shooting_direction.x * self.speed
 
         # Calculate the sine wave movement
         sine_wave = math.sin(2 * math.pi * self.frequency * self.timer)
@@ -41,11 +35,13 @@ class EnemyFireBall(Monster):
 
     def handle_collision(self, tile, index, level):
         if self.collision_left(tile) or self.collision_right(tile):
-            self.killed = False
+            self.killed = True
+
+        # Make sure player dies when colliding with the fireball
+        self.handle_collision_with_player(level)
 
     def update(self, cam_pos, level_length):
-        super().update(cam_pos, level_length)
-        self.correct_position_with_camera(cam_pos)
+        self.handle_movement(cam_pos, level_length)
 
         # Check if fireball is out of screen
         if self.out_of_screen():
