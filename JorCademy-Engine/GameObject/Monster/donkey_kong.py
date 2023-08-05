@@ -26,17 +26,12 @@ class DonkeyKong(Monster):
         self.walk_animation_delay = 15
 
         # Jump delay
-        self.jump_timer = 0
         self.min_jump_delay = 60 * 1
         self.max_jump_delay = 60 * 4
-        self.random_jump_delay = random.randint(self.min_jump_delay, self.max_jump_delay)
 
         # Attack delay
-        self.invincible_delay = 1000
-        self.attack_timer = 0
         self.min_attack_delay = 60 * 5
         self.max_attack_delay = 60 * 10
-        self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
     def handle_collision(self, tile, _, level):
         # Handle collision on left side of monster
@@ -69,9 +64,7 @@ class DonkeyKong(Monster):
 
     def jump(self, speed):
         self.jump_timer = 0
-        if self.is_grounded:
-            self.direction.y = speed
-            self.is_grounded = False
+        super().jump(speed)
 
     def attack(self):
         self.state = ATTACK
@@ -90,15 +83,6 @@ class DonkeyKong(Monster):
                 self.invincible_timer <= 0:
             self.health -= 1
             self.invincible_timer = self.invincible_delay
-
-    def init_new_attack_delay(self):
-        self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
-
-    def init_new_jump_delay(self):
-        self.random_jump_delay = random.randint(self.min_jump_delay, self.max_jump_delay)
-
-    def init_new_jump_speed(self):
-        self.jump_speed = random.randint(-13, -5)
 
     def get_direction(self):
         if self.player.x <= self.x:

@@ -1,5 +1,6 @@
 from GameObject.Monster.monster import Monster
 from jorcademy import *
+import random
 
 # Ganondorf states
 IDLE = 0
@@ -25,8 +26,17 @@ class Ganondorf(Monster):
             "monsters/ganondorf/ganondorf_walking_6.png",
         ]
         self.state = WALKING_1
+
+        # Walking delay
         self.walking_timer = 0
         self.walking_delay = 10
+
+        # Attack delay
+        self.invincible_delay = 1000
+        self.attack_timer = 0
+        self.min_attack_delay = 60 * 5
+        self.max_attack_delay = 60 * 10
+        self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
@@ -70,6 +80,15 @@ class Ganondorf(Monster):
         # Player game events
         self.handle_collision_with_player(level)
         self.handle_collision_with_sword()
+
+    def attack(self):
+        pass
+
+    def init_new_attack_delay(self):
+        pass
+
+    def init_new_jump_delay(self):
+        pass
 
     def draw(self):
         # Make sure the monster is drawn facing the right direction

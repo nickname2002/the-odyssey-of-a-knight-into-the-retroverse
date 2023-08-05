@@ -38,7 +38,7 @@ class Link(GameObject):
         self.orig_speed = 4
         self.speed = 4
         self.facing_left = False
-        self.jump_speed = -13
+        self.jump_speed = -15
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE

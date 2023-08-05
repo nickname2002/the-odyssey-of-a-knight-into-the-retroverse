@@ -1,7 +1,7 @@
 from Environment.text_anomaly import TextAnomaly
 from GameObject.gameobject import GameObject
 from Support.settings import screen_width, screen_height, tile_size
-
+import random
 
 class Monster(GameObject):
 
@@ -21,8 +21,20 @@ class Monster(GameObject):
         self.killed = False
         self.loot = 100
         self.health = 1
+
+        # Jump delay
+        self.jump_timer = 0
+        self.min_jump_delay = 60 * 1
+        self.max_jump_delay = 60 * 4
+        self.random_jump_delay = random.randint(self.min_jump_delay, self.max_jump_delay)
+
+        # Attack delay
         self.invincible_timer = 0
         self.invincible_delay = 1000
+        self.attack_timer = 0
+        self.min_attack_delay = 60 * 5
+        self.max_attack_delay = 60 * 10
+        self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
     def is_out_of_frame(self):
         if self.moving:
@@ -83,6 +95,15 @@ class Monster(GameObject):
                 self.invincible_timer <= 0:
             self.health -= 1
             self.invincible_timer = self.invincible_delay
+
+    def init_new_attack_delay(self):
+        self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
+
+    def init_new_jump_delay(self):
+        self.random_jump_delay = random.randint(self.min_jump_delay, self.max_jump_delay)
+
+    def init_new_jump_speed(self):
+        self.jump_speed = random.randint(-13, -5)
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)

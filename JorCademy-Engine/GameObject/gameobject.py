@@ -14,11 +14,14 @@ class GameObject:
         self.width = w
         self.height = h
         self.direction = pygame.Vector2(0, 0)
-        self.gravity = 0.6
+        self.gravity = 0.8
         self.walk_animation_delay = 5
         self.timer = 0
-        self.speed = 4
         self.visible = False
+
+        # Speed
+        self.jump_speed = -10
+        self.speed = 4
 
     def out_of_screen(self):
         return (self.x - self.width < 0 or self.x + self.width > screen_width) or \
@@ -99,8 +102,13 @@ class GameObject:
         # Check horizontally and vertically in range
         return in_x_range and in_y_range
 
+    def jump(self, speed):
+        if self.is_grounded:
+            self.direction.y = speed
+            self.is_grounded = False
+
     # Applying gravity
     def apply_gravity(self):
-        if self.direction.y < 5:
+        if self.direction.y < 10:
             self.direction.y += self.gravity
         self.y += self.direction.y
