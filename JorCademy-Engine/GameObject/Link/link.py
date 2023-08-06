@@ -111,7 +111,7 @@ class Link(GameObject):
         super().handle_movement(cam_pos, level_length)
 
         # Prevent movement if at end of level
-        if at_level_end:
+        if at_level_end or self.speed == 0:
             self.state = IDLE
             return
 
