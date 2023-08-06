@@ -1,7 +1,10 @@
 import pygame.mouse
+
+from GameObject.Monster.ganondorf import Ganondorf
 from jorcademy import *
 from Support.settings import screen_width, screen_height
 from Level.level import Level
+from Level.boss_level import BossLevel
 
 # Levels
 active_level_index = 0
@@ -10,7 +13,8 @@ levels = [
     Level("1_2", 10, (147, 187, 236)),
     Level("1_3", 10, (147, 187, 236)),
     Level("1_4", 10, (147, 187, 236)),
-    Level("1_5", 10, (0, 0, 0))
+    Level("1_5", 10, (0, 0, 0)),
+    BossLevel("BOSS", 1, (0, 0, 0), Ganondorf)
 ]
 
 # Transition properties
@@ -184,16 +188,14 @@ def update() -> None:
             transition_started = False
 
             # Switch to next level if needed
-            if levels[active_level_index].end_game_triforce.reached:
-                activate_next_level()
+            if type(levels[active_level_index]) == Level:
+                if levels[active_level_index].end_game_triforce.reached:
+                    activate_next_level()
 
             # Reset level
             levels[active_level_index].reset()
             transitioning_from_main_menu = False
         return
-
-    # Draw sky backdrop
-    # backdrop(levels[active_level_index].backdrop_color)
 
     # Draw levels
     levels[active_level_index].draw()
