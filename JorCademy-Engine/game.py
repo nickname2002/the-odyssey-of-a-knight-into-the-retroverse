@@ -9,13 +9,13 @@ from Level.boss_level import BossLevel
 # Levels
 active_level_index = 0
 levels = [
-    EndScene("END", 1, (147, 187, 236)),
     Level("1_1", 10, (147, 187, 236)),
     Level("1_2", 10, (147, 187, 236)),
     Level("1_3", 10, (147, 187, 236)),
     Level("1_4", 10, (147, 187, 236)),
     Level("1_5", 10, (0, 0, 0)),
-    BossLevel("BOSS", 1, (0, 0, 0), Ganondorf)
+    BossLevel("BOSS", 1, (0, 0, 0), Ganondorf),
+    EndScene("END", 1, (147, 187, 236))
 ]
 
 # Transition properties
