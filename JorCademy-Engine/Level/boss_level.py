@@ -36,7 +36,7 @@ class BossLevel(Level):
             chunk.update(self.cam_pos, self.level_length)
 
         # Update player
-        self.link.update(self.cam_pos, self.level_length, False, self)
+        self.link.update(self.cam_pos, self.level_length, False)
 
         # Update endgame triforce
         print(self.boss.killed)

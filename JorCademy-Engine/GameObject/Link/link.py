@@ -264,7 +264,7 @@ class Link(GameObject):
         self.fire_mario.draw()
         self.pac_man.draw()
 
-    def die(self):
+    def die(self, level=None):
         # TODO: add cool dying animation
         if not self.at_game_end:
             self.lives -= 1

@@ -260,7 +260,7 @@ class Level:
             chunk.update(self.cam_pos, self.level_length)
 
         # == Player
-        self.link.update(self.cam_pos, self.level_length, self.end_game_triforce.reached, self)
+        self.link.update(self.cam_pos, self.level_length, self.end_game_triforce.reached)
 
         if not self.prevent_tile_shift():
             self.world_shift()
