@@ -188,8 +188,10 @@ def update() -> None:
         if transition_timer <= 0:
             transition_started = False
 
+            # TODO: Fix for when outplayed all levels
             # Switch to next level if needed
-            if type(levels[active_level_index]) == Level:
+            if type(levels[active_level_index]) == Level or \
+                    type(levels[active_level_index]) == BossLevel:
                 if levels[active_level_index].end_game_triforce.reached:
                     activate_next_level()
 
