@@ -102,7 +102,7 @@ class Link(GameObject):
                         pass
 
                 elif tile.code in BREAKABLE:
-                    tile.break_tile()
+                    tile.break_tile(level.get_right_sky_tile())
 
         # Handle collision of linked objects
         self.fire_mario.handle_collision(tile, index, level)

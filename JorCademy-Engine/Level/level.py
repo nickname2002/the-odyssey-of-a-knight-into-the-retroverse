@@ -19,7 +19,7 @@ from Level.Tiles.tile_data import *
 
 class Level:
 
-    def __init__(self, level_name, chunk_amount):
+    def __init__(self, level_name, chunk_amount, level_backdrop_color=(0, 0, 0)):
         # Properties
         self.level_length = None
         self.level_data = None
@@ -27,13 +27,19 @@ class Level:
         self.level_name = level_name
         self.cam_pos = 0
         self.link = Link((100, screen_height / 2), 32, 64)
-        self.backdrop_color = (147, 187, 236)
+        self.backdrop_color = level_backdrop_color
         self.end_game_triforce = None
         self.chunk_amount = chunk_amount
         self.chunk_size = None
 
         # Collections
         self.chunks = []
+
+    def get_right_sky_tile(self):
+        if self.backdrop_color == (0, 0, 0):
+            return CASTLE_WALL
+        else:
+            return SKY_TILE
 
     def init_tile(self, tile, tile_set, pos, i, j, chunk):
 
@@ -51,7 +57,7 @@ class Level:
             loot = self.init_loot(loot_code, tile_set, pos, len(chunk.tiles))
 
             # Setup tile
-            self.level_data[j + 1][i] = SKY_TILE
+            self.level_data[j + 1][i] = self.get_right_sky_tile()
             sel_tile = tile_set[int(tile)]
             alt_tile = tile_set[int(EMPTY_BOX)]
             chunk.tiles.append(MysteryBox(tile_size, pos, sel_tile, alt_tile, tile, loot, len(chunk.tiles)))
@@ -63,7 +69,7 @@ class Level:
         # Initialize breakable tiles
         elif tile in BREAKABLE:
             sel_tile = tile_set[int(tile)]
-            alt_tile = tile_set[int(SKY_TILE)]
+            alt_tile = tile_set[int(self.get_right_sky_tile())]
             chunk.tiles.append(BreakableTile(tile_size, pos, sel_tile, alt_tile, tile, len(chunk.tiles)))
 
         # Initialize end of game
@@ -72,7 +78,7 @@ class Level:
             self.end_game_triforce = Triforce((pos[0], 230), 481, 371, self.link)
 
             # Make sky tile
-            sel_tile = tile_set[int(SKY_TILE)]
+            sel_tile = tile_set[int(self.get_right_sky_tile())]
             chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, len(chunk.tiles)))
 
         # Initialize normal static tiles
@@ -121,7 +127,6 @@ class Level:
     def setup(self, game_screen):
 
         self.screen = game_screen
-        self.backdrop_color = (147, 187, 236)
         self.level_data = import_level_data(f"Maps/level_{self.level_name}.csv")
         self.level_length = len(self.level_data[0] * tile_size)
         self.init_chunks()
@@ -148,7 +153,7 @@ class Level:
                     tile_index = 0
 
                 # Treat different tiles correctly
-                if tile == SKY_TILE:
+                if tile == SKY_TILE or tile == CASTLE_WALL:
                     pass
 
                 # Treat different tiles correctly
@@ -268,6 +273,9 @@ class Level:
 
     # Draw the state of the level
     def draw(self):
+
+        # == Background
+        backdrop(self.backdrop_color)
 
         # == Player 
         self.link.draw()

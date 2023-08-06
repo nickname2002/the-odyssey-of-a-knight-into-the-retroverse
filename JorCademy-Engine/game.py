@@ -6,10 +6,11 @@ from Level.level import Level
 # Levels
 active_level_index = 0
 levels = [
-    Level("1_4_0", 1),
-    Level("1_1", 10),
-    Level("1_2", 10),
-    Level("1_3", 10)
+    Level("1_1", 10, (147, 187, 236)),
+    Level("1_2", 10, (147, 187, 236)),
+    Level("1_3", 10, (147, 187, 236)),
+    Level("1_4", 10, (147, 187, 236)),
+    Level("1_5", 10, (0, 0, 0))
 ]
 
 # Transition properties
@@ -192,7 +193,7 @@ def update() -> None:
         return
 
     # Draw sky backdrop
-    backdrop(levels[active_level_index].backdrop_color)
+    # backdrop(levels[active_level_index].backdrop_color)
 
     # Draw levels
     levels[active_level_index].draw()

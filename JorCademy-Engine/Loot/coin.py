@@ -27,3 +27,7 @@ class Coin(Loot):
             self.timer += 1
             if self.timer % self.disappear_delay == 0:
                 self.y = 800
+
+    def draw(self, screen):
+        self.make_image("assets/power_ups/coin.png")
+        super().draw(screen)

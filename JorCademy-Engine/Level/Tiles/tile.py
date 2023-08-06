@@ -204,9 +204,9 @@ class BreakableTile(StaticTile):
         super().__init__(size, pos, surface, code, index)
         self.alt_surface = alt_surface
 
-    def break_tile(self):
+    def break_tile(self, sky_tile_code):
         self.image = self.alt_surface
-        self.code = SKY_TILE
+        self.code = sky_tile_code
 
 
 class MysteryBox(StaticTile):
