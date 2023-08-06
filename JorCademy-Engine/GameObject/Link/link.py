@@ -52,6 +52,7 @@ class Link(GameObject):
         self.representation_change_timer = 0
         self.representation_change_delay = 1000
         self.killed = False
+        self.at_game_end = False
         self.sprites = [
             'link/link_idle.png',
             'link/link_fight.png',
@@ -263,10 +264,11 @@ class Link(GameObject):
         self.fire_mario.draw()
         self.pac_man.draw()
 
-    def die(self, level=None):
+    def die(self):
         # TODO: add cool dying animation
-        self.lives -= 1
-        self.killed = True
+        if not self.at_game_end:
+            self.lives -= 1
+            self.killed = True
 
     def soft_reset(self):
         self.x = 100

@@ -14,37 +14,60 @@ class EndScene(Level):
             46 * 0.7,
             97 * 0.7)
         self.end_reached = False
-        self.heart = GameObject((screen_width / 2, screen_height / 2), 50, 50)
+        self.heart = GameObject((screen_width / 2, 0 - 50), 50, 50)
+        self.to_subtitles_delay = 300
+        self.to_subtitles_timer = 0
 
     def setup(self, game_screen):
         super().setup(game_screen)
         self.end_game_triforce = TriforceKey((screen_width / 2, 0), 50, 50, self.link)
+        self.link.at_game_end = True
 
     def transition_requested(self):
         pass
         # TODO: Add transition to main menu
 
-    def update(self):
-
-        # Update chunks in range
-        chunks_to_update = self.get_chunks_in_range()
-        for chunk in chunks_to_update:
-            chunk.update(self.cam_pos, self.level_length)
-
-        # Update player
-        self.link.update(self.cam_pos, self.level_length, False)
-
-        # Make sure the player doesn't move too far to the right
+    # Make sure the player doesn't move too far to the right
+    def stop_moving_link_when_needed(self):
         if self.link.x >= screen_width / 2 - 100:
             self.link.speed = 0
             self.end_reached = True
 
-        if self.end_reached:
-            # TODO: Make heart move down
-            pass
+    def move_world_down(self):
+        # Move sprites
+        self.link.y += 1
+        self.zelda.y += 1
+        self.heart.y += 1
 
-        # Update endgame triforce
-        self.end_game_triforce.update(self.cam_pos, self.level_length)
+        # Move tiles
+        for chunk in self.chunks:
+            for tile in chunk.tiles:
+                tile.y += 1
+
+    def show_heart(self):
+        if self.heart.y <= screen_height / 2:
+            self.heart.y += 3
+        else:
+            self.to_subtitles_timer += 1
+
+    def update(self):
+
+        # Update chunks
+        chunks_to_update = self.get_chunks_in_range()
+        for chunk in chunks_to_update:
+            chunk.update(self.cam_pos, self.level_length)
+
+        # Update Link
+        self.link.update(self.cam_pos, self.level_length, False)
+        self.stop_moving_link_when_needed()
+
+        # Move the map down when needed
+        if self.to_subtitles_timer >= self.to_subtitles_delay:
+            self.move_world_down()
+
+        # Show the heart when needed
+        if self.end_reached:
+            self.show_heart()
 
         # Collision
         self.handle_collision()
