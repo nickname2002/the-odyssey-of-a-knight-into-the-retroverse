@@ -46,7 +46,6 @@ class BossLevel(Level):
         self.link.update(self.cam_pos, self.level_length, False)
 
         # Update endgame triforce
-        print(self.boss.killed)
         if self.boss.killed:
 
             # Play boss kill sound
