@@ -32,6 +32,7 @@ game_paused = False
 pause_cooldown = 30
 pause_timer = 0
 
+
 def show_paused_screen() -> None:
     global show_main_menu, game_paused, active_level_index
 

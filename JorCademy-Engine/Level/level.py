@@ -197,8 +197,8 @@ class Level:
 
     # Update the camera position
     def world_shift(self):
-        if is_key_down("d") and self.link.x >= screen_width / 2:
-            self.cam_pos += self.link.speed
+        if self.link.x >= screen_width / 2 and not is_key_down('a'):
+            self.cam_pos += self.link.direction.x * self.link.speed
 
     # Handle collision
     def handle_collision(self):

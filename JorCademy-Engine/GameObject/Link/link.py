@@ -53,6 +53,7 @@ class Link(GameObject):
         self.representation_change_timer = 0
         self.representation_change_delay = 1000
         self.killed = False
+        self.max_speed = 0.8 * scale
         self.at_game_end = False
         self.sprites = [
             'link/link_idle.png',
@@ -112,6 +113,8 @@ class Link(GameObject):
 
     def handle_movement(self, cam_pos, level_length, at_level_end=False):
         super().handle_movement(cam_pos, level_length)
+        if self.x < screen_width / 2 or cam_pos >= (level_length - screen_width):
+            self.x += self.direction.x * self.speed
 
         # Prevent movement if at end of level
         if at_level_end or self.speed == 0:
@@ -124,7 +127,6 @@ class Link(GameObject):
         elif is_key_down("a") and not is_key_down("shift"):
             self.move_left(cam_pos)
         elif self.is_grounded:
-            self.direction.x = 0
             self.state = IDLE
 
         # Update the vertical position of Link
@@ -145,9 +147,8 @@ class Link(GameObject):
         self.timer += 1
 
         # Update coordinates
-        self.direction.x = self.speed
-        if self.x < screen_width / 2 or cam_pos >= (level_length - screen_width):
-            self.x += self.direction.x
+        if abs(self.direction.x) < self.max_speed:
+            self.direction.x += 0.25 * scale
 
     # Move left
     def move_left(self, cam_pos):
@@ -164,7 +165,9 @@ class Link(GameObject):
         self.timer += 1
 
         # Update coordinates
-        self.direction.x = -self.speed
+        if abs(self.direction.x) < self.max_speed:
+            self.direction.x -= 0.25 * scale
+
         if self.x > 0 or cam_pos <= 0:
             self.x += self.direction.x
 
@@ -196,8 +199,19 @@ class Link(GameObject):
         elif representation == "PAC_MAN":
             self.representation = PAC_MAN
 
+    def change_velocity(self):
+        if abs(self.direction.x) < 0.1:
+            self.direction.x = 0
+            return
+
+        if self.direction.x < 0:
+            self.direction.x += 0.1
+        elif self.direction.x > 0:
+            self.direction.x -= 0.1
+
     def update(self, cam_pos, level_length, at_level_end=False):
         self.handle_movement(cam_pos, level_length, at_level_end)
+        self.change_velocity()
 
         # Die when out of screen
         if self.y > screen_height:
