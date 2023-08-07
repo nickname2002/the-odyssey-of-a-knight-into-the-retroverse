@@ -1,4 +1,5 @@
 from Loot.loot import Loot
+from jorcademy import *
 
 
 class Cherry(Loot):
@@ -8,6 +9,7 @@ class Cherry(Loot):
         self.message = "+1000 COINS"
         self.coins = 1000
         self.triggered_representation = "PAC_MAN"
+        self.collect_sound = load_sound("assets/sounds/power_up.wav")
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -21,6 +23,7 @@ class Cherry(Loot):
 
     def process_loot(self):
         super().process_loot()
+        play_sound(self.collect_sound, 1)
         self.player.trigger_new_representation(self.triggered_representation)
 
     def draw(self, screen):

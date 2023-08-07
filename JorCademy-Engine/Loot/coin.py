@@ -1,5 +1,6 @@
 from Loot.loot import Loot
 from Support.settings import tile_size
+from jorcademy import *
 
 
 class Coin(Loot):
@@ -10,6 +11,7 @@ class Coin(Loot):
         self.disappear_delay = 20
         self.message = "+200 COIN"
         self.coins = 200
+        self.collect_sound = load_sound("assets/sounds/coin.mp3")
 
     def show(self, level):
         super().show(level)
@@ -18,6 +20,10 @@ class Coin(Loot):
         # Process effect of the loot
         if not self.looted:
             self.process_loot()
+
+    def process_loot(self):
+        play_sound(self.collect_sound, 0.7)
+        super().process_loot()
 
     def update(self, shift_x):
         super().update(shift_x)

@@ -26,6 +26,8 @@ for level in game.levels:
 clock = pygame.time.Clock()
 running = True
 
+# Set amount of audio channels
+pygame.mixer.set_num_channels(32)
 
 # Print debug message when in debug mode 
 def __debug_log(msg: str):

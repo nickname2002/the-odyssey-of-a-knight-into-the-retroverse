@@ -28,6 +28,7 @@ class Ghost(Monster):
         self.direction = pygame.Vector2(-self.speed, 0)
         self.amplitude = 1 * scale
         self.frequency = 1 * scale
+        self.eaten_sound = load_sound("sounds/eat_pac_man.mp3")
 
     def handle_collision_with_player(self, level):
         fireball = self.player.fire_mario.fireball
@@ -39,6 +40,7 @@ class Ghost(Monster):
         # Process player damage & damage from player
         elif self.collision(self.player):
             if self.player.representation == PAC_MAN:
+                play_sound(self.eaten_sound, 0.3)
                 self.health -= 1
             elif not self.player.killed:
                 self.player.die(level)

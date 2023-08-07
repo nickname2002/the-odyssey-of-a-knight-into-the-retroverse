@@ -2,6 +2,7 @@ from Environment.text_anomaly import TextAnomaly
 from GameObject.gameobject import GameObject
 from Support.settings import screen_width, screen_height, tile_size
 import random
+from jorcademy import *
 
 
 class Monster(GameObject):
@@ -37,6 +38,10 @@ class Monster(GameObject):
         self.max_attack_delay = 60 * 10
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
+        # Sounds
+        self.hit_by_player_sound = load_sound("assets/sounds/enemy_jump.mp3")
+        self.hit_by_sword_sound = load_sound("assets/sounds/punch.mp3")
+
     def is_out_of_frame(self):
         if self.moving:
             return \
@@ -65,6 +70,7 @@ class Monster(GameObject):
         # Check if fireball is visible and if it collides with the monster
         if fireball.visible:
             if self.collision(fireball) and self.invincible_timer <= 0:
+                play_sound(self.hit_by_player_sound, 0.5)
                 self.health -= 1
                 self.invincible_timer = self.invincible_delay
                 fireball.visible = False
@@ -74,12 +80,13 @@ class Monster(GameObject):
 
             # Kill monster
             if not self.killed and self.invincible_timer <= 0:
+                play_sound(self.hit_by_player_sound, 0.5)
                 self.invincible_timer = self.invincible_delay
                 self.health -= 1
 
             # Make player jump when landing on top of monster
             self.player.is_grounded = True
-            self.player.jump(self.player.jump_speed + 4)
+            self.player.jump(self.player.jump_speed + 4, True)
 
         # Process player damage
         elif self.collision(self.player):
@@ -94,6 +101,7 @@ class Monster(GameObject):
         if self.player.master_sword.collision(self) and \
                 self.player.master_sword.visible and \
                 self.invincible_timer <= 0:
+            play_sound(self.hit_by_sword_sound, 1)
             self.health -= 1
             self.invincible_timer = self.invincible_delay
 

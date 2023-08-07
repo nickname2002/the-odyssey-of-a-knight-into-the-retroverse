@@ -16,6 +16,7 @@ class Bokoblin(Monster):
         self.speed = 1
         self.direction = pygame.Vector2(-self.speed, 0)
 
+
     def handle_collision(self, tile, _, level):
         # Handle collision on left side of monster
         if self.collision_left(tile):
@@ -48,6 +49,7 @@ class Bokoblin(Monster):
     def handle_collision_with_sword(self):
         if self.player.master_sword.collision(self) and \
                 self.player.master_sword.visible:
+            # play_sound(self.player.master_sword.hit_sound)
             self.die()
 
     def handle_movement(self, cam_pos, level_length):

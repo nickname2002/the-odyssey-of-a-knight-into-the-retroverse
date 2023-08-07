@@ -5,6 +5,7 @@ from GameObject.Link.pac_man import PacMan
 from GameObject.Link.Weapons.master_sword import MasterSword
 from Level.Tiles.tile_data import *
 from jorcademy import *
+import random
 
 # States for Link
 IDLE = 0
@@ -68,6 +69,7 @@ class Link(GameObject):
             'link/link_walking_10.png',
             'link/link_jumping.png'
         ]
+        self.jump_sound = load_sound('assets/sounds/jump.ogg')
 
     def handle_collision(self, tile, index, level):
         # Handle collision on left side of object
@@ -177,12 +179,16 @@ class Link(GameObject):
             self.state = ATTACK
 
     # Let character jump
-    def jump(self, speed):
+    def jump(self, speed, enemy_killed=False):
         self.timer = 0
         self.state = JUMPING
         if self.is_grounded:
             self.direction.y = speed
             self.is_grounded = False
+            if not enemy_killed and self.representation == LINK:
+                play_sound(self.jump_sound, 0.3)
+            elif not enemy_killed and self.representation == FIRE_MARIO:
+                play_sound(self.fire_mario.jump_sound, 1.5)
 
     def trigger_new_representation(self, representation):
         if representation == "FIRE_MARIO":

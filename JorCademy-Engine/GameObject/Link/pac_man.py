@@ -1,6 +1,6 @@
 from GameObject.gameobject import GameObject
 from jorcademy import *
-from Support.settings import screen_width, screen_height, scale
+from Support.settings import screen_width
 
 IDLE = 0
 WALKING_1 = 1
@@ -30,6 +30,9 @@ class PacMan(GameObject):
             "pac_man/pac_man_walking_2.png",
             "pac_man/pac_man_walking_1.png"
         ]
+        self.waka_sound = load_sound('assets/sounds/waka.mp3')
+        self.play_sound_delay = 15
+        self.play_sound_timer = 0
 
     def handle_movement(self, cam_pos, level_length):
         # Update horizontal direction and position of Link
@@ -57,6 +60,12 @@ class PacMan(GameObject):
                 if self.timer % self.walk_animation_delay == 0:
                     self.state += 1
 
+            if self.play_sound_timer >= self.play_sound_delay and self.visible:
+                play_sound(self.waka_sound, 0.15)
+                self.play_sound_timer = 0
+
+            self.play_sound_timer += 1
+
         self.timer += 1
 
         # Update coordinates
@@ -75,6 +84,12 @@ class PacMan(GameObject):
             else:
                 if self.timer % self.walk_animation_delay == 0:
                     self.state += 1
+
+            if self.play_sound_timer >= self.play_sound_delay and self.visible:
+                play_sound(self.waka_sound, 0.15)
+                self.play_sound_timer = 0
+
+            self.play_sound_timer += 1
 
         self.timer += 1
 

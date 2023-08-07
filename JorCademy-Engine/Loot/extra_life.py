@@ -10,6 +10,7 @@ class ExtraLife(Loot):
         self.message = "+1 UP"
         self.moving = False
         self.speed = 2 * scale
+        self.collect_sound = load_sound("assets/sounds/1_up.wav")
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -28,6 +29,7 @@ class ExtraLife(Loot):
 
     def process_loot(self):
         super().process_loot()
+        play_sound(self.collect_sound, 2)
         self.player.lives += 1
 
     def rise_animation(self):

@@ -23,7 +23,7 @@ class DonkeyKong(Monster):
         self.speed = 1 * scale
         self.health = 3
         self.direction = pygame.Vector2(-self.speed, 0)
-        self.jump_speed = -13 * scale
+        self.jump_speed = -16 * scale
         self.walk_animation_delay = 15
 
         # Jump delay

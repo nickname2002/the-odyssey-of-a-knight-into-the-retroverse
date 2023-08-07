@@ -18,11 +18,17 @@ class MasterSword(GameObject):
         self.player = player
         self.gravity = 0 * scale
         self.rotation = -75
+        self.slash_sound = load_sound("assets/sounds/sword.mp3")
+        self.audio_played = False
 
     def attack(self):
         self.x = self.player.x + 30 * scale
         self.y = self.player.y + 10 * scale
         self.visible = True
+
+        if not self.audio_played:
+            play_sound(self.slash_sound)
+            self.audio_played = True
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
@@ -56,3 +62,5 @@ class MasterSword(GameObject):
                 image(self.sprite, self.x - 32 * scale, self.y, 1 * scale, False, self.rotation)
             else:
                 image(self.sprite, self.x, self.y, 1 * scale, False, self.rotation + -(self.rotation * 2))
+        else:
+            self.audio_played = False

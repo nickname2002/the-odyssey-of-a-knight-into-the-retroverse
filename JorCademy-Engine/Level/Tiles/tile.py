@@ -2,6 +2,7 @@ from Support.settings import tile_size, screen_height, screen_width
 from jorcademy import rect
 from Level.Tiles.tile_data import *
 import pygame
+from jorcademy import *
 
 
 class Tile:
@@ -203,10 +204,12 @@ class BreakableTile(StaticTile):
     def __init__(self, size, pos, surface, alt_surface, code, index):
         super().__init__(size, pos, surface, code, index)
         self.alt_surface = alt_surface
+        self.break_sound = load_sound("assets/sounds/block_break.wav")
 
     def break_tile(self, sky_tile_code):
         self.image = self.alt_surface
         self.code = sky_tile_code
+        play_sound(self.break_sound, 1.5)
 
 
 class MysteryBox(StaticTile):
@@ -223,7 +226,7 @@ class MysteryBox(StaticTile):
             self.loot.show(level)
             try:
                 pass
-                #self.loot.show(level)
+                # self.loot.show(level)
             except:
                 pass
 

@@ -35,6 +35,8 @@ class FireMario(GameObject):
         self.active_cooldown = 0
         self.fireball_thrown = False
         self.fireball = FireBall((self.x, self.y), 16 * scale, 16 * scale, self.player)
+        self.fire_sound = load_sound('assets/sounds/fireball.wav')
+        self.jump_sound = load_sound('assets/sounds/mario_jump.wav')
 
     def handle_movement(self, cam_pos, level_length):
         if self.active_cooldown > 0:
@@ -98,6 +100,7 @@ class FireMario(GameObject):
         if self.active_cooldown <= 0 and self.visible:
             self.state = ATTACK
             self.fireball.attack()
+            play_sound(self.fire_sound, 2)
             self.activate_attack_cooldown()
 
     # Let character jump

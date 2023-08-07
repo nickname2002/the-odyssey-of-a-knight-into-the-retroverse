@@ -1,4 +1,4 @@
-scale = 1
+scale = 1.5
 
 # Tile properties
 tile_size = int(32 * scale)
