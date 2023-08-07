@@ -51,7 +51,9 @@ def show_paused_screen() -> None:
 
 # Show main menu screen
 def show_main_menu_screen() -> None:
-    global show_main_menu, active_level_index, transitioning_from_main_menu
+    global show_main_menu, \
+        active_level_index, \
+        transitioning_from_main_menu
 
     # Draw menu
     backdrop((255, 255, 255))
@@ -169,7 +171,8 @@ def update() -> None:
         active_level_index, \
         game_paused, \
         pause_timer, \
-        transitioning_from_main_menu
+        transitioning_from_main_menu, \
+        show_main_menu
 
     if show_main_menu:
         show_main_menu_screen()
@@ -181,14 +184,21 @@ def update() -> None:
         return
 
     # Check if level is over
-    if levels[active_level_index].transition_requested() or transitioning_from_main_menu:  
+    if levels[active_level_index].transition_requested() or transitioning_from_main_menu:
+
+        # Check if transitioning to main menu from EndScene
+        if type(levels[active_level_index]) == EndScene and \
+                levels[active_level_index].transition_requested():
+            show_main_menu = True
+            return
+
+        # Show transition screen
         transition_screen()
 
         # Reset level if timer is over
         if transition_timer <= 0:
             transition_started = False
 
-            # TODO: Fix for when outplayed all levels
             # Switch to next level if needed
             if type(levels[active_level_index]) == Level or \
                     type(levels[active_level_index]) == BossLevel:

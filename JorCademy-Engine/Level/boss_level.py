@@ -25,6 +25,11 @@ class BossLevel(Level):
                 if type(monster) == self.boss_type:
                     self.boss = monster
 
+    def reset(self):
+        super().reset()
+        self.link.at_game_end = True
+        self.end_game_triforce.moving_allowed = False
+
     def transition_requested(self):
         return self.link.killed or self.end_game_triforce.reached
 

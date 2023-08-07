@@ -9,23 +9,52 @@ class EndScene(Level):
 
     def __init__(self, level_name, chunk_amount, level_backdrop_color):
         super().__init__(level_name, chunk_amount, level_backdrop_color)
+        self.subtitles_shown = False
         self.zelda = GameObject(
             (screen_width / 2 + 100, screen_height - tile_size * 2 - 97 * 0.7 / 2),
             46 * 0.7,
             97 * 0.7)
         self.end_reached = False
         self.heart = GameObject((screen_width / 2, 0 - 50), 50, 50)
-        self.to_subtitles_delay = 300
+
+        # Transition to subtitles
+        self.to_subtitles_delay = 200
         self.to_subtitles_timer = 0
+
+        # Start subtitles
+        self.start_subtitles_delay = 600
+        self.start_subtitles_timer = 0
+
+        # Switch subtitles
+        self.switch_subtitles_delay = 300
+        self.switch_subtitles_timer = 0
+
+        # Subtitles index
+        self.subtitles_index = 0
 
     def setup(self, game_screen):
         super().setup(game_screen)
         self.end_game_triforce = TriforceKey((screen_width / 2, 0), 50, 50, self.link)
         self.link.at_game_end = True
 
+    def reset(self):
+        super().reset()
+        self.zelda = GameObject(
+            (screen_width / 2 + 100, screen_height - tile_size * 2 - 97 * 0.7 / 2),
+            46 * 0.7,
+            97 * 0.7)
+        self.heart = GameObject((screen_width / 2, 0 - 50), 50, 50)
+        self.link.speed = 4
+        self.subtitles_shown = False
+        self.end_reached = False
+        self.to_subtitles_timer = 0
+        self.start_subtitles_timer = 0
+        self.switch_subtitles_timer = 0
+        self.subtitles_index = 0
+        self.link.at_game_end = True
+
     def transition_requested(self):
-        pass
-        # TODO: Add transition to main menu
+        return self.subtitles_shown
 
     # Make sure the player doesn't move too far to the right
     def stop_moving_link_when_needed(self):
@@ -35,20 +64,49 @@ class EndScene(Level):
 
     def move_world_down(self):
         # Move sprites
-        self.link.y += 1
-        self.zelda.y += 1
-        self.heart.y += 1
+        self.link.y += 2
+        self.zelda.y += 2
+        self.heart.y += 2
 
         # Move tiles
         for chunk in self.chunks:
             for tile in chunk.tiles:
-                tile.y += 1
+                tile.y += 2
 
     def show_heart(self):
         if self.heart.y <= screen_height / 2:
             self.heart.y += 3
         else:
             self.to_subtitles_timer += 1
+
+    def show_subtitles(self):
+        subtitles = [
+            # Ending messages for the game
+            "LINK'S ODYSSEY HAS COME TO AN END",
+            "THANK YOU FOR PLAYING",
+            "A GAME BY NICKNAME",
+        ]
+
+        # Show correct subtitle
+        text(subtitles[self.subtitles_index],
+             25,
+             (255, 255, 255),
+             screen_width / 2,
+             screen_height / 2,
+             "fonts/pixel.ttf")
+
+        # Update timer
+        self.switch_subtitles_timer += 1
+
+        # Switch to next subtitle
+        if self.switch_subtitles_timer >= self.switch_subtitles_delay:
+            if self.subtitles_index >= len(subtitles) - 1:
+                self.subtitles_shown = True
+                return
+
+            # Reset timer & change index
+            self.subtitles_index += 1
+            self.switch_subtitles_timer = 0
 
     def update(self):
 
@@ -68,6 +126,12 @@ class EndScene(Level):
         # Show the heart when needed
         if self.end_reached:
             self.show_heart()
+
+        # Show subtitles when needed
+        self.start_subtitles_timer += 1
+        if self.start_subtitles_timer >= self.start_subtitles_delay:
+            self.show_subtitles()
+            return
 
         # Collision
         self.handle_collision()
