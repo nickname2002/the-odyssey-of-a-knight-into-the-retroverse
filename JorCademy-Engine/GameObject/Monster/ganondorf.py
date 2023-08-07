@@ -74,6 +74,12 @@ class Ganondorf(Monster):
         self.max_attack_delay = 60 * 10
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
+        # Sounds
+        self.long_range_attack_sound = load_sound("assets/sounds/ganondorf_long_range_attack.wav")
+        self.short_range_attack_sound = load_sound("assets/sounds/ganondorf_short_range_attack.mp3")
+        #self.hit_by_player_sound = load_sound("assets/sounds/ganondorf_damage.mp3")
+        self.audio_played = False
+
     def update_sprite_state(self):
 
         # Idle
@@ -248,7 +254,14 @@ class Ganondorf(Monster):
 
             # Reset speed
             self.speed = 1
+
+            # Reset audio
+            self.audio_played = False
             return
+
+        if not self.audio_played and not self.health <= 0:
+            play_sound(self.short_range_attack_sound, 0.5)
+            self.audio_played = True
 
         self.short_range_attack_activated = True
         if self.state == IDLE:
@@ -280,7 +293,14 @@ class Ganondorf(Monster):
 
             # Reset speed
             self.speed = 1
+
+            # Reset audio
+            self.audio_played = False
             return
+
+        if not self.audio_played and not self.health <= 0:
+            play_sound(self.long_range_attack_sound, 0.5)
+            self.audio_played = True
 
         # Activate long range attack state
         self.long_range_attack_activated = True

@@ -121,7 +121,7 @@ def play_sound(audio_obj: Audio, volume=1.0):
         sound.set_volume(volume)
         pygame.mixer.find_channel().play(sound)
     except:
-        pass
+        print("Error: Audio could not be played.")
 
 
 # Wait for new action
