@@ -1,4 +1,5 @@
 from GameObject.Monster.monster import Monster
+from Support.settings import scale
 from jorcademy import *
 
 
@@ -17,7 +18,7 @@ class Barrel(Monster):
         ]
         self.walk_animation_delay = 5
         self.direction = pygame.Vector2(donkey_kong.get_direction(), 0)
-        self.speed = 4
+        self.speed = 4 * scale
         self.offset = 0
 
     def handle_movement(self, cam_pos, level_length):
@@ -34,7 +35,7 @@ class Barrel(Monster):
             self.update_sprite_state()
 
         # Make sure the monster is drawn facing the right direction
-        image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3)
+        image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3 * scale)
 
     def update_sprite_state(self):
         if self.sel_sprite_index == len(self.sprite_set) - 1:

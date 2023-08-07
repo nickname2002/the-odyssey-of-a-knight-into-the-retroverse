@@ -1,3 +1,4 @@
+from Support.settings import scale
 from jorcademy import *
 from GameObject.gameobject import GameObject
 
@@ -22,4 +23,4 @@ class Triforce(GameObject):
             self.reached = True
 
     def draw(self):
-        image(self.sprite, self.x, self.y, 0.5, False, 0)
+        image(self.sprite, self.x, self.y, 0.5 * scale, False, 0)

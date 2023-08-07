@@ -1,5 +1,6 @@
 from GameObject.Monster.monster import Monster
 from GameObject.Monster.Weapons.barrel import Barrel
+from Support.settings import scale
 from jorcademy import *
 import random
 
@@ -19,10 +20,10 @@ class DonkeyKong(Monster):
             "monsters/donkey_kong/donkey_throw.png",
         ]
         self.state = IDLE_1
-        self.speed = 1
+        self.speed = 1 * scale
         self.health = 3
         self.direction = pygame.Vector2(-self.speed, 0)
-        self.jump_speed = -13
+        self.jump_speed = -13 * scale
         self.walk_animation_delay = 15
 
         # Jump delay
@@ -70,7 +71,7 @@ class DonkeyKong(Monster):
         self.state = ATTACK
 
         # Add new barrel to the chunk's monster list
-        barrel = Barrel((self.x, self.y), 36, 30, self.player, self)
+        barrel = Barrel((self.x, self.y), 36 * scale, 30 * scale, self.player, self)
         self.level.chunks[self.chunk.index].monsters.append(barrel)
 
         # Reset attack timer
@@ -115,7 +116,7 @@ class DonkeyKong(Monster):
             self.update_sprite_state()
 
         # Make sure the monster is drawn facing the right direction
-        image(self.sprite_set[self.state], self.x, self.y, 3, self.player.x >= self.x)
+        image(self.sprite_set[self.state], self.x, self.y, 3 * scale, self.player.x >= self.x)
 
     def update_sprite_state(self):
         if self.state != ATTACK:

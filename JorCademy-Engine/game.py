@@ -2,7 +2,7 @@ import pygame.mouse
 from GameObject.Monster.ganondorf import Ganondorf
 from Level.endscene import EndScene
 from jorcademy import *
-from Support.settings import screen_width, screen_height
+from Support.settings import screen_width, screen_height, scale
 from Level.level import Level
 from Level.boss_level import BossLevel
 
@@ -57,14 +57,25 @@ def show_main_menu_screen() -> None:
 
     # Draw menu
     backdrop((255, 255, 255))
-    image("other/main_menu_backdrop_light.png", screen_width / 2, screen_height / 2, 1)
-    image("icons/odyssey-of-link-into-retroverse.png", screen_width / 2, screen_height / 2 - 90, 0.8)
-    text("START NEW GAME", 30, (0, 255, 255), screen_width / 2, screen_height / 2 + 90, "fonts/pixel.ttf")
+    image("other/main_menu_backdrop_light.png",
+          screen_width / 2,
+          screen_height / 2,
+          1.0 * scale)
+    image("icons/odyssey-of-link-into-retroverse.png",
+          screen_width / 2,
+          screen_height / 2 - 90 * scale,
+          0.8 * scale)
+    text("START NEW GAME",
+         int(30 * scale),
+         (0, 255, 255),
+         screen_width / 2,
+         screen_height / 2 + 90 * scale,
+         "fonts/pixel.ttf")
 
     # Check if user clicked on start new game
     if is_mouse_button_down("left"):
-        if screen_height / 2 + 80 < pygame.mouse.get_pos()[1] < screen_height / 2 + 120 and \
-                screen_width / 2 - 140 < pygame.mouse.get_pos()[0] < screen_width / 2 + 140:
+        if screen_height / 2 + scale * 80 < pygame.mouse.get_pos()[1] < screen_height / 2 + scale * 120 and \
+                screen_width / 2 - scale * 140 < pygame.mouse.get_pos()[0] < screen_width / 2 + scale * 140:
             show_main_menu = False
             transitioning_from_main_menu = True
             active_level_index = 0
@@ -134,10 +145,19 @@ def transition_screen() -> None:
         transition_timer -= 1
 
     # Display properties on screen
-    text(f"x{levels[active_level_index].link.lives}", 40, (255, 255, 255), screen_width / 2 + 30, screen_height / 2,
+    text(f"x{levels[active_level_index].link.lives}",
+         int(40 * scale),
+         (255, 255, 255),
+         screen_width / 2 + 30 * scale,
+         screen_height / 2,
          "fonts/pixel.ttf")
-    text(f"WORLD {get_current_level_name()}", 30, (255, 255, 255), screen_width / 2, 30, "fonts/pixel.ttf")
-    image("link/link_idle.png", screen_width / 2 - 40, screen_height / 2, 2, 40)
+    text(f"WORLD {get_current_level_name()}",
+         int(30 * scale),
+         (255, 255, 255),
+         screen_width / 2,
+         30 * scale,
+         "fonts/pixel.ttf")
+    image("link/link_idle.png", screen_width / 2 - 40 * scale, screen_height / 2, 2 * scale)
 
 
 # Get next level index

@@ -1,5 +1,6 @@
 import math
 from GameObject.Monster.monster import Monster
+from Support.settings import scale
 from jorcademy import *
 
 
@@ -11,9 +12,9 @@ class EnemyFireBall(Monster):
         self.visible = False
         self.owner = owner
         self.sprite = "fire_mario/fireball.png"
-        self.speed = 5
-        self.amplitude = 5
-        self.frequency = 0.1
+        self.speed = 5 * scale
+        self.amplitude = 5 * scale
+        self.frequency = 0.1 * scale
         self.player = player
         self.shooting_direction = shooting_direction
 
@@ -21,7 +22,7 @@ class EnemyFireBall(Monster):
         self.x += self.shooting_direction.x * self.speed
 
         # Calculate the sine wave movement
-        sine_wave = math.sin(2 * math.pi * self.frequency * self.timer)
+        sine_wave = math.sin(2 * scale * math.pi * self.frequency * self.timer)
 
         # Update the y position using the sine wave formula with amplitude
         self.y += self.amplitude * sine_wave
@@ -48,4 +49,4 @@ class EnemyFireBall(Monster):
             self.killed = True
 
     def draw(self):
-        image(self.sprite, self.x, self.y, 0.16, False, 0)
+        image(self.sprite, self.x, self.y, 0.16 * scale, False, 0)

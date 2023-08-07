@@ -1,5 +1,6 @@
 import math
 from GameObject.gameobject import GameObject
+from Support.settings import scale
 from jorcademy import *
 
 
@@ -10,14 +11,14 @@ class FireBall(GameObject):
         self.visible = False
         self.player = player
         self.sprite = "fire_mario/fireball.png"
-        self.speed = 5
-        self.amplitude = 5
-        self.frequency = 0.1
+        self.speed = 5 * scale
+        self.amplitude = 5 * scale
+        self.frequency = 0.1 * scale
 
     def attack(self):
         if not self.visible:
-            self.x = self.player.x + 30
-            self.y = self.player.y + 10
+            self.x = self.player.x + 30 * scale
+            self.y = self.player.y + 10 * scale
             self.visible = True
 
             # Determine whether fireball should move left or right
@@ -73,4 +74,4 @@ class FireBall(GameObject):
 
     def draw(self):
         if self.visible:
-            image(self.sprite, self.x, self.y, 0.16, False, 0)
+            image(self.sprite, self.x, self.y, 0.16 * scale, False, 0)

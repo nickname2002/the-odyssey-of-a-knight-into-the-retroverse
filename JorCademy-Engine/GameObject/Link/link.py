@@ -1,5 +1,5 @@
 from GameObject.gameobject import GameObject
-from Support.settings import screen_width, screen_height
+from Support.settings import screen_width, screen_height, scale
 from GameObject.Link.fire_mario import FireMario
 from GameObject.Link.pac_man import PacMan
 from GameObject.Link.Weapons.master_sword import MasterSword
@@ -35,20 +35,20 @@ class Link(GameObject):
         self.score = 0
         self.lives = 3
         self.coins = 0  # NOTE: maybe change coins into rupees
-        self.orig_speed = 4
-        self.speed = 4
+        self.orig_speed = 4 * scale
+        self.speed = 4 * scale
         self.facing_left = False
-        self.jump_speed = -15
+        self.jump_speed = -15 * scale
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE
-        self.representation = LINK  # TODO: change for debugging other representation's behavior
+        self.representation = LINK
         self.attack_cooldown = 50
         self.active_cooldown = 0
-        self.master_sword = MasterSword((self.x, self.y), 45, 33, self)
+        self.master_sword = MasterSword((self.x, self.y), 45 * scale, 33 * scale, self)
         self.visible = True
-        self.fire_mario = FireMario((self.x, self.y), 32, 64, self)
-        self.pac_man = PacMan((self.x, self.y), 48, 48, self)
+        self.fire_mario = FireMario((self.x, self.y), 32 * scale, 64 * scale, self)
+        self.pac_man = PacMan((self.x, self.y), 48 * scale, 48 * scale, self)
         self.representation_change_timer = 0
         self.representation_change_delay = 1000
         self.killed = False
@@ -213,7 +213,7 @@ class Link(GameObject):
     def activate_main_representation(self):
         self.jump(self.jump_speed)
         self.representation = LINK
-        self.height = 64
+        self.height = 64 * scale
         self.representation_change_timer = 0
 
         # Disable other representations
@@ -257,7 +257,7 @@ class Link(GameObject):
 
         # Only draw when visible
         if self.visible:
-            image(sprite, self.x, self.y, 1.28, self.facing_left)
+            image(sprite, self.x, self.y, 1.28 * scale, self.facing_left)
             self.master_sword.draw()
 
         # Draw alternative representations
@@ -271,12 +271,14 @@ class Link(GameObject):
             self.killed = True
 
     def soft_reset(self):
+        self.speed = self.orig_speed
         self.x = 100
         self.y = screen_height / 2
         self.killed = False
         self.activate_main_representation()
 
     def hard_reset(self):
+        self.speed = self.orig_speed
         self.lives = 3
         self.killed = False
         self.coins = 0

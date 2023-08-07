@@ -1,6 +1,6 @@
 from Loot.loot import Loot
 from jorcademy import *
-from Support.settings import tile_size
+from Support.settings import tile_size, scale
 
 
 class ExtraLife(Loot):
@@ -9,7 +9,7 @@ class ExtraLife(Loot):
         super().__init__(size, pos, surface, code, player, index)
         self.message = "+1 UP"
         self.moving = False
-        self.speed = 2
+        self.speed = 2 * scale
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -37,7 +37,7 @@ class ExtraLife(Loot):
 
     def draw(self, shift_x):
         if self.moving:
-            image("power_ups/1up.png", self.x, self.y, 0.129)
+            image("power_ups/1up.png", self.x, self.y, 0.129 * scale)
         else:
             self.make_image("assets/power_ups/1up.png")
             super().draw(shift_x)

@@ -1,5 +1,5 @@
 from GameObject.gameobject import GameObject
-from Support.settings import screen_width, screen_height
+from Support.settings import screen_width, screen_height, scale
 from GameObject.Link.Weapons.fireball import FireBall
 from jorcademy import *
 
@@ -34,7 +34,7 @@ class FireMario(GameObject):
         self.attack_cooldown = 20
         self.active_cooldown = 0
         self.fireball_thrown = False
-        self.fireball = FireBall((self.x, self.y), 16, 16, self.player)
+        self.fireball = FireBall((self.x, self.y), 16 * scale, 16 * scale, self.player)
 
     def handle_movement(self, cam_pos, level_length):
         if self.active_cooldown > 0:
@@ -136,7 +136,7 @@ class FireMario(GameObject):
         sprite = self.sprites[self.state]
 
         if self.visible:
-            image(sprite, self.x, self.y, 2, self.facing_left)
+            image(sprite, self.x, self.y, 2 * scale, self.facing_left)
 
         # Draw linked objects
         self.fireball.draw()

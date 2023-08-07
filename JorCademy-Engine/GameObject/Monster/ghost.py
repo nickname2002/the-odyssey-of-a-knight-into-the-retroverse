@@ -1,4 +1,5 @@
 from GameObject.Monster.monster import Monster
+from Support.settings import scale
 from jorcademy import *
 import pygame
 import math
@@ -23,10 +24,10 @@ class Ghost(Monster):
             "monsters/ghost/ghost_vertical.png",
             "monsters/ghost/ghost_vulnerable.png"
         ]
-        self.speed = 1.5
+        self.speed = 1.5 * scale
         self.direction = pygame.Vector2(-self.speed, 0)
-        self.amplitude = 1
-        self.frequency = 1
+        self.amplitude = 1 * scale
+        self.frequency = 1 * scale
 
     def handle_collision_with_player(self, level):
         fireball = self.player.fire_mario.fireball
@@ -107,6 +108,6 @@ class Ghost(Monster):
     def draw(self):
         # Make sure the monster is drawn facing the right direction
         if self.direction.x > 0:
-            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 1)
+            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 1 * scale)
         else:
-            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 1, True)
+            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 1 * scale, True)

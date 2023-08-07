@@ -1,5 +1,5 @@
 from GameObject.Monster.monster import Monster
-import pygame
+from Support.settings import scale
 from jorcademy import *
 
 
@@ -61,9 +61,9 @@ class Bokoblin(Monster):
 
         # Make sure the monster is drawn facing the right direction
         if self.direction.x > 0:
-            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3)
+            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3 * scale)
         else:
-            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3, True)
+            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3 * scale, True)
 
     def update_sprite_state(self):
         if self.sel_sprite_index < len(self.sprite_set) - 1:

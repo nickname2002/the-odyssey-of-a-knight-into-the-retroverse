@@ -1,5 +1,6 @@
 from GameObject.Monster.monster import Monster
 from GameObject.Monster.Weapons.enemy_fireball import EnemyFireBall
+from Support.settings import scale
 from jorcademy import *
 import random
 
@@ -35,7 +36,7 @@ class Ganondorf(Monster):
             "monsters/ganondorf/ganondorf_long_attack.png"
         ]
         self.state = IDLE
-        self.speed = 1
+        self.speed = 1 * scale
         self.health = 10
 
         # Idle delay
@@ -50,7 +51,7 @@ class Ganondorf(Monster):
 
         # Short range attack
         self.short_range_attack_activated = False
-        self.short_range_attack_speed = 3
+        self.short_range_attack_speed = 3 * scale
         self.short_range_attack_timer = 0
         self.short_range_attack_delay = 50
         self.short_range_attack_activation_distance = 200
@@ -59,7 +60,7 @@ class Ganondorf(Monster):
 
         # Long range attack
         self.long_range_attack_activated = False
-        self.long_range_attack_speed = 3
+        self.long_range_attack_speed = 3 * scale
         self.long_range_attack_timer = 0
         self.long_range_attack_delay = 50
         self.long_range_attack_activation_distance = 200
@@ -302,4 +303,4 @@ class Ganondorf(Monster):
 
     def draw(self):
         # Make sure the monster is drawn facing the right direction
-        image(self.sprite_set[self.state], self.x, self.y, 1.5, self.player.x >= self.x)
+        image(self.sprite_set[self.state], self.x, self.y, 1.5 * scale, self.player.x >= self.x)

@@ -1,5 +1,5 @@
 from Loot.loot import Loot
-from Support.settings import tile_size, screen_width, screen_height
+from Support.settings import tile_size, screen_width, screen_height, scale
 from jorcademy import *
 from Level.chunk import Chunk
 from Level.triforce import Triforce
@@ -26,7 +26,7 @@ class Level:
         self.screen = None
         self.level_name = level_name
         self.cam_pos = 0
-        self.link = Link((100, screen_height / 2), 32, 64)
+        self.link = Link((100, screen_height / 2), 32 * scale, 64 * scale)
         self.backdrop_color = level_backdrop_color
         self.end_game_triforce = None
         self.chunk_amount = chunk_amount
@@ -75,7 +75,7 @@ class Level:
         # Initialize end of game
         elif tile == END_OF_GAME:
             # Make end-of-game
-            self.end_game_triforce = Triforce((pos[0], 230), 481, 371, self.link)
+            self.end_game_triforce = Triforce((pos[0], 230 * scale), 481 * scale, 371 * scale, self.link)
 
             # Make sky tile
             sel_tile = tile_set[int(self.get_right_sky_tile())]
@@ -171,11 +171,11 @@ class Level:
         if tile_code == BOKOBLIN:
             chunk.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5, self.link, self, chunk))
         elif tile_code == GHOST:
-            chunk.monsters.append(Ghost(pos, 48, 48, self.link, self, chunk))
+            chunk.monsters.append(Ghost(pos, 48 * scale, 48 * scale, self.link, self, chunk))
         elif tile_code == DONKEY_KONG:
-            chunk.monsters.append(DonkeyKong(pos, 46 * 3, 32 * 3, self.link, self, chunk))
+            chunk.monsters.append(DonkeyKong(pos, 46 * 3 * scale, 32 * 3 * scale, self.link, self, chunk))
         elif tile_code == GANONDORF:
-            chunk.monsters.append(Ganondorf(pos, 46 * 1.5, 65 * 1.5, self.link, self, chunk))
+            chunk.monsters.append(Ganondorf(pos, 46 * 1.5 * scale, 65 * 1.5 * scale, self.link, self, chunk))
 
     # Make loot object to be added to the world
     def init_loot(self, loot_code, tile_set, pos, tile_index):
@@ -290,24 +290,24 @@ class Level:
 
         # Coin amount
         text(f"COINS: {str(self.link.coins)}",
-             25,
+             int(scale * 25),
              (255, 255, 255),
-             100,
-             25,
+             (100 * scale),
+             (25 * scale),
              "fonts/pixel.ttf")
 
         # Lives amount
         text(f"LIVES: {str(self.link.lives)}",
-             25,
+             int(scale * 25),
              (255, 255, 255),
-             screen_width / 2 + 10,
-             25,
+             screen_width / 2 + 10 * scale,
+             25 * scale,
              "fonts/pixel.ttf")
 
         # World number
         text(f"WORLD: {str(self.level_name)}",
-             25,
+             int(scale * 25),
              (255, 255, 255),
-             screen_width / 2 + 300,
-             25,
+             screen_width / 2 + 300 * scale,
+             25 * scale,
              "fonts/pixel.ttf")

@@ -1,5 +1,5 @@
 from jorcademy import text
-from Support.settings import tile_size
+from Support.settings import tile_size, scale
 
 
 class TextAnomaly:
@@ -13,7 +13,7 @@ class TextAnomaly:
         self.visible = True
         self.size = size
         self.color = color
-        self.speed = 0.5
+        self.speed = 0.5 * scale
 
     def update(self):
         if self.timer % self.disappear_delay == 0:
@@ -25,7 +25,7 @@ class TextAnomaly:
     def draw(self):
         if self.visible:
             text(str(self.content),
-                 self.size,
+                 int(self.size * scale),
                  self.color,
                  self.x,
                  self.y - tile_size,

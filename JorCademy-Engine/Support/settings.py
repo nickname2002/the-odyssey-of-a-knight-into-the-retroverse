@@ -1,6 +1,8 @@
+scale = 1
+
 # Tile properties
-tile_size = 32
+tile_size = int(32 * scale)
 
 # Screen properties
-screen_width = 800
+screen_width = int(800 * scale)
 screen_height = tile_size * 16

@@ -1,5 +1,5 @@
 from Level.triforce import Triforce
-from Support.settings import screen_width, screen_height
+from Support.settings import screen_width, screen_height, scale
 from jorcademy import *
 
 
@@ -26,5 +26,5 @@ class TriforceKey(Triforce):
         self.y += self.speed
 
     def draw(self):
-        image(self.sprite, self.x, self.y, 0.25, False, 0)
+        image(self.sprite, self.x, self.y, 0.25 * scale, False, 0)
 

@@ -1,7 +1,7 @@
 from GameObject.gameobject import GameObject
 from Level.level import Level
 from Level.triforce_key import TriforceKey
-from Support.settings import screen_width, screen_height, tile_size
+from Support.settings import screen_width, screen_height, tile_size, scale
 from jorcademy import *
 
 
@@ -11,11 +11,11 @@ class EndScene(Level):
         super().__init__(level_name, chunk_amount, level_backdrop_color)
         self.subtitles_shown = False
         self.zelda = GameObject(
-            (screen_width / 2 + 100, screen_height - tile_size * 2 - 97 * 0.7 / 2),
-            46 * 0.7,
-            97 * 0.7)
+            (screen_width / 2 + 100 * scale, screen_height - tile_size * 2 - 97 * 0.7 / 2 * scale),
+            46 * 0.7 * scale,
+            97 * 0.7 * scale)
         self.end_reached = False
-        self.heart = GameObject((screen_width / 2, 0 - 50), 50, 50)
+        self.heart = GameObject((screen_width / 2, 0 - 50 * scale), 50 * scale, 50 * scale)
 
         # Transition to subtitles
         self.to_subtitles_delay = 200
@@ -34,17 +34,17 @@ class EndScene(Level):
 
     def setup(self, game_screen):
         super().setup(game_screen)
-        self.end_game_triforce = TriforceKey((screen_width / 2, 0), 50, 50, self.link)
+        self.end_game_triforce = TriforceKey((screen_width / 2, 0), 50 * scale, 50 * scale, self.link)
         self.link.at_game_end = True
 
     def reset(self):
         super().reset()
         self.zelda = GameObject(
-            (screen_width / 2 + 100, screen_height - tile_size * 2 - 97 * 0.7 / 2),
-            46 * 0.7,
-            97 * 0.7)
+            (screen_width / 2 + 100 * scale, screen_height - tile_size * 2 - 97 * 0.7 / 2 * scale),
+            46 * 0.7 * scale,
+            97 * 0.7 * scale)
         self.heart = GameObject((screen_width / 2, 0 - 50), 50, 50)
-        self.link.speed = 4
+        self.link.speed = 4 * scale
         self.subtitles_shown = False
         self.end_reached = False
         self.to_subtitles_timer = 0
@@ -58,24 +58,24 @@ class EndScene(Level):
 
     # Make sure the player doesn't move too far to the right
     def stop_moving_link_when_needed(self):
-        if self.link.x >= screen_width / 2 - 100:
+        if self.link.x >= screen_width / 2 - 100 * scale:
             self.link.speed = 0
             self.end_reached = True
 
     def move_world_down(self):
         # Move sprites
-        self.link.y += 2
-        self.zelda.y += 2
-        self.heart.y += 2
+        self.link.y += 2 * scale
+        self.zelda.y += 2 * scale
+        self.heart.y += 2 * scale
 
         # Move tiles
         for chunk in self.chunks:
             for tile in chunk.tiles:
-                tile.y += 2
+                tile.y += 2 * scale
 
     def show_heart(self):
         if self.heart.y <= screen_height / 2:
-            self.heart.y += 3
+            self.heart.y += 3 * scale
         else:
             self.to_subtitles_timer += 1
 
@@ -89,7 +89,7 @@ class EndScene(Level):
 
         # Show correct subtitle
         text(subtitles[self.subtitles_index],
-             25,
+             int(scale * 25),
              (255, 255, 255),
              screen_width / 2,
              screen_height / 2,
@@ -145,11 +145,11 @@ class EndScene(Level):
         self.link.draw()
 
         # Zelda
-        image("zelda/zelda.png", self.zelda.x, self.zelda.y, 0.7, True, 0)
+        image("zelda/zelda.png", self.zelda.x, self.zelda.y, 0.7 * scale, True, 0)
 
         # Heart
         if self.end_reached:
-            image("other/heart.png", self.heart.x, self.heart.y, 0.2, True, 0)
+            image("other/heart.png", self.heart.x, self.heart.y, 0.2 * scale, True, 0)
 
         # Draw necessary tiles
         chunks_to_draw = self.get_chunks_in_range()
@@ -158,24 +158,24 @@ class EndScene(Level):
 
         # Coin amount
         text(f"COINS: {str(self.link.coins)}",
-             25,
+             int(scale * 25),
              (255, 255, 255),
-             100,
-             25,
+             100 * scale,
+             25 * scale,
              "fonts/pixel.ttf")
 
         # Lives amount
         text(f"LIVES: {str(self.link.lives)}",
-             25,
+             int(scale * 25),
              (255, 255, 255),
              screen_width / 2,
-             25,
+             25 * scale,
              "fonts/pixel.ttf")
 
         # World number
         text(f"WORLD: {str(self.level_name)}",
-             25,
+             int(scale * 25),
              (255, 255, 255),
-             screen_width / 2 + 300,
-             25,
+             screen_width / 2 + 300 * scale,
+             25 * scale,
              "fonts/pixel.ttf")
