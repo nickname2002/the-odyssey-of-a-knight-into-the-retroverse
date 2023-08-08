@@ -1,5 +1,6 @@
 from GameObject.Monster.monster import Monster
 from Support.settings import scale
+from Level.Tiles.tile_data import *
 from jorcademy import *
 
 

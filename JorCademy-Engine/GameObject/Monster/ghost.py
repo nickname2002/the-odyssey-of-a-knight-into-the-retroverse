@@ -31,14 +31,8 @@ class Ghost(Monster):
         self.eaten_sound = load_sound("sounds/eat_pac_man.mp3")
 
     def handle_collision_with_player(self, level):
-        fireball = self.player.fire_mario.fireball
-
-        # Check if fireball is visible and if it collides with the monster
-        if fireball.visible:
-            fireball.visible = False
-
         # Process player damage & damage from player
-        elif self.collision(self.player):
+        if self.collision(self.player):
             if self.player.representation == PAC_MAN:
                 play_sound(self.eaten_sound, 0.3)
                 self.health -= 1
