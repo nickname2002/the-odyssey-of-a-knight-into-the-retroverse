@@ -16,6 +16,7 @@ SHORT_RANGE_ATTACK_1 = 7
 SHORT_RANGE_ATTACK_2 = 8
 SHORT_RANGE_ATTACK_3 = 9
 LONG_RANGE_ATTACK = 10
+DEAD = 11
 
 
 class Ganondorf(Monster):
@@ -33,8 +34,10 @@ class Ganondorf(Monster):
             "monsters/ganondorf/ganondorf_short_attack_1.png",
             "monsters/ganondorf/ganondorf_short_attack_2.png",
             "monsters/ganondorf/ganondorf_short_attack_3.png",
-            "monsters/ganondorf/ganondorf_long_attack.png"
+            "monsters/ganondorf/ganondorf_long_attack.png",
+            "monsters/ganondorf/ganondorf_long_attack.png"  # TODO: add sprite for 'dead' state
         ]
+        self.die_state_index = DEAD
         self.state = IDLE
         self.speed = 1 * scale
         self.health = 20
@@ -81,6 +84,10 @@ class Ganondorf(Monster):
         self.audio_played = False
 
     def update_sprite_state(self):
+        # Dead
+        if self.killed:
+            self.show_die_animation()
+            return
 
         # Idle
         if self.state == IDLE:
@@ -180,6 +187,10 @@ class Ganondorf(Monster):
 
     def handle_movement(self, cam_pos, level_length):
         super().handle_movement(cam_pos, level_length)
+
+        # Stop monster action when it is killed
+        if self.killed:
+            return
 
         # Perform short range attack if needed
         if self.get_distance_from_player() < self.short_range_attack_activation_distance and \

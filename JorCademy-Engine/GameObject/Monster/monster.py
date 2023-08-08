@@ -14,7 +14,7 @@ class Monster(GameObject):
         self.sprite_set = []
         self.timer = 0
         self.walk_animation_delay = 10
-        self.sel_sprite_index = 0
+        self.state = 0
         self.offset = 0
         self.moving = False
         self.player = player
@@ -23,6 +23,11 @@ class Monster(GameObject):
         self.killed = False
         self.loot = 20
         self.health = 1
+
+        # Die animation
+        self.die_animation_delay = 80
+        self.die_animation_timer = 0
+        self.die_state_index = 0
 
         # Jump delay
         self.jump_timer = 0
@@ -47,6 +52,14 @@ class Monster(GameObject):
             return \
                 self.x < 0 - self.width and \
                 (self.y < 0 - self.width or self.y > screen_height + self.height)
+
+    def ready_to_remove(self):
+        return self.is_out_of_frame() or \
+            self.die_animation_timer >= self.die_animation_delay
+
+    def show_die_animation(self):
+        self.die_animation_timer += 1
+        self.state = self.die_state_index
 
     def make_text_anomaly(self):
         anomaly_pos = (self.level.link.x, self.y - tile_size)
@@ -83,13 +96,12 @@ class Monster(GameObject):
                 self.invincible_timer = self.invincible_delay
                 self.health -= 1
 
-            # Make player jump when landing on top of monster
-            self.player.is_grounded = True
-            self.player.jump(self.player.jump_speed + 4, True)
+                # Make player jump when landing on top of monster
+                self.player.is_grounded = True
+                self.player.jump(self.player.jump_speed + 4, True)
 
         # Process player damage
-        elif self.collision(self.player):
-            print(True)
+        elif self.collision(self.player) and not self.killed:
             if not self.player.killed:
                 self.player.die(level)
 
@@ -118,7 +130,9 @@ class Monster(GameObject):
         self.offset += self.direction.x * self.speed
 
     def update(self, cam_pos, level_length):
-        super().update(cam_pos, level_length)
+        if not self.killed:
+            super().update(cam_pos, level_length)
+
         self.correct_position_with_camera(cam_pos)
         self.timer += 1
 

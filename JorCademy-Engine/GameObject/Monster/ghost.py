@@ -22,8 +22,10 @@ class Ghost(Monster):
         self.sprite_set = [
             "monsters/ghost/ghost_horizontal.png",
             "monsters/ghost/ghost_vertical.png",
-            "monsters/ghost/ghost_vulnerable.png"
+            "monsters/ghost/ghost_vulnerable.png",
+            "monsters/ghost/ghost_vulnerable.png"  # TODO: add sprite for 'dead' state
         ]
+        self.die_state_index = 3
         self.speed = 1.5 * scale
         self.direction = pygame.Vector2(-self.speed, 0)
         self.amplitude = 1 * scale
@@ -88,14 +90,18 @@ class Ghost(Monster):
             self.y += self.amplitude * sine_wave
 
     def determine_sel_sprite_index(self):
-        self.sel_sprite_index = NOT_VULNERABLE_HORIZONTAL
+        if self.killed:
+            self.show_die_animation()
+            return
+
+        self.state = NOT_VULNERABLE_HORIZONTAL
 
         if self.player.representation == PAC_MAN:
-            self.sel_sprite_index = VULNERABLE
+            self.state = VULNERABLE
         elif self.player.y < (self.y - self.height / 2) and \
                 self.player.x + self.player.width / 2 > self.x - self.width / 2 and \
                 self.player.x - self.player.width / 2 < self.x + self.width / 2:
-            self.sel_sprite_index = NOT_VULNERABLE_VERTICAL
+            self.state = NOT_VULNERABLE_VERTICAL
 
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
@@ -104,6 +110,6 @@ class Ghost(Monster):
     def draw(self):
         # Make sure the monster is drawn facing the right direction
         if self.direction.x > 0:
-            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 1 * scale)
+            image(self.sprite_set[self.state], self.x, self.y, 1 * scale)
         else:
-            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 1 * scale, True)
+            image(self.sprite_set[self.state], self.x, self.y, 1 * scale, True)

@@ -18,8 +18,10 @@ class DonkeyKong(Monster):
             "monsters/donkey_kong/donkey_idle_1.png",
             "monsters/donkey_kong/donkey_idle_2.png",
             "monsters/donkey_kong/donkey_throw.png",
+            "monsters/donkey_kong/donkey_throw.png"  # TODO: add sprite for 'dead' state
         ]
         self.state = IDLE_1
+        self.die_state_index = 3
         self.speed = 1 * scale
         self.health = 3
         self.direction = pygame.Vector2(-self.speed, 0)
@@ -96,6 +98,10 @@ class DonkeyKong(Monster):
         super().update(cam_pos, level_length)
         self.handle_movement(cam_pos, level_length)
 
+        # Stop monster action when dead
+        if self.killed():
+            return
+
         # Make the monster jump when the timer is up
         if self.is_grounded and self.jump_timer >= self.random_jump_delay:
             self.jump(self.jump_speed)
@@ -120,6 +126,10 @@ class DonkeyKong(Monster):
         image(self.sprite_set[self.state], self.x, self.y, 3 * scale, self.player.x >= self.x)
 
     def update_sprite_state(self):
+        if self.killed:
+            self.show_die_animation()
+            return
+
         if self.state != ATTACK:
             if self.state < IDLE_2:
                 self.state += 1

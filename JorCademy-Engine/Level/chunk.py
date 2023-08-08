@@ -24,9 +24,11 @@ class Chunk:
 
     def update_monsters(self, cam_pos, level_length):
         for monster in self.monsters:
-            if monster.is_out_of_frame() or monster.killed:
+            if monster.ready_to_remove():
+                print("Removing monster")
                 self.monsters.remove(monster)
-            monster.update(cam_pos, level_length)
+            else:
+                monster.update(cam_pos, level_length)
 
     def update_tiles(self, cam_pos):
         for tile in self.tiles:

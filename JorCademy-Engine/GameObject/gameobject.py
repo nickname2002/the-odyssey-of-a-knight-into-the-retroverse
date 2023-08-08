@@ -18,6 +18,7 @@ class GameObject:
         self.walk_animation_delay = 5
         self.timer = 0
         self.visible = False
+        self.state = 0
 
         # Speed
         self.jump_speed = -10 * scale

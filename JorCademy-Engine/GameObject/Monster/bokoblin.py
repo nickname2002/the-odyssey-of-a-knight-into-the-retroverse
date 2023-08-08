@@ -11,11 +11,12 @@ class Bokoblin(Monster):
         super().__init__(pos, w, h, player, level, chunk)
         self.sprite_set = [
             "monsters/bokoblin/bokoblin_1.png",
-            "monsters/bokoblin/bokoblin_2.png"
+            "monsters/bokoblin/bokoblin_2.png",
+            "monsters/bokoblin/bokoblin_2.png"  # TODO: add sprite for 'dead' state
         ]
         self.speed = 1
         self.direction = pygame.Vector2(-self.speed, 0)
-
+        self.die_state_index = 2
 
     def handle_collision(self, tile, _, level):
         # Handle collision on left side of monster
@@ -58,17 +59,22 @@ class Bokoblin(Monster):
             self.offset += self.direction.x * self.speed
 
     def draw(self):
-        if self.timer % self.walk_animation_delay == 0:
-            self.update_sprite_state()
+        self.update_sprite_state()
 
         # Make sure the monster is drawn facing the right direction
         if self.direction.x > 0:
-            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3 * scale)
+            image(self.sprite_set[self.state], self.x, self.y, 3 * scale)
         else:
-            image(self.sprite_set[self.sel_sprite_index], self.x, self.y, 3 * scale, True)
+            image(self.sprite_set[self.state], self.x, self.y, 3 * scale, True)
 
     def update_sprite_state(self):
-        if self.sel_sprite_index < len(self.sprite_set) - 1:
-            self.sel_sprite_index += 1
-        else:
-            self.sel_sprite_index = 0
+        if self.killed:
+            self.show_die_animation()
+            return
+
+        # Update walking animation
+        if self.timer % self.walk_animation_delay == 0:
+            if self.state < len(self.sprite_set) - 1:
+                self.state += 1
+            else:
+                self.state = 0
