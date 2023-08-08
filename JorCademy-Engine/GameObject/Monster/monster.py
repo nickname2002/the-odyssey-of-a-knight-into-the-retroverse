@@ -18,10 +18,10 @@ class Monster(GameObject):
         self.offset = 0
         self.moving = False
         self.player = player
-        self.message = "+20 SCORE"
+        self.message = "+20 COINS"
         self.level = level
         self.killed = False
-        self.loot = 100
+        self.loot = 20
         self.health = 1
 
         # Jump delay

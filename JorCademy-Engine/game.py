@@ -177,7 +177,6 @@ def get_next_level_index() -> int:
 def activate_next_level() -> None:
     global active_level_index
     global last_recorded_score
-    last_recorded_score = levels[active_level_index].link.coins
     stored_link = levels[active_level_index].link
     active_level_index = get_next_level_index()
     levels[active_level_index].init_link(stored_link)
@@ -197,13 +196,14 @@ def update() -> None:
         game_paused, \
         pause_timer, \
         transitioning_from_main_menu, \
-        show_main_menu
+        show_main_menu, \
+        last_recorded_score
+
+    last_recorded_score = levels[active_level_index].link.coins
 
     if show_main_menu:
         show_main_menu_screen()
         return
-
-    print(levels[active_level_index].link.coins)
 
     # Check if game is over
     if levels[active_level_index].link.lives == 0:

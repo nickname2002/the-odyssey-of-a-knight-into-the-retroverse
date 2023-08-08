@@ -1,9 +1,10 @@
+from Environment.text_anomaly import TextAnomaly
 from GameObject.Link.Weapons.master_sword import MasterSword
 from GameObject.Link.fire_mario import FireMario
 from GameObject.Link.pac_man import PacMan
 from GameObject.gameobject import GameObject
 from Level.Tiles.tile_data import *
-from Support.settings import screen_width, screen_height, scale
+from Support.settings import screen_width, screen_height, scale, tile_size
 from jorcademy import *
 
 # States for Link
@@ -70,6 +71,7 @@ class Link(GameObject):
             'link/link_jumping.png'
         ]
         self.jump_sound = load_sound('assets/sounds/jump.ogg')
+        self.one_up_sound = load_sound("assets/sounds/1_up.wav")
 
     def handle_collision(self, tile, index, level):
         # Handle collision on left side of object
@@ -208,13 +210,29 @@ class Link(GameObject):
         elif self.direction.x > 0:
             self.direction.x -= 0.1
 
-    def update(self, cam_pos, level_length, at_level_end=False):
-        self.handle_movement(cam_pos, level_length, at_level_end)
+    def make_text_anomaly(self, level, message):
+        anomaly_pos = (self.x, self.y - tile_size)
+        new_text_anomaly = TextAnomaly(anomaly_pos, message, 20, (255, 255, 255))
+        level.get_current_chunk().update_text_anomalies(new_text_anomaly)
+
+    def handle_1up_with_coins(self, level):
+        if self.coins + self.coins_earned_current_level >= 2500:
+            self.coins = 0
+            self.coins_earned_current_level = 0
+            self.lives += 1
+            self.make_text_anomaly(level, "+1 UP")
+            play_sound(self.one_up_sound, 0.5)
+
+    def update(self, cam_pos, level, at_level_end=False):
+        self.handle_movement(cam_pos, level.level_length, at_level_end)
         self.change_velocity()
 
         # Die when out of screen
         if self.y > screen_height:
             self.die()
+
+        # Update lives with respect to coins
+        self.handle_1up_with_coins(level)
 
         # Start attack
         if is_key_down("shift") and self.is_grounded:
@@ -225,12 +243,12 @@ class Link(GameObject):
             self.active_cooldown -= 1
 
         # Update state of linked objects
-        self.fire_mario.update(cam_pos, level_length)
-        self.pac_man.update(cam_pos, level_length)
-        self.master_sword.update(cam_pos, level_length)
+        self.fire_mario.update(cam_pos, level.level_length)
+        self.pac_man.update(cam_pos, level.level_length)
+        self.master_sword.update(cam_pos, level.level_length)
 
     def activate_main_representation(self):
-        self.jump(self.jump_speed)
+        self.jump(self.jump_speed / 2)
         self.representation = LINK
         self.height = 64 * scale
         self.representation_change_timer = 0
@@ -246,6 +264,7 @@ class Link(GameObject):
         # Activate alt representation
         if representation == FIRE_MARIO:
             self.fire_mario.visible = True
+            self.height = self.fire_mario.height
             self.pac_man.visible = False
         elif representation == PAC_MAN:
             self.height = self.pac_man.height
@@ -262,12 +281,19 @@ class Link(GameObject):
             self.representation_change_timer = 0
             self.visible = True
         elif self.representation == FIRE_MARIO:
+            self.reset_representation_timer(self.fire_mario)
             self.activate_alt_representation(FIRE_MARIO)
         elif self.representation == PAC_MAN:
+            self.reset_representation_timer(self.pac_man)
             self.activate_alt_representation(PAC_MAN)
         else:
             self.visible = True
             self.representation_change_timer += 1
+
+    def reset_representation_timer(self, representation_object):
+        if not representation_object.visible:
+            self.jump(self.jump_speed / 2)
+            self.representation_change_timer = 0
 
     # Draw Link
     def draw(self):

@@ -9,8 +9,8 @@ class Coin(Loot):
         super().__init__(size, pos, surface, code, player, index)
         self.timer = 0
         self.disappear_delay = 20
-        self.message = "+200 COIN"
-        self.coins = 200
+        self.message = "+100 COINS"
+        self.coins = 100
         self.collect_sound = load_sound("assets/sounds/coin.mp3")
 
     def show(self, level):

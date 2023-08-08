@@ -6,8 +6,8 @@ class Cherry(Loot):
 
     def __init__(self, size, pos, surface, code, player, index):
         super().__init__(size, pos, surface, code, player, index)
-        self.message = "+1000 COINS"
-        self.coins = 1000
+        self.coins = 50
+        self.message = "+50 COINS"
         self.triggered_representation = "PAC_MAN"
         self.collect_sound = load_sound("assets/sounds/power_up.wav")
 

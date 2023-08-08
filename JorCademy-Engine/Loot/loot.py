@@ -13,9 +13,9 @@ class Loot(MovingTile):
         self.speed = 2
         self.player = player
         self.looted = False
-        self.message = "SAMPLE_MESSAGE"
         self.level = None
         self.coins = 0
+        self.message = "SAMPLE_MESSAGE"
         self.triggered_representation = "SAMPLE_TRIGGERED_REPRESENTATION"
 
     def show(self, level):
