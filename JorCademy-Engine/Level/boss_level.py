@@ -33,7 +33,7 @@ class BossLevel(Level):
 
     def reset(self):
         super().reset()
-        self.link.at_game_end = True
+        self.link.at_game_end = False
         self.end_game_triforce.moving_allowed = False
 
     def transition_requested(self):

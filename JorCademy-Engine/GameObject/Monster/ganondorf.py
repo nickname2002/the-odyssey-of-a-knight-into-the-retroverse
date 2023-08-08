@@ -37,7 +37,7 @@ class Ganondorf(Monster):
         ]
         self.state = IDLE
         self.speed = 1 * scale
-        self.health = 10
+        self.health = 20
 
         # Idle delay
         self.idle_timer = 0
@@ -310,8 +310,9 @@ class Ganondorf(Monster):
         self.direction.x = 0
 
         # Shoot fireball
-        self.chunk.monsters.append(
-            EnemyFireBall((self.x, self.y), 16, 16, self, self.player, self.get_direction()))
+        if len(self.chunk.monsters) < 10:
+            self.chunk.monsters.append(
+                EnemyFireBall((self.x, self.y), 16, 16, self, self.player, self.get_direction()))
 
         # Update timer
         self.long_range_attack_timer += 1

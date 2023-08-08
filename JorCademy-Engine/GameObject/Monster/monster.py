@@ -72,7 +72,7 @@ class Monster(GameObject):
                 play_sound(self.hit_by_player_sound, 0.5)
                 self.health -= 1
                 self.invincible_timer = self.invincible_delay
-                fireball.visible = False
+                fireball.killed = True
 
         # Process this object's damage
         if self.collision_top(self.player) and self.player.collision_bottom(self):
@@ -89,6 +89,7 @@ class Monster(GameObject):
 
         # Process player damage
         elif self.collision(self.player):
+            print(True)
             if not self.player.killed:
                 self.player.die(level)
 
