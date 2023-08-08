@@ -1,11 +1,10 @@
-from GameObject.gameobject import GameObject
-from Support.settings import screen_width, screen_height, scale
+from GameObject.Link.Weapons.master_sword import MasterSword
 from GameObject.Link.fire_mario import FireMario
 from GameObject.Link.pac_man import PacMan
-from GameObject.Link.Weapons.master_sword import MasterSword
+from GameObject.gameobject import GameObject
 from Level.Tiles.tile_data import *
+from Support.settings import screen_width, screen_height, scale
 from jorcademy import *
-import random
 
 # States for Link
 IDLE = 0
@@ -43,7 +42,7 @@ class Link(GameObject):
         self.is_grounded = False
         self.walk_animation_delay = 3
         self.state = IDLE
-        self.representation = LINK
+        self.representation = FIRE_MARIO
         self.attack_cooldown = 50
         self.active_cooldown = 0
         self.master_sword = MasterSword((self.x, self.y), 45 * scale, 33 * scale, self)

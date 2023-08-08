@@ -16,6 +16,7 @@ class FireMario(GameObject):
 
     def __init__(self, pos, w, h, player):
         super().__init__(pos, w, h)
+        self.MAX_FIREBALLS = 5
         self.player = player
         self.sprites = [
             'fire_mario/fire_mario_idle.png',
@@ -34,7 +35,8 @@ class FireMario(GameObject):
         self.attack_cooldown = 20
         self.active_cooldown = 0
         self.fireball_thrown = False
-        self.fireball = FireBall((self.x, self.y), 16 * scale, 16 * scale, self.player)
+        # self.fireball = FireBall((self.x, self.y), 16 * scale, 16 * scale, self.player)
+        self.fireballs = []
         self.fire_sound = load_sound('assets/sounds/fireball.wav')
         self.jump_sound = load_sound('assets/sounds/mario_jump.wav')
 
@@ -57,7 +59,8 @@ class FireMario(GameObject):
 
     def handle_collision(self, tile, index, level):
         if self.visible:
-            self.fireball.handle_collision(tile, index, level)
+            for fireball in self.fireballs:
+                fireball.handle_collision(tile, index, level)
 
     # Move right
     def move_right(self, cam_pos, level_length):
@@ -99,7 +102,11 @@ class FireMario(GameObject):
     def attack(self):
         if self.active_cooldown <= 0 and self.visible:
             self.state = ATTACK
-            self.fireball.attack()
+
+            # Create fireball
+            if len(self.fireballs) < self.MAX_FIREBALLS:
+                self.fireballs.append(FireBall((self.x, self.y), 16 * scale, 16 * scale, self.player))
+
             play_sound(self.fire_sound, 2)
             self.activate_attack_cooldown()
 
@@ -114,6 +121,12 @@ class FireMario(GameObject):
     # Update FireMario
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
+
+        # Update fireballs
+        for fireball in self.fireballs:
+            if fireball.killed:
+                self.fireballs.remove(fireball)
+            fireball.update(cam_pos, level_length)
 
         # Start attack
         if is_key_down("shift") and \
@@ -131,9 +144,6 @@ class FireMario(GameObject):
         self.x = self.player.x
         self.y = self.player.y
 
-        # Update linked objects
-        self.fireball.update(cam_pos, level_length)
-
     # Draw FireMario
     def draw(self):
         sprite = self.sprites[self.state]
@@ -142,4 +152,5 @@ class FireMario(GameObject):
             image(sprite, self.x, self.y, 2 * scale, self.facing_left)
 
         # Draw linked objects
-        self.fireball.draw()
+        for fireball in self.fireballs:
+            fireball.draw()

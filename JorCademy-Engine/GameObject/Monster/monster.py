@@ -64,11 +64,10 @@ class Monster(GameObject):
         self.killed = True
 
     def handle_collision_with_player(self, level):
-        fireball = self.player.fire_mario.fireball
         self.invincible_timer -= 1
 
         # Check if fireball is visible and if it collides with the monster
-        if fireball.visible:
+        for fireball in self.player.fire_mario.fireballs:
             if self.collision(fireball) and self.invincible_timer <= 0:
                 play_sound(self.hit_by_player_sound, 0.5)
                 self.health -= 1
