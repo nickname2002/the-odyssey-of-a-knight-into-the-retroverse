@@ -110,14 +110,17 @@ def image(url: str, x: float, y: float, scale: float, flipped=False, rotation=0)
 
 # Load new sound
 def load_sound(path: str):
-    sound: Audio = Audio(0, path)
+    sound = Exception
+    try:
+        sound = pygame.mixer.Sound(path)
+    except:
+        print("Error: Audio could not be loaded.")
     return sound
 
 
 # Play audio
-def play_sound(audio_obj: Audio, volume=1.0):
+def play_sound(sound, volume=1.0):
     try:
-        sound = pygame.mixer.Sound(audio_obj.filepath)
         sound.set_volume(volume)
         pygame.mixer.find_channel().play(sound)
     except:

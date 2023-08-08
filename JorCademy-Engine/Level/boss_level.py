@@ -6,13 +6,17 @@ from jorcademy import *
 
 class BossLevel(Level):
 
-    def __init__(self, level_name, chunk_amount, level_backdrop_color, boss_type):
+    def __init__(self, level_name, chunk_amount, level_music_path, level_backdrop_color, boss_type):
         super().__init__(level_name, chunk_amount, level_backdrop_color)
         self.end_game_triforce = None
         self.boss_type = boss_type
         self.boss = None
         self.die_sound_played = False
         self.boss_die_sound = load_sound("assets/sounds/ganondorf_die.mp3")
+
+        # Music
+        self.level_music = load_sound(level_music_path)
+        self.level_music_started = False
 
     def setup(self, game_screen):
         super().setup(game_screen)
@@ -36,6 +40,9 @@ class BossLevel(Level):
         return self.link.killed or self.end_game_triforce.reached
 
     def update(self):
+        # Stop music if game is over
+        if self.transition_requested():
+            self.level_music.stop(500)
 
         # Update chunks in range
         chunks_to_update = self.get_chunks_in_range()
@@ -43,7 +50,7 @@ class BossLevel(Level):
             chunk.update(self.cam_pos, self.level_length)
 
         # Update player
-        self.link.update(self.cam_pos, self.level_length, False)
+        self.link.update(self.cam_pos, self, False)
 
         # Update endgame triforce
         if self.boss.killed:
@@ -55,6 +62,11 @@ class BossLevel(Level):
 
             self.end_game_triforce.moving_allowed = True
         self.end_game_triforce.update(self.cam_pos, self.level_length)
+
+        # Play music
+        if not self.level_music.get_num_channels() > 0:
+            self.level_music.play(-1)
+            self.level_music.set_volume(0.25)
 
         # Collision
         self.handle_collision()

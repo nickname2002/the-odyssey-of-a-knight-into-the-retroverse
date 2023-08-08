@@ -19,7 +19,7 @@ from Level.Tiles.tile_data import *
 
 class Level:
 
-    def __init__(self, level_name, chunk_amount, level_backdrop_color=(0, 0, 0)):
+    def __init__(self, level_name, chunk_amount, level_music_path, level_backdrop_color=(0, 0, 0)):
         # Properties
         self.level_length = None
         self.level_data = None
@@ -34,6 +34,10 @@ class Level:
 
         # Collections
         self.chunks = []
+
+        # Music
+        self.level_music = load_sound(level_music_path)
+        self.level_music_started = False
 
     def get_right_sky_tile(self):
         if self.backdrop_color == (0, 0, 0):
@@ -250,6 +254,10 @@ class Level:
 
     # Update the state of the level
     def update(self):
+        # Stop music if game is over
+        if self.transition_requested():
+            self.level_music.stop(500)
+
         if self.end_game_triforce.reached:
             self.reset()
 
@@ -266,6 +274,15 @@ class Level:
 
         # Other
         self.end_game_triforce.update(self.cam_pos, self.level_length)
+
+        # Play music
+        if not self.level_music.get_num_channels() > 0:
+            self.level_music.play(-1)
+            self.level_music.set_volume(0.25)
+
+        # Fade out music when transition is requested
+        if self.transition_requested():
+            self.level_music.fadeout(500)
 
         # Collision
         self.handle_collision()

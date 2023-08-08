@@ -9,12 +9,12 @@ from Level.boss_level import BossLevel
 # Levels
 active_level_index = 0
 levels = [
-    Level("1_1", 10, (147, 187, 236)),
-    Level("1_2", 10, (147, 187, 236)),
-    Level("1_3", 10, (147, 187, 236)),
-    Level("1_4", 10, (147, 187, 236)),
-    Level("1_5", 10, (0, 0, 0)),
-    BossLevel("BOSS", 1, (0, 0, 0), Ganondorf),
+    Level("1_1", 10, "assets/music/1-1.mp3", (147, 187, 236)),
+    Level("1_2", 10, "assets/music/1-2.mp3", (147, 187, 236)),
+    Level("1_3", 10, "assets/music/1-3.mp3", (147, 187, 236)),
+    Level("1_4", 10, "assets/music/1-4.mp3", (147, 187, 236)),
+    Level("1_5", 10, "assets/music/1-5.mp3", (0, 0, 0)),
+    BossLevel("BOSS", 1, "assets/music/boss.mp3", (0, 0, 0), Ganondorf),
     EndScene("END", 1, (147, 187, 236))
 ]
 
@@ -33,19 +33,28 @@ game_paused = False
 pause_cooldown = 30
 pause_timer = 0
 
+# Game Over
+game_over_delay = 300
+game_over_timer = 0
+
+# Music
+main_menu_music = load_sound("assets/music/main_menu.mp3")
+
 
 def show_paused_screen() -> None:
     global show_main_menu, game_paused, active_level_index
 
-    text("PAUSED", 50, (0, 0, 0), screen_width / 2, screen_height / 2 - 30, "fonts/pixel.ttf")
+    text("PAUSED", int(scale * 50), (0, 0, 0), screen_width / 2, screen_height / 2 - 30 * scale, "fonts/pixel.ttf")
 
     # Go back to main menu
-    text("GO TO MAIN MENU", 30, (0, 255, 255), screen_width / 2, screen_height / 2 + 20, "fonts/pixel.ttf")
+    text("GO TO MAIN MENU", int(scale * 30), (0, 255, 255),
+         screen_width / 2, screen_height / 2 + 20 * scale, "fonts/pixel.ttf")
 
     # Check if user clicked on start new game
     if is_mouse_button_down("left"):
-        if screen_height / 2 < pygame.mouse.get_pos()[1] < screen_height / 2 + 40 and \
-                screen_width / 2 - 140 < pygame.mouse.get_pos()[0] < screen_width / 2 + 140:
+        if screen_height / 2 < pygame.mouse.get_pos()[1] < screen_height / 2 + 40 * scale and \
+                screen_width / 2 - 140 * scale < pygame.mouse.get_pos()[0] < screen_width / 2 + 140 * scale:
+            levels[active_level_index].level_music.fadeout(500)
             show_main_menu = True
             game_paused = False
 
@@ -55,6 +64,11 @@ def show_main_menu_screen() -> None:
     global show_main_menu, \
         active_level_index, \
         transitioning_from_main_menu
+
+    # Play music
+    if not main_menu_music.get_num_channels() > 0:
+        main_menu_music.play(-1)
+        main_menu_music.set_volume(0.5)
 
     # Draw menu
     backdrop((255, 255, 255))
@@ -86,15 +100,28 @@ def show_main_menu_screen() -> None:
 
 # Show game over screen
 def show_game_over_screen() -> None:
-    global last_recorded_score
+    global last_recorded_score, \
+        active_level_index, \
+        show_main_menu, \
+        game_over_timer
+
+    # Stop music in active level
+    levels[active_level_index].level_music.fadeout(500)
 
     # Set backdrop to black
     backdrop((0, 0, 0))
 
     # Display properties on screen
-    text("GAME OVER", 50, (255, 255, 255), screen_width / 2, screen_height / 2 - 30, "fonts/pixel.ttf")
-    text(f"SCORE: {last_recorded_score}", 20, (255, 255, 255), screen_width / 2,
-         screen_height / 2 + 20, "fonts/pixel.ttf")
+    text("GAME OVER", int(scale * 50), (255, 255, 255),
+         screen_width / 2, screen_height / 2 - 30 * scale, "fonts/pixel.ttf")
+    text(f"SCORE: {last_recorded_score}", int(20 * scale), (255, 255, 255), screen_width / 2,
+         screen_height / 2 + 20 * scale, "fonts/pixel.ttf")
+
+    game_over_timer += 1
+
+    if game_over_timer >= game_over_delay:
+        show_main_menu = True
+        game_over_timer = 0
 
 
 # Pause/play game
@@ -204,6 +231,8 @@ def update() -> None:
     if show_main_menu:
         show_main_menu_screen()
         return
+    else:
+        main_menu_music.fadeout(500)
 
     # Check if game is over
     if levels[active_level_index].link.lives == 0:
