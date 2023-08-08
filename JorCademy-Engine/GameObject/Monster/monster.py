@@ -59,7 +59,7 @@ class Monster(GameObject):
     def die(self):
         if not self.killed:
             self.make_text_anomaly()
-            self.player.coins += self.loot
+            self.player.coins_earned_current_level += self.loot
 
         self.killed = True
 

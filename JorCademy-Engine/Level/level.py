@@ -125,7 +125,6 @@ class Level:
 
     # Initialize level
     def setup(self, game_screen):
-
         self.screen = game_screen
         self.level_data = import_level_data(f"Maps/level_{self.level_name}.csv")
         self.level_length = len(self.level_data[0] * tile_size)
@@ -289,7 +288,7 @@ class Level:
         self.end_game_triforce.draw()
 
         # Coin amount
-        text(f"COINS: {str(self.link.coins)}",
+        text(f"COINS: {str(self.link.coins + self.link.coins_earned_current_level)}",
              int(scale * 25),
              (255, 255, 255),
              (100 * scale),

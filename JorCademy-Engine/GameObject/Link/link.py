@@ -32,7 +32,6 @@ class Link(GameObject):
 
     def __init__(self, pos, w, h):
         super().__init__(pos, w, h)
-        self.score = 0
         self.lives = 3
         self.coins = 0  # NOTE: maybe change coins into rupees
         self.orig_speed = 4 * scale
@@ -54,6 +53,7 @@ class Link(GameObject):
         self.killed = False
         self.max_speed = 0.8 * scale
         self.at_game_end = False
+        self.coins_earned_current_level = 0
         self.sprites = [
             'link/link_idle.png',
             'link/link_fight.png',
@@ -294,6 +294,7 @@ class Link(GameObject):
         self.x = 100
         self.y = screen_height / 2
         self.killed = False
+        self.coins_earned_current_level = 0
         self.activate_main_representation()
 
     def hard_reset(self):
@@ -301,4 +302,5 @@ class Link(GameObject):
         self.lives = 3
         self.killed = False
         self.coins = 0
+        self.coins_earned_current_level = 0
         self.activate_main_representation()

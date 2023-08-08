@@ -14,12 +14,16 @@ class Triforce(GameObject):
     def handle_movement(self, cam_pos, level_length):
         pass
 
+    def process_earned_player_coins(self):
+        self.player.coins += self.player.coins_earned_current_level
+
     def update(self, cam_pos, level_length):
         super().update(cam_pos, level_length)
         self.correct_position_with_camera(cam_pos)
 
         # If the player collides with the triforce, it is looted
         if self.player.x >= self.x:
+            self.process_earned_player_coins()
             self.reached = True
 
     def draw(self):

@@ -47,7 +47,7 @@ class Loot(MovingTile):
         return self.player.collision(self)
 
     def process_loot(self):
-        self.player.coins += self.coins
+        self.player.coins_earned_current_level += self.coins
         self.make_text_anomaly()
         self.looted = True
 

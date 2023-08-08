@@ -22,6 +22,7 @@ levels = [
 transition_started = False
 transition_timer = 0
 transition_time = 60 * 3
+last_recorded_score = 0
 
 # Menu flags
 show_main_menu = True
@@ -85,12 +86,14 @@ def show_main_menu_screen() -> None:
 
 # Show game over screen
 def show_game_over_screen() -> None:
+    global last_recorded_score
+
     # Set backdrop to black
     backdrop((0, 0, 0))
 
     # Display properties on screen
     text("GAME OVER", 50, (255, 255, 255), screen_width / 2, screen_height / 2 - 30, "fonts/pixel.ttf")
-    text(f"SCORE: {levels[active_level_index].link.score}", 20, (255, 255, 255), screen_width / 2,
+    text(f"SCORE: {last_recorded_score}", 20, (255, 255, 255), screen_width / 2,
          screen_height / 2 + 20, "fonts/pixel.ttf")
 
 
@@ -173,6 +176,8 @@ def get_next_level_index() -> int:
 # Activate next level
 def activate_next_level() -> None:
     global active_level_index
+    global last_recorded_score
+    last_recorded_score = levels[active_level_index].link.coins
     stored_link = levels[active_level_index].link
     active_level_index = get_next_level_index()
     levels[active_level_index].init_link(stored_link)
@@ -197,6 +202,8 @@ def update() -> None:
     if show_main_menu:
         show_main_menu_screen()
         return
+
+    print(levels[active_level_index].link.coins)
 
     # Check if game is over
     if levels[active_level_index].link.lives == 0:
