@@ -9,12 +9,12 @@ from Level.boss_level import BossLevel
 # Levels
 active_level_index = 0
 levels = [
-BossLevel("BOSS", 1, "assets/music/boss.mp3", (0, 0, 0), Ganondorf),
+Level("1_2", 10, "assets/music/1-2.mp3", (147, 187, 236)),
     Level("1_1", 10, "assets/music/1-1.mp3", (147, 187, 236)),
-    Level("1_2", 10, "assets/music/1-2.mp3", (147, 187, 236)),
     Level("1_3", 10, "assets/music/1-3.mp3", (147, 187, 236)),
     Level("1_4", 10, "assets/music/1-4.mp3", (147, 187, 236)),
     Level("1_5", 10, "assets/music/1-5.mp3", (0, 0, 0)),
+    BossLevel("BOSS", 1, "assets/music/boss.mp3", (0, 0, 0), Ganondorf),
     EndScene("END", 1, (147, 187, 236))
 ]
 
@@ -156,11 +156,13 @@ def get_current_level_name() -> int:
         return levels[get_next_level_index()].level_name
 
 
-# Show game over screen
 def transition_screen() -> None:
     global transition_started, \
         transition_timer, \
         transition_time
+
+    # Stop music from current level
+    levels[active_level_index].level_music.fadeout(500)
 
     # Set backdrop to black
     backdrop((0, 0, 0))

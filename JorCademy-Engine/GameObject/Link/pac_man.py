@@ -1,6 +1,6 @@
 from GameObject.gameobject import GameObject
 from jorcademy import *
-from Support.settings import screen_width
+from Support.settings import screen_width, scale
 
 IDLE = 0
 WALKING_1 = 1
@@ -9,6 +9,7 @@ WALKING_3 = 3
 WALKING_4 = 4
 WALKING_5 = 5
 JUMPING = 1
+DEAD = 6
 
 
 class PacMan(GameObject):
@@ -28,9 +29,11 @@ class PacMan(GameObject):
             "pac_man/pac_man_walking_2.png",
             "pac_man/pac_man_walking_3.png",
             "pac_man/pac_man_walking_2.png",
-            "pac_man/pac_man_walking_1.png"
+            "pac_man/pac_man_walking_1.png",
+            "pac_man/pac_man_death.png"
         ]
-        self.waka_sound = load_sound('assets/sounds/waka.mp3')
+        self.waka_sound = load_sound('assets/sounds/pac_man/waka.mp3')
+        self.death_sound = load_sound('assets/sounds/pac_man/pac_man_death.mp3')
         self.play_sound_delay = 15
         self.play_sound_timer = 0
 
@@ -103,6 +106,12 @@ class PacMan(GameObject):
 
     # Update Pac-Man
     def update(self, cam_pos, level_length):
+        if self.player.killed and self.visible:
+            self.play_death_sound()
+            self.y = self.player.y + 10 * scale
+            self.state = DEAD
+            return
+
         super().update(cam_pos, level_length)
 
         # Derive properties from player

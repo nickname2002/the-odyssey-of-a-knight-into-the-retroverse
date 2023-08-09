@@ -25,7 +25,6 @@ class Chunk:
     def update_monsters(self, cam_pos, level_length):
         for monster in self.monsters:
             if monster.ready_to_remove():
-                print("Removing monster")
                 self.monsters.remove(monster)
             else:
                 monster.update(cam_pos, level_length)

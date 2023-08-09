@@ -6,6 +6,8 @@ import pygame
 class GameObject:
 
     def __init__(self, pos, w, h):
+        self.die_state_index = 0
+        self.die_animation_timer = 0
         self.is_grounded = False
         self.x = pos[0]
         self.y = pos[1] - 10 * scale
@@ -19,6 +21,13 @@ class GameObject:
         self.timer = 0
         self.visible = False
         self.state = 0
+        self.die_y = 0
+
+        # Die animation
+        self.die_animation_delay = 80
+        self.die_animation_timer = 0
+        self.die_state_index = 0
+        self.death_sound = None
 
         # Speed
         self.jump_speed = -10 * scale
@@ -28,12 +37,21 @@ class GameObject:
         return (self.x + self.width < 0 or self.x - self.width > screen_width) or \
                (self.y - self.height < 0 or self.y - self.height > screen_height)
 
+    def play_death_sound(self):
+        if not self.death_sound.get_num_channels() > 0:
+            self.death_sound.set_volume(0.5)
+            self.death_sound.play()
+
     def correct_position_with_camera(self, cam_pos):
         self.x = self.orig_pos[0] - cam_pos
         self.x += self.offset
 
     def update(self, cam_pos, level_length):
         self.handle_movement(cam_pos, level_length)
+
+    def show_die_animation(self):
+        self.die_animation_timer += 1
+        self.state = self.die_state_index
 
     def handle_movement(self, cam_pos, level_length):
         # Apply gravity to Link

@@ -94,7 +94,8 @@ class Level:
         self.link = new_link
 
     def transition_requested(self):
-        return self.link.killed or self.end_game_triforce.reached
+        return self.link.die_animation_timer >= self.link.die_animation_delay or \
+               self.end_game_triforce.reached
 
     def init_chunks(self):
         self.chunk_size = round(self.level_length / self.chunk_amount)  # Maybe we can determine this automatically
@@ -200,6 +201,9 @@ class Level:
 
     # Update the camera position
     def world_shift(self):
+        if self.link.killed:
+            return
+
         if self.link.x >= screen_width / 2 and not is_key_down('a'):
             self.cam_pos += self.link.direction.x * self.link.speed
 

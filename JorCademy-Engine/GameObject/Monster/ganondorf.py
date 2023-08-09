@@ -40,7 +40,7 @@ class Ganondorf(Monster):
         self.die_state_index = DEAD
         self.state = IDLE
         self.speed = 1 * scale
-        self.health = 1
+        self.health = 15
         self.rotation = 0
 
         # Idle delay

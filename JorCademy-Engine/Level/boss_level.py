@@ -12,7 +12,7 @@ class BossLevel(Level):
         self.boss_type = boss_type
         self.boss = None
         self.die_sound_played = False
-        self.boss_die_sound = load_sound("assets/sounds/ganondorf_die.mp3")
+        self.boss_die_sound = load_sound("assets/sounds/ganondorf/ganondorf_die.mp3")
 
         # Music
         self.level_music = load_sound(level_music_path)
@@ -42,7 +42,8 @@ class BossLevel(Level):
     def update(self):
         # Stop music if game is over
         if self.transition_requested():
-            self.level_music.stop(500)
+            print(True)
+            self.level_music.fadeout(500)
 
         # Update chunks in range
         chunks_to_update = self.get_chunks_in_range()

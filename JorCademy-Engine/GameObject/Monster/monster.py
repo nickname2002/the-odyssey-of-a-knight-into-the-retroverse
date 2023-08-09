@@ -23,12 +23,6 @@ class Monster(GameObject):
         self.killed = False
         self.loot = 20
         self.health = 1
-        self.die_y = 0
-
-        # Die animation
-        self.die_animation_delay = 80
-        self.die_animation_timer = 0
-        self.die_state_index = 0
 
         # Jump delay
         self.jump_timer = 0
@@ -45,8 +39,8 @@ class Monster(GameObject):
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
         # Sounds
-        self.hit_by_player_sound = load_sound("assets/sounds/enemy_jump.mp3")
-        self.hit_by_sword_sound = load_sound("assets/sounds/punch.mp3")
+        self.hit_by_player_sound = load_sound("assets/sounds/monsters/enemy_jump.mp3")
+        self.hit_by_sword_sound = load_sound("assets/sounds/link/punch.mp3")
 
     def is_out_of_frame(self):
         if self.moving:
@@ -57,10 +51,6 @@ class Monster(GameObject):
     def ready_to_remove(self):
         return self.is_out_of_frame() or \
             self.die_animation_timer >= self.die_animation_delay
-
-    def show_die_animation(self):
-        self.die_animation_timer += 1
-        self.state = self.die_state_index
 
     def make_text_anomaly(self):
         anomaly_pos = (self.level.link.x, self.y - tile_size)

@@ -21,6 +21,7 @@ WALKING_8 = 9
 WALKING_9 = 10
 WALKING_10 = 11
 JUMPING = 12
+DEAD = 13
 
 
 # Representations for Link
@@ -55,6 +56,7 @@ class Link(GameObject):
         self.max_speed = 0.8 * scale
         self.at_game_end = False
         self.coins_earned_current_level = 0
+        self.die_state_index = DEAD
         self.sprites = [
             'link/link_idle.png',
             'link/link_fight.png',
@@ -68,10 +70,14 @@ class Link(GameObject):
             'link/link_walking_8.png',
             'link/link_walking_9.png',
             'link/link_walking_10.png',
-            'link/link_jumping.png'
+            'link/link_jumping.png',
+            "link/link_dead.png"
         ]
-        self.jump_sound = load_sound('assets/sounds/jump.ogg')
-        self.one_up_sound = load_sound("assets/sounds/1_up.wav")
+
+        # Load sounds
+        self.jump_sound = load_sound('assets/sounds/link/jump.ogg')
+        self.one_up_sound = load_sound("assets/sounds/power_ups/1_up.wav")
+        self.death_sound = load_sound("assets/sounds/link/link_death_sound.mp3")  # TODO: find improved dead sound
 
     def handle_collision(self, tile, index, level):
         # Handle collision on left side of object
@@ -224,6 +230,21 @@ class Link(GameObject):
             play_sound(self.one_up_sound, 0.5)
 
     def update(self, cam_pos, level, at_level_end=False):
+        # Update state of linked representations
+        self.fire_mario.update(cam_pos, level.level_length)
+        self.pac_man.update(cam_pos, level.level_length)
+
+        # Handle Link DEAD state
+        if self.killed:
+
+            if self.visible:
+                self.play_death_sound()
+
+            self.y = self.die_y + self.height / 2 - 15 * scale
+            self.show_die_animation()
+            return
+
+        # Update position
         self.handle_movement(cam_pos, level.level_length, at_level_end)
         self.change_velocity()
 
@@ -243,8 +264,6 @@ class Link(GameObject):
             self.active_cooldown -= 1
 
         # Update state of linked objects
-        self.fire_mario.update(cam_pos, level.level_length)
-        self.pac_man.update(cam_pos, level.level_length)
         self.master_sword.update(cam_pos, level.level_length)
 
     def activate_main_representation(self):
@@ -310,12 +329,15 @@ class Link(GameObject):
         self.pac_man.draw()
 
     def die(self, level=None):
-        # TODO: add cool dying animation
+        if not self.killed:
+            self.die_y = self.y
+
         if not self.at_game_end:
             self.lives -= 1
             self.killed = True
 
     def soft_reset(self):
+        self.die_animation_timer = 0
         self.speed = self.orig_speed
         self.x = 100
         self.y = screen_height / 2
@@ -324,6 +346,7 @@ class Link(GameObject):
         self.activate_main_representation()
 
     def hard_reset(self):
+        self.die_animation_timer = 0
         self.speed = self.orig_speed
         self.lives = 3
         self.killed = False

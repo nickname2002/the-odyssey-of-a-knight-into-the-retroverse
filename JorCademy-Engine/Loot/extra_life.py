@@ -10,7 +10,7 @@ class ExtraLife(Loot):
         self.message = "+1 UP"
         self.moving = False
         self.speed = 2 * scale
-        self.collect_sound = load_sound("assets/sounds/1_up.wav")
+        self.collect_sound = load_sound("assets/sounds/power_ups/1_up.wav")
 
     def update(self, shift_x):
         super().update(shift_x)

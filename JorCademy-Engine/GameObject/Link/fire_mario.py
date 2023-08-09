@@ -10,6 +10,7 @@ WALKING_1 = 2
 WALKING_2 = 3
 WALKING_3 = 4
 ATTACK = 5
+DEAD = 6
 
 
 class FireMario(GameObject):
@@ -24,7 +25,8 @@ class FireMario(GameObject):
             'fire_mario/fire_mario_walking_1.png',
             'fire_mario/fire_mario_walking_2.png',
             'fire_mario/fire_mario_walking_3.png',
-            'fire_mario/fire_mario_attack.png'
+            'fire_mario/fire_mario_attack.png',
+            "fire_mario/fire_mario_dead.png"
         ]
         self.attack_cooldown = 50
         self.active_cooldown = 0
@@ -35,10 +37,10 @@ class FireMario(GameObject):
         self.attack_cooldown = 20
         self.active_cooldown = 0
         self.fireball_thrown = False
-        # self.fireball = FireBall((self.x, self.y), 16 * scale, 16 * scale, self.player)
         self.fireballs = []
-        self.fire_sound = load_sound('assets/sounds/fireball.wav')
-        self.jump_sound = load_sound('assets/sounds/mario_jump.wav')
+        self.fire_sound = load_sound('assets/sounds/fire_mario/fireball.wav')
+        self.jump_sound = load_sound('assets/sounds/fire_mario/mario_jump.wav')
+        self.death_sound = load_sound('assets/sounds/fire_mario/fire_mario_death.mp3')
 
     def handle_movement(self, cam_pos, level_length):
         if self.active_cooldown > 0:
@@ -120,6 +122,12 @@ class FireMario(GameObject):
 
     # Update FireMario
     def update(self, cam_pos, level_length):
+        if self.player.killed and self.visible:
+            self.play_death_sound()
+            self.y = self.player.y
+            self.state = DEAD
+            return
+
         super().update(cam_pos, level_length)
 
         # Update fireballs
