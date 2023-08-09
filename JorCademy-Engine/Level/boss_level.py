@@ -42,7 +42,6 @@ class BossLevel(Level):
     def update(self):
         # Stop music if game is over
         if self.transition_requested():
-            print(True)
             self.level_music.fadeout(500)
 
         # Update chunks in range

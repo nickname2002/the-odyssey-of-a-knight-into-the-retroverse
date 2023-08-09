@@ -73,7 +73,9 @@ class Monster(GameObject):
 
         # Check if fireball is visible and if it collides with the monster
         for fireball in self.player.fire_mario.fireballs:
-            if self.collision(fireball) and self.invincible_timer <= 0:
+            if ((self.collision(fireball) and
+                    self.invincible_timer <= 0) and
+                    not self.killed):
                 play_sound(self.hit_by_player_sound, 0.5)
                 self.health -= 1
                 self.invincible_timer = self.invincible_delay

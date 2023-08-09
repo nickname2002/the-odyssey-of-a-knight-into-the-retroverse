@@ -7,8 +7,8 @@ from jorcademy import *
 
 class EndScene(Level):
 
-    def __init__(self, level_name, chunk_amount, level_backdrop_color):
-        super().__init__(level_name, chunk_amount, level_backdrop_color)
+    def __init__(self, level_name, chunk_amount, level_music_path, level_backdrop_color):
+        super().__init__(level_name, chunk_amount, level_music_path, level_backdrop_color)
         self.subtitles_shown = False
         self.zelda = GameObject(
             (screen_width / 2 + 100 * scale, screen_height - tile_size * 2 - 97 * 0.7 / 2 * scale),
@@ -29,6 +29,10 @@ class EndScene(Level):
         self.switch_subtitles_delay = 300
         self.switch_subtitles_timer = 0
 
+        # Music
+        self.level_music = load_sound(level_music_path)
+        self.level_music_started = False
+
         # Subtitles index
         self.subtitles_index = 0
 
@@ -40,7 +44,7 @@ class EndScene(Level):
     def reset(self):
         super().reset()
         self.zelda = GameObject(
-            (screen_width / 2 + 100 * scale, screen_height - tile_size * 2 - 97 * 0.7 / 2 * scale),
+            (screen_width / 2 + 100 * scale, screen_height - tile_size * 2 - 97 * 0.7 / 2),
             46 * 0.7 * scale,
             97 * 0.7 * scale)
         self.heart = GameObject((screen_width / 2, 0 - 50), 50, 50)
@@ -109,14 +113,13 @@ class EndScene(Level):
             self.switch_subtitles_timer = 0
 
     def update(self):
-
         # Update chunks
         chunks_to_update = self.get_chunks_in_range()
         for chunk in chunks_to_update:
             chunk.update(self.cam_pos, self.level_length)
 
         # Update Link
-        self.link.update(self.cam_pos, self.level_length, False)
+        self.link.update(self.cam_pos, self, False)
         self.stop_moving_link_when_needed()
 
         # Move the map down when needed
@@ -132,6 +135,11 @@ class EndScene(Level):
         if self.start_subtitles_timer >= self.start_subtitles_delay:
             self.show_subtitles()
             return
+
+        # Play music
+        if not self.level_music.get_num_channels() > 0:
+            self.level_music.play(-1)
+            self.level_music.set_volume(0.25)
 
         # Collision
         self.handle_collision()

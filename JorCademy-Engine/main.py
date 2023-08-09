@@ -29,7 +29,8 @@ running = True
 # Set amount of audio channels
 pygame.mixer.set_num_channels(32)
 
-# Print debug message when in debug mode 
+
+# Print debug message when in debug mode
 def __debug_log(msg: str):
     if __debug:
         print(msg)

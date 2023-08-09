@@ -41,6 +41,9 @@ class EnemyFireBall(Monster):
         # Make sure player dies when colliding with the fireball
         self.handle_collision_with_player(level)
 
+    def ready_to_remove(self):
+        return self.killed
+
     def update(self, cam_pos, level_length):
         self.handle_movement(cam_pos, level_length)
 

@@ -9,14 +9,41 @@ from Level.boss_level import BossLevel
 # Levels
 active_level_index = 0
 levels = [
-Level("1_2", 10, "assets/music/1-2.mp3", (147, 187, 236)),
-    Level("1_1", 10, "assets/music/1-1.mp3", (147, 187, 236)),
-    Level("1_3", 10, "assets/music/1-3.mp3", (147, 187, 236)),
-    Level("1_4", 10, "assets/music/1-4.mp3", (147, 187, 236)),
-    Level("1_5", 10, "assets/music/1-5.mp3", (0, 0, 0)),
-    BossLevel("BOSS", 1, "assets/music/boss.mp3", (0, 0, 0), Ganondorf),
-    EndScene("END", 1, (147, 187, 236))
+    Level("1_1",
+          10,
+          "assets/music/1-1.mp3",
+          (147, 187, 236)),
+    Level("1_2",
+          10,
+          "assets/music/1-2.mp3",
+          (147, 187, 236)),
+    Level("1_3",
+          10,
+          "assets/music/1-3.mp3",
+          (147, 187, 236)),
+    Level("1_4",
+          10,
+          "assets/music/1-4.mp3",
+          (147, 187, 236)),
+    Level("1_5",
+          10,
+          "assets/music/1-5.mp3",
+          (0, 0, 0)),
+    BossLevel("BOSS",
+              1,
+              "assets/music/boss.mp3",
+              (0, 0, 0), Ganondorf),
+    EndScene("END",
+             1,
+             "assets/music/outro_song.mp3",
+             (147, 187, 236)),
 ]
+
+# Starting message properties
+starting_message_shown = False
+switch_starting_message_timer = 0
+starting_message_delay = 300
+starting_message_index = 0
 
 # Transition properties
 transition_started = False
@@ -59,11 +86,51 @@ def show_paused_screen() -> None:
             game_paused = False
 
 
+def show_starting_messages():
+    global switch_starting_message_timer, \
+        starting_message_shown, \
+        starting_message_index
+
+    # Starting messages to show
+    starting_messages = [
+        "The Princess has been captured by an awful monster",
+        "As an honorable knight, it is your duty to save her",
+        "The retro-verse is full of dangerous creatures",
+        "Be careful. And good luck"
+    ]
+
+    backdrop((255, 255, 255))
+
+    # Show correct message
+    text(starting_messages[starting_message_index],
+         int(scale * 20),
+         (0, 0, 0),
+         screen_width / 2,
+         screen_height / 2,
+         "fonts/pixel.ttf")
+
+    # Update timer
+    switch_starting_message_timer += 1
+
+    # Switch to next message
+    if switch_starting_message_timer >= starting_message_delay:
+        if starting_message_index >= len(starting_messages) - 1:
+            starting_message_shown = True
+            return
+
+        # Reset timer & change index
+        starting_message_index += 1
+        switch_starting_message_timer = 0
+
+
 # Show main menu screen
 def show_main_menu_screen() -> None:
     global show_main_menu, \
         active_level_index, \
         transitioning_from_main_menu
+
+    # Stop music in active level
+    levels[active_level_index].level_music.fadeout(500)
 
     # Play music
     if not main_menu_music.get_num_channels() > 0:
@@ -162,7 +229,10 @@ def transition_screen() -> None:
         transition_time
 
     # Stop music from current level
-    levels[active_level_index].level_music.fadeout(500)
+    try:
+        levels[active_level_index].level_music.fadeout(500)
+    except:
+        pass
 
     # Set backdrop to black
     backdrop((0, 0, 0))
@@ -226,7 +296,8 @@ def update() -> None:
         pause_timer, \
         transitioning_from_main_menu, \
         show_main_menu, \
-        last_recorded_score
+        last_recorded_score, \
+        starting_message_shown
 
     last_recorded_score = levels[active_level_index].link.coins
 
@@ -244,6 +315,11 @@ def update() -> None:
     # Check if level is over
     if levels[active_level_index].transition_requested() or transitioning_from_main_menu:
 
+        # Show starting message when transitioning from main menu
+        if transitioning_from_main_menu and not starting_message_shown:
+            show_starting_messages()
+            return
+
         # Check if transitioning to main menu from EndScene
         if type(levels[active_level_index]) == EndScene and \
                 levels[active_level_index].transition_requested():
@@ -260,6 +336,7 @@ def update() -> None:
             # Switch to next level if needed
             if type(levels[active_level_index]) == Level or \
                     type(levels[active_level_index]) == BossLevel:
+                starting_message_shown = False
                 if levels[active_level_index].end_game_triforce.reached:
                     activate_next_level()
 

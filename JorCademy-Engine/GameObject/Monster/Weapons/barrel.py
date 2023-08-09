@@ -44,6 +44,9 @@ class Barrel(Monster):
         else:
             self.sel_sprite_index += 1
 
+    def ready_to_remove(self):
+        return self.killed
+
     def handle_collision(self, tile, _, level):
         # Handle collision on left side
         if self.collision_left(tile):
