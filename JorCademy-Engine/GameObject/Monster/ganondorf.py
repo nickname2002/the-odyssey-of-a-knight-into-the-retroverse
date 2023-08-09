@@ -39,8 +39,8 @@ class Ganondorf(Monster):
         ]
         self.die_state_index = DEAD
         self.state = IDLE
-        self.speed = 1 * scale
-        self.health = 15
+        self.speed = 2 * scale
+        self.health = 20
         self.rotation = 0
 
         # Idle delay
@@ -55,7 +55,7 @@ class Ganondorf(Monster):
 
         # Short range attack
         self.short_range_attack_activated = False
-        self.short_range_attack_speed = 3 * scale
+        self.short_range_attack_speed = 4 * scale
         self.short_range_attack_timer = 0
         self.short_range_attack_delay = 50
         self.short_range_attack_activation_distance = 200
@@ -74,8 +74,8 @@ class Ganondorf(Monster):
         # Attack delay
         self.invincible_delay = 1000
         self.attack_timer = 0
-        self.min_attack_delay = 60 * 5
-        self.max_attack_delay = 60 * 10
+        self.min_attack_delay = 60 * 3
+        self.max_attack_delay = 60 * 6
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
         # Sounds
@@ -336,5 +336,5 @@ class Ganondorf(Monster):
         self.update_sprite_state()
 
     def draw(self):
-        # Make sure the monster is drawn facing the right direction
         image(self.sprite_set[self.state], self.x, self.y, 1.5 * scale, self.player.x >= self.x, self.rotation)
+        self.show_health_indicator()

@@ -63,6 +63,7 @@ class EndScene(Level):
     # Make sure the player doesn't move too far to the right
     def stop_moving_link_when_needed(self):
         if self.link.x >= screen_width / 2 - 100 * scale:
+            self.link.gravity = 0
             self.link.speed = 0
             self.end_reached = True
 
@@ -118,9 +119,9 @@ class EndScene(Level):
         for chunk in chunks_to_update:
             chunk.update(self.cam_pos, self.level_length)
 
-        # Update Link
-        self.link.update(self.cam_pos, self, False)
+        # Update player
         self.stop_moving_link_when_needed()
+        self.link.update(self.cam_pos, self, False)
 
         # Move the map down when needed
         if self.to_subtitles_timer >= self.to_subtitles_delay:

@@ -36,7 +36,7 @@ levels = [
     EndScene("END",
              1,
              "assets/music/outro_song.ogg",
-             (147, 187, 236)),
+             (147, 187, 236))
 ]
 
 # Starting message properties
@@ -93,10 +93,10 @@ def show_starting_messages():
 
     # Starting messages to show
     starting_messages = [
-        "The Princess has been captured by an awful monster",
-        "As an honorable knight, it is your duty to save her",
-        "The retro-verse is full of dangerous creatures",
-        "Be careful. And good luck"
+        "The Princess has been captured by an awful monster".upper(),
+        "As an honorable knight, it is your duty to save her".upper(),
+        "The retro-verse is full of dangerous creatures".upper(),
+        "Be careful. And good luck".upper()
     ]
 
     backdrop((255, 255, 255))

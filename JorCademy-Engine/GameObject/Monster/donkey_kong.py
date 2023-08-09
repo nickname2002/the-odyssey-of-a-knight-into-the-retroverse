@@ -123,6 +123,7 @@ class DonkeyKong(Monster):
 
         # Make sure the monster is drawn facing the right direction
         image(self.sprite_set[self.state], self.x, self.y, 3 * scale, self.player.x >= self.x)
+        self.show_health_indicator()
 
     def update_sprite_state(self):
         if self.killed:

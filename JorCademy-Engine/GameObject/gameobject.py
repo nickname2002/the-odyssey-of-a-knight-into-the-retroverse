@@ -1,4 +1,4 @@
-from jorcademy import rect
+from jorcademy import *
 from Support.settings import screen_width, screen_height, scale
 import pygame
 
@@ -22,6 +22,7 @@ class GameObject:
         self.visible = False
         self.state = 0
         self.die_y = 0
+        self.health = 1
 
         # Die animation
         self.die_animation_delay = 80
@@ -36,6 +37,14 @@ class GameObject:
     def out_of_screen(self):
         return (self.x + self.width < 0 or self.x - self.width > screen_width) or \
                (self.y - self.height < 0 or self.y - self.height > screen_height)
+
+    def show_health_indicator(self):
+        text(str(self.health),
+             20,
+             (255, 255, 255),
+             self.x + self.width / 2,
+             self.y - self.height / 2,
+             "fonts/pixel.ttf")
 
     def play_death_sound(self):
         if not self.death_sound.get_num_channels() > 0:
@@ -54,9 +63,7 @@ class GameObject:
         self.state = self.die_state_index
 
     def handle_movement(self, cam_pos, level_length):
-        # Apply gravity to Link
         self.apply_gravity()
-
         if self.timer == 100000:
             self.timer = 0
 

@@ -337,19 +337,16 @@ class Link(GameObject):
             self.killed = True
 
     def soft_reset(self):
-        self.die_animation_timer = 0
-        self.speed = self.orig_speed
         self.x = 100
         self.y = screen_height / 2
+        self.gravity = 0.8 * scale
+        self.die_animation_timer = 0
+        self.speed = self.orig_speed
         self.killed = False
         self.coins_earned_current_level = 0
         self.activate_main_representation()
 
     def hard_reset(self):
-        self.die_animation_timer = 0
-        self.speed = self.orig_speed
-        self.lives = 3
-        self.killed = False
         self.coins = 0
-        self.coins_earned_current_level = 0
-        self.activate_main_representation()
+        self.lives = 3
+        self.soft_reset()
