@@ -39,8 +39,8 @@ class Monster(GameObject):
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
         # Sounds
-        self.hit_by_player_sound = load_sound("assets/sounds/monsters/enemy_jump.mp3")
-        self.hit_by_sword_sound = load_sound("assets/sounds/link/punch.mp3")
+        self.hit_by_player_sound = load_sound("assets/sounds/monsters/enemy_jump.ogg")
+        self.hit_by_sword_sound = load_sound("assets/sounds/link/punch.ogg")
 
     def is_out_of_frame(self):
         if self.moving:

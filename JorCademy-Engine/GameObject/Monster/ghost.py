@@ -28,7 +28,7 @@ class Ghost(Monster):
         self.direction = pygame.Vector2(-self.speed, 0)
         self.amplitude = 1 * scale
         self.frequency = 1 * scale
-        self.eaten_sound = load_sound("sounds/pac_man/eat_pac_man.mp3")
+        self.eaten_sound = load_sound("sounds/pac_man/eat_pac_man.ogg")
 
     def handle_collision_with_player(self, level):
         # Process player damage & damage from player

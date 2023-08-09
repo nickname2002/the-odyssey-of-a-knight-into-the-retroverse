@@ -18,7 +18,7 @@ class MasterSword(GameObject):
         self.player = player
         self.gravity = 0 * scale
         self.rotation = -75
-        self.slash_sound = load_sound("assets/sounds/link/sword.mp3")
+        self.slash_sound = load_sound("assets/sounds/link/sword.ogg")
         self.audio_played = False
 
     def attack(self):

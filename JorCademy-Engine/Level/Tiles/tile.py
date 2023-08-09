@@ -204,7 +204,7 @@ class BreakableTile(StaticTile):
     def __init__(self, size, pos, surface, alt_surface, code, index):
         super().__init__(size, pos, surface, code, index)
         self.alt_surface = alt_surface
-        self.break_sound = load_sound("assets/sounds/block_break.wav")
+        self.break_sound = load_sound("assets/sounds/block_break.ogg")
 
     def break_tile(self, sky_tile_code):
         self.image = self.alt_surface

@@ -11,31 +11,31 @@ active_level_index = 0
 levels = [
     Level("1_1",
           10,
-          "assets/music/1-1.mp3",
+          "assets/music/1-1.ogg",
           (147, 187, 236)),
     Level("1_2",
           10,
-          "assets/music/1-2.mp3",
+          "assets/music/1-2.ogg",
           (147, 187, 236)),
     Level("1_3",
           10,
-          "assets/music/1-3.mp3",
+          "assets/music/1-3.ogg",
           (147, 187, 236)),
     Level("1_4",
           10,
-          "assets/music/1-4.mp3",
+          "assets/music/1-4.ogg",
           (147, 187, 236)),
     Level("1_5",
           10,
-          "assets/music/1-5.mp3",
+          "assets/music/1-5.ogg",
           (0, 0, 0)),
     BossLevel("BOSS",
               1,
-              "assets/music/boss.mp3",
+              "assets/music/boss.ogg",
               (0, 0, 0), Ganondorf),
     EndScene("END",
              1,
-             "assets/music/outro_song.mp3",
+             "assets/music/outro_song.ogg",
              (147, 187, 236)),
 ]
 
@@ -65,7 +65,7 @@ game_over_delay = 300
 game_over_timer = 0
 
 # Music
-main_menu_music = load_sound("assets/music/main_menu.mp3")
+main_menu_music = load_sound("assets/music/main_menu.ogg")
 
 
 def show_paused_screen() -> None:

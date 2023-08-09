@@ -32,8 +32,8 @@ class PacMan(GameObject):
             "pac_man/pac_man_walking_1.png",
             "pac_man/pac_man_death.png"
         ]
-        self.waka_sound = load_sound('assets/sounds/pac_man/waka.mp3')
-        self.death_sound = load_sound('assets/sounds/pac_man/pac_man_death.mp3')
+        self.waka_sound = load_sound('assets/sounds/pac_man/waka.ogg')
+        self.death_sound = load_sound('assets/sounds/pac_man/pac_man_death.ogg')
         self.play_sound_delay = 15
         self.play_sound_timer = 0
 

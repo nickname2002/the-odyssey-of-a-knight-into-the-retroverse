@@ -11,7 +11,7 @@ class Coin(Loot):
         self.disappear_delay = 20
         self.message = "+100 COINS"
         self.coins = 100
-        self.collect_sound = load_sound("assets/sounds/power_ups/coin.mp3")
+        self.collect_sound = load_sound("assets/sounds/power_ups/coin.ogg")
 
     def show(self, level):
         super().show(level)

@@ -38,9 +38,9 @@ class FireMario(GameObject):
         self.active_cooldown = 0
         self.fireball_thrown = False
         self.fireballs = []
-        self.fire_sound = load_sound('assets/sounds/fire_mario/fireball.wav')
-        self.jump_sound = load_sound('assets/sounds/fire_mario/mario_jump.wav')
-        self.death_sound = load_sound('assets/sounds/fire_mario/fire_mario_death.mp3')
+        self.fire_sound = load_sound('assets/sounds/fire_mario/fireball.ogg')
+        self.jump_sound = load_sound('assets/sounds/fire_mario/mario_jump.ogg')
+        self.death_sound = load_sound('assets/sounds/fire_mario/fire_mario_death.ogg')
 
     def handle_movement(self, cam_pos, level_length):
         if self.active_cooldown > 0:

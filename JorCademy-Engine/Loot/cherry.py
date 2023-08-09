@@ -9,7 +9,7 @@ class Cherry(Loot):
         self.coins = 50
         self.message = "+50 COINS"
         self.triggered_representation = "PAC_MAN"
-        self.collect_sound = load_sound("assets/sounds/power_ups/power_up.wav")
+        self.collect_sound = load_sound("assets/sounds/power_ups/power_up.ogg")
 
     def update(self, shift_x):
         super().update(shift_x)

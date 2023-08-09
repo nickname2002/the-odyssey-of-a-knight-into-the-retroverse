@@ -79,8 +79,8 @@ class Ganondorf(Monster):
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
         # Sounds
-        self.long_range_attack_sound = load_sound("assets/sounds/ganondorf_long_range_attack.wav")
-        self.short_range_attack_sound = load_sound("assets/sounds/ganondorf_short_range_attack.mp3")
+        self.long_range_attack_sound = load_sound("assets/sounds/ganondorf_long_range_attack.ogg")
+        self.short_range_attack_sound = load_sound("assets/sounds/ganondorf_short_range_attack.ogg")
         self.audio_played = False
 
     def update_sprite_state(self):
