@@ -5,14 +5,12 @@ from jorcademy import *
 
 class Bokoblin(Monster):
 
-    # TODO: Add cool dying animation
-
     def __init__(self, pos, w, h, player, level, chunk):
         super().__init__(pos, w, h, player, level, chunk)
         self.sprite_set = [
             "monsters/bokoblin/bokoblin_1.png",
             "monsters/bokoblin/bokoblin_2.png",
-            "monsters/bokoblin/bokoblin_2.png"  # TODO: add sprite for 'dead' state
+            "monsters/bokoblin/bokoblin_dead.png"
         ]
         self.speed = 1
         self.direction = pygame.Vector2(-self.speed, 0)
@@ -69,12 +67,13 @@ class Bokoblin(Monster):
 
     def update_sprite_state(self):
         if self.killed:
+            self.y = self.die_y + self.height / 2 - 3 * scale
             self.show_die_animation()
             return
 
         # Update walking animation
         if self.timer % self.walk_animation_delay == 0:
-            if self.state < len(self.sprite_set) - 1:
+            if self.state < len(self.sprite_set) - 2:
                 self.state += 1
             else:
                 self.state = 0

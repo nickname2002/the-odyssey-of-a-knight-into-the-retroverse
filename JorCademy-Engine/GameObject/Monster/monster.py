@@ -23,6 +23,7 @@ class Monster(GameObject):
         self.killed = False
         self.loot = 20
         self.health = 1
+        self.die_y = 0
 
         # Die animation
         self.die_animation_delay = 80
@@ -71,6 +72,7 @@ class Monster(GameObject):
 
     def die(self):
         if not self.killed:
+            self.die_y = self.y
             self.make_text_anomaly()
             self.player.coins_earned_current_level += self.loot
 

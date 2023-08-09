@@ -18,7 +18,7 @@ class DonkeyKong(Monster):
             "monsters/donkey_kong/donkey_idle_1.png",
             "monsters/donkey_kong/donkey_idle_2.png",
             "monsters/donkey_kong/donkey_throw.png",
-            "monsters/donkey_kong/donkey_throw.png"  # TODO: add sprite for 'dead' state
+            "monsters/donkey_kong/donkey_kong_dead.png"
         ]
         self.state = IDLE_1
         self.die_state_index = 3
@@ -99,7 +99,7 @@ class DonkeyKong(Monster):
         self.handle_movement(cam_pos, level_length)
 
         # Stop monster action when dead
-        if self.killed():
+        if self.killed:
             return
 
         # Make the monster jump when the timer is up
@@ -119,8 +119,7 @@ class DonkeyKong(Monster):
         self.attack_timer += 1
 
     def draw(self):
-        if self.timer % self.walk_animation_delay == 0:
-            self.update_sprite_state()
+        self.update_sprite_state()
 
         # Make sure the monster is drawn facing the right direction
         image(self.sprite_set[self.state], self.x, self.y, 3 * scale, self.player.x >= self.x)
@@ -130,12 +129,14 @@ class DonkeyKong(Monster):
             self.show_die_animation()
             return
 
-        if self.state != ATTACK:
-            if self.state < IDLE_2:
-                self.state += 1
+        # Update jump animation
+        if self.timer % self.walk_animation_delay == 0:
+            if self.state != ATTACK:
+                if self.state < IDLE_2:
+                    self.state += 1
+                else:
+                    self.state = IDLE_1
             else:
-                self.state = IDLE_1
-        else:
-            attack_animation_delay = 15
-            if self.timer % attack_animation_delay == 0:
-                self.state = IDLE_1
+                attack_animation_delay = 15
+                if self.timer % attack_animation_delay == 0:
+                    self.state = IDLE_1

@@ -35,12 +35,13 @@ class Ganondorf(Monster):
             "monsters/ganondorf/ganondorf_short_attack_2.png",
             "monsters/ganondorf/ganondorf_short_attack_3.png",
             "monsters/ganondorf/ganondorf_long_attack.png",
-            "monsters/ganondorf/ganondorf_long_attack.png"  # TODO: add sprite for 'dead' state
+            "monsters/ganondorf/ganondorf_dead.png"
         ]
         self.die_state_index = DEAD
         self.state = IDLE
         self.speed = 1 * scale
-        self.health = 20
+        self.health = 1
+        self.rotation = 0
 
         # Idle delay
         self.idle_timer = 0
@@ -80,7 +81,6 @@ class Ganondorf(Monster):
         # Sounds
         self.long_range_attack_sound = load_sound("assets/sounds/ganondorf_long_range_attack.wav")
         self.short_range_attack_sound = load_sound("assets/sounds/ganondorf_short_range_attack.mp3")
-        #self.hit_by_player_sound = load_sound("assets/sounds/ganondorf_damage.mp3")
         self.audio_played = False
 
     def update_sprite_state(self):
@@ -190,6 +190,8 @@ class Ganondorf(Monster):
 
         # Stop monster action when it is killed
         if self.killed:
+            self.y = self.die_y + self.height / 2 - 10 * scale
+            self.rotation = -60
             return
 
         # Perform short range attack if needed
@@ -335,4 +337,4 @@ class Ganondorf(Monster):
 
     def draw(self):
         # Make sure the monster is drawn facing the right direction
-        image(self.sprite_set[self.state], self.x, self.y, 1.5 * scale, self.player.x >= self.x)
+        image(self.sprite_set[self.state], self.x, self.y, 1.5 * scale, self.player.x >= self.x, self.rotation)
