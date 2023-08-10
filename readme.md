@@ -7,7 +7,7 @@ A game created for the Summer of GameDev 2023 game jam, inspired by the theme _R
 - [Dependencies](#dependencies)
 - [Running the Application](#running-the-application)
 - [Maintenance](#maintenance)
-- [Credits](#credits)
+- [Known issues](#known-issues)
 - [Contact](#contact)
 
 ---
@@ -82,6 +82,12 @@ The game features captivating music composed by the following artists:
 The final track is promoted by BreakingCopyright:
 
 [ • 💌 Royalty Free Romantic Piano Music -...](https://www.youtube.com/watch?v=3S8CXHs2yyo&t=0s)
+
+## Known issues
+The game is currently in the last stage of development. The following issues are known and will be fixed before the game jam deadline:
+- Click events are not very responsive. This means that the player must likely click the 
+button multiple times to get a response. This is a known issue with the JorCademy Engine, 
+and will be fixed in a future update.
 
 ## Contact
 If you have any questions or feedback, feel free to reach out: nickjordan2002@gmail.com
