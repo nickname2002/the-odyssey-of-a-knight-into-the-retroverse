@@ -135,7 +135,7 @@ def show_main_menu_screen() -> None:
     # Play music
     if not main_menu_music.get_num_channels() > 0:
         main_menu_music.play(-1)
-        main_menu_music.set_volume(0.5)
+        main_menu_music.set_volume(0.5 * volume)
 
     # Draw menu
     backdrop((255, 255, 255))

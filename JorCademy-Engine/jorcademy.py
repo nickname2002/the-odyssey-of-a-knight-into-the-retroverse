@@ -1,3 +1,4 @@
+from Support.settings import volume
 from primitives import *
 from typing import Tuple
 
@@ -119,9 +120,9 @@ def load_sound(path: str):
 
 
 # Play audio
-def play_sound(sound, volume=1.0):
+def play_sound(sound, p_volume=1.0):
     try:
-        sound.set_volume(volume)
+        sound.set_volume(p_volume * volume)
         pygame.mixer.find_channel().play(sound)
     except:
         print("Error: Audio could not be played.")

@@ -48,8 +48,7 @@ class GameObject:
 
     def play_death_sound(self):
         if not self.death_sound.get_num_channels() > 0:
-            self.death_sound.set_volume(0.5)
-            self.death_sound.play()
+            play_sound(self.death_sound)
 
     def correct_position_with_camera(self, cam_pos):
         self.x = self.orig_pos[0] - cam_pos

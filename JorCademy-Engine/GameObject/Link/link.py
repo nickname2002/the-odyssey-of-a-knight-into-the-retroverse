@@ -129,15 +129,15 @@ class Link(GameObject):
             return
 
         # Update horizontal direction and position of Link
-        if is_key_down("d") and not is_key_down('shift'):
+        if is_key_down("d") or is_key_down('right') and not is_key_down('shift'):
             self.move_right(cam_pos, level_length)
-        elif is_key_down("a") and not is_key_down("shift"):
+        elif is_key_down("a") or is_key_down('left') and not is_key_down("shift"):
             self.move_left(cam_pos)
         elif self.is_grounded:
             self.state = IDLE
 
         # Update the vertical position of Link
-        if is_key_down("space"):
+        if is_key_down("space") or is_key_down("up") or is_key_down("w"):
             self.jump(self.jump_speed)
 
     def move_right(self, cam_pos, level_length):
@@ -196,7 +196,7 @@ class Link(GameObject):
             self.direction.y = speed
             self.is_grounded = False
             if not enemy_killed and self.representation == LINK:
-                play_sound(self.jump_sound, 0.3)
+                play_sound(self.jump_sound, 0.6)
             elif not enemy_killed and self.representation == FIRE_MARIO:
                 play_sound(self.fire_mario.jump_sound, 1.5)
 

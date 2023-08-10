@@ -10,17 +10,17 @@ __mouse_up_event = {}
 # ==== Mouse input ==== #
 
 def handle_mouse_input(game_event: pygame.event):
-    if not (game_event.type == MOUSEBUTTONDOWN 
+    if not (game_event.type == MOUSEBUTTONDOWN
             or game_event.type == MOUSEBUTTONDOWN):
         return
-    
+
     button = button_to_str(game_event.button)
-    
+
     if game_event.type == MOUSEBUTTONDOWN:
         __notify_mouse_button_down(button)
     elif game_event.type == MOUSEBUTTONUP:
         __notify_mouse_button_up(button)
-    
+
 
 def button_to_str(button: int) -> str:
     if button == 1:
@@ -29,7 +29,7 @@ def button_to_str(button: int) -> str:
         return "middle"
     elif button == 3:
         return "right"
-    
+
 
 def add_mouse_button_down_event(key: str, function):
     if key in __calls_down_event:
@@ -67,7 +67,6 @@ def __notify_mouse_button_up(button: str):
         f()
 
 
-
 # ==== Keyboard input ==== #
 
 def handle_keyboard_input(game_event: pygame.event):
@@ -81,7 +80,7 @@ def handle_keyboard_input(game_event: pygame.event):
 
 
 def key_to_str(key: int) -> str:
-    if key >= 33 and key<=126:
+    if 33 <= key <= 126:
         return chr(key)
     elif key == 32:
         return "space"
@@ -89,7 +88,7 @@ def key_to_str(key: int) -> str:
         return "alt"
     elif key == 1073742048:
         return "ctrl"
-    elif key == 1073742049:
+    elif key == 1073742049 or key == 1073742053:
         return "shift"
     elif key == 1073741881:
         return "caps"
@@ -97,7 +96,14 @@ def key_to_str(key: int) -> str:
         return "esc"
     elif key == 9:
         return "tab"
-    #TODO
+    elif key == 1073741904:
+        return "left"
+    elif key == 1073741906:
+        return "up"
+    elif key == 1073741903:
+        return "right"
+    elif key == 1073741905:
+        return "down"
     return "other"
 
 

@@ -5,6 +5,8 @@ import jorcademy as jc
 import events
 import asyncio
 
+from Support.settings import fps
+
 __debug = False
 
 # Set app icon
@@ -121,7 +123,7 @@ async def main():
         pygame.display.flip()
         jc.__draw_buffer.clear()
 
-        clock.tick(60)  # limits FPS to 60
+        clock.tick(fps)
         await asyncio.sleep(0)
 
     pygame.quit()
