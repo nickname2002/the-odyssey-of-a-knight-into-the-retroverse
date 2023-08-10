@@ -10,10 +10,6 @@ from UI.button import Button
 # Levels
 active_level_index = 0
 levels = [
-Level("1_2",
-          10,
-          "assets/music/1-2.ogg",
-          (147, 187, 236)),
     Level("1_1",
           10,
           "assets/music/1-1.ogg",
@@ -199,10 +195,10 @@ def show_main_menu_screen() -> None:
           screen_width / 2,
           screen_height / 2,
           1.0 * scale)
-    image("icons/odyssey-of-link-into-retroverse.png",
+    image("icons/odyssey-of-a-knight-into-retroverse.png",
           screen_width / 2,
-          screen_height / 2 - 90 * scale,
-          0.8 * scale)
+          screen_height / 2 - 80 * scale,
+          0.85 * scale)
     text("BY NICKNAME", int(scale * 30), (0, 0, 0),
          screen_width / 2, screen_height / 2 + 40 * scale,
          "fonts/pixel.ttf")
@@ -338,7 +334,7 @@ def activate_next_level() -> None:
 
 def setup() -> None:
     # Screen properties
-    title("The Odyssey of Link | Into The Retro-Verse")
+    title("The Odyssey of a Knight | Into the Retro-Verse")
     screen(screen_width, screen_height)
     # NOTE: setting up level happened in main.py
 
