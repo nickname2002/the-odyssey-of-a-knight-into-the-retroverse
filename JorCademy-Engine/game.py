@@ -70,7 +70,7 @@ main_menu_music = load_sound("assets/music/main_menu.ogg")
 
 # Buttons
 start_button = Button(
-    (screen_width / 2, screen_height / 2 + 90 * scale),
+    (screen_width / 2, screen_height / 2 + 110 * scale),
     275, 50,
     "START NEW GAME", 30, (0, 255, 255),
     (1, 1, 1), (50, 50, 50),
@@ -166,6 +166,9 @@ def show_main_menu_screen() -> None:
           screen_width / 2,
           screen_height / 2 - 90 * scale,
           0.8 * scale)
+    text("BY NICKNAME", int(scale * 30), (0, 0, 0),
+         screen_width / 2, screen_height / 2 + 40 * scale,
+         "fonts/pixel.ttf")
 
     # Update start button
     start_button.update()
