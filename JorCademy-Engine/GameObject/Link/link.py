@@ -36,8 +36,8 @@ class Link(GameObject):
         super().__init__(pos, w, h)
         self.lives = 3
         self.coins = 0  # NOTE: maybe change coins into rupees
-        self.orig_speed = 4 * scale
-        self.speed = 4 * scale
+        self.orig_speed = 6
+        self.speed = 6
         self.facing_left = False
         self.jump_speed = -15 * scale
         self.is_grounded = False
@@ -117,6 +117,27 @@ class Link(GameObject):
 
         # Handle collision of linked objects
         self.fire_mario.handle_collision(tile, index, level)
+
+    def show_power_up_indicator(self):
+        if self.representation != LINK:
+            timer = self.representation_change_delay - self.representation_change_timer
+            sprite = None
+
+            # Get sprite for power up indicator
+            if self.representation == FIRE_MARIO:
+                sprite = "power_ups/power_up_indicator_mario.png"
+            else:
+                sprite = "power_ups/power_up_indicator_pac_man.png"
+
+            # Show power up indicator
+            image(sprite, 45 * scale, 60 * scale, 0.66 * scale)
+
+            # Show timer
+            text(f"{timer}",
+                 int(25 * scale),
+                 (255, 255, 255),
+                 85 * scale, 58 * scale,
+                 "fonts/pixel.ttf")
 
     def handle_movement(self, cam_pos, level_length, at_level_end=False):
         super().handle_movement(cam_pos, level_length)
@@ -325,6 +346,7 @@ class Link(GameObject):
             self.master_sword.draw()
 
         # Draw alternative representations
+        self.show_power_up_indicator()
         self.fire_mario.draw()
         self.pac_man.draw()
 
