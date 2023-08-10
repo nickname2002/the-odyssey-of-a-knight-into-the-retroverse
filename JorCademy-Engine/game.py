@@ -10,6 +10,10 @@ from UI.button import Button
 # Levels
 active_level_index = 0
 levels = [
+Level("1_2",
+          10,
+          "assets/music/1-2.ogg",
+          (147, 187, 236)),
     Level("1_1",
           10,
           "assets/music/1-1.ogg",
@@ -45,6 +49,9 @@ starting_message_shown = False
 switch_starting_message_timer = 0
 starting_message_delay = 300
 starting_message_index = 0
+
+# Controls screen
+show_controls = False
 
 # Transition properties
 transition_started = False
@@ -108,7 +115,8 @@ def show_paused_screen() -> None:
 def show_starting_messages():
     global switch_starting_message_timer, \
         starting_message_shown, \
-        starting_message_index
+        starting_message_index, \
+        show_controls
 
     # Starting messages to show
     starting_messages = [
@@ -140,6 +148,35 @@ def show_starting_messages():
         # Reset timer & change index
         starting_message_index += 1
         switch_starting_message_timer = 0
+        show_controls = True
+
+
+# Show controls screen
+def show_controls_screen() -> None:
+    backdrop((0, 0, 0))
+    text("CONTROLS", int(scale * 50), (255, 255, 255),
+         screen_width / 2, screen_height / 2 - 150 * scale,
+         "fonts/pixel.ttf")
+    text("MOVE: ARROW KEYS & WASD", int(scale * 30), (255, 255, 255),
+         screen_width / 2, screen_height / 2 - 50 * scale,
+         "fonts/pixel.ttf")
+    text("JUMP: SPACE", int(scale * 30), (255, 255, 255),
+         screen_width / 2, screen_height / 2,
+         "fonts/pixel.ttf")
+    text("ATTACK: SHIFT", int(scale * 30), (255, 255, 255),
+         screen_width / 2, screen_height / 2 + 50 * scale,
+         "fonts/pixel.ttf")
+    text("PAUSE: ESCAPE", int(scale * 30), (255, 255, 255),
+         screen_width / 2, screen_height / 2 + 100 * scale,
+         "fonts/pixel.ttf")
+    text("PRESS ENTER TO START", int(scale * 30), (255, 255, 255),
+         screen_width / 2, screen_height / 2 + 200 * scale,
+         "fonts/pixel.ttf")
+
+    # Go to game when enter is pressed
+    if is_key_down("return"):
+        global show_controls
+        show_controls = False
 
 
 # Show main menu screen
@@ -336,6 +373,11 @@ def update() -> None:
         # Show starting message when transitioning from main menu
         if transitioning_from_main_menu and not starting_message_shown:
             show_starting_messages()
+            return
+
+        # Show controls screen
+        if show_controls:
+            show_controls_screen()
             return
 
         # Check if transitioning to main menu from EndScene

@@ -121,7 +121,6 @@ class Link(GameObject):
     def show_power_up_indicator(self):
         if self.representation != LINK:
             timer = self.representation_change_delay - self.representation_change_timer
-            sprite = None
 
             # Get sprite for power up indicator
             if self.representation == FIRE_MARIO:
@@ -141,7 +140,8 @@ class Link(GameObject):
 
     def handle_movement(self, cam_pos, level_length, at_level_end=False):
         super().handle_movement(cam_pos, level_length)
-        if self.x < screen_width / 2 or cam_pos >= (level_length - screen_width):
+        if (self.x < screen_width / 2 or cam_pos >= (level_length - screen_width)
+                and self.x > 10):
             self.x += self.direction.x * self.speed
 
         # Prevent movement if at end of level
@@ -150,10 +150,10 @@ class Link(GameObject):
             return
 
         # Update horizontal direction and position of Link
-        if is_key_down("d") or is_key_down('right') and not is_key_down('shift'):
-            self.move_right(cam_pos, level_length)
-        elif is_key_down("a") or is_key_down('left') and not is_key_down("shift"):
-            self.move_left(cam_pos)
+        if is_key_down("d") or is_key_down('right'):
+            self.move_right()
+        elif is_key_down("a") or is_key_down('left'):
+            self.move_left()
         elif self.is_grounded:
             self.state = IDLE
 
@@ -161,7 +161,7 @@ class Link(GameObject):
         if is_key_down("space") or is_key_down("up") or is_key_down("w"):
             self.jump(self.jump_speed)
 
-    def move_right(self, cam_pos, level_length):
+    def move_right(self):
         self.facing_left = False
 
         # Handle animation
@@ -175,11 +175,11 @@ class Link(GameObject):
         self.timer += 1
 
         # Update coordinates
-        if abs(self.direction.x) < self.max_speed:
+        if abs(self.direction.x) < self.max_speed and not is_key_down("shift"):
             self.direction.x += 0.25 * scale
 
     # Move left
-    def move_left(self, cam_pos):
+    def move_left(self):
         self.facing_left = True
 
         # Handle animation
@@ -193,10 +193,10 @@ class Link(GameObject):
         self.timer += 1
 
         # Update coordinates
-        if abs(self.direction.x) < self.max_speed:
+        if abs(self.direction.x) < self.max_speed and self.x > 30 and not is_key_down("shift"):
             self.direction.x -= 0.25 * scale
 
-        if self.x > 0 or cam_pos <= 0:
+        if self.x > 30:
             self.x += self.direction.x
 
     def activate_attack_cooldown(self):

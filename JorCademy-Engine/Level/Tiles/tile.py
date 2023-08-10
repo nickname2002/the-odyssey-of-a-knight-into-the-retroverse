@@ -163,7 +163,7 @@ class MovingTile(Tile):
             # Handle collision on right side of Link
             elif self.collision_right(tile):
                 if self.direction.x > 0:
-                    self.speed *= -1  # TODO: this might break things in the future
+                    self.speed *= -1
                     self.x = tile.x - tile.width / 2 - self.width / 2
 
     # Change vertical collision of player with the map
@@ -193,6 +193,7 @@ class MovingTile(Tile):
                     # Handle collision with mystery box
                     if tile.code == MYSTERY_BOX:
                         try:
+                            #  self.break_sound = load_sound("assets/sounds/block_break.ogg")
                             loot = tile.give_loot(self)
                             self.tiles.insert(i, loot)
                         except:
@@ -226,7 +227,6 @@ class MysteryBox(StaticTile):
             self.loot.show(level)
             try:
                 pass
-                # self.loot.show(level)
             except:
                 pass
 

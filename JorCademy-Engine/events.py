@@ -104,6 +104,8 @@ def key_to_str(key: int) -> str:
         return "right"
     elif key == 1073741905:
         return "down"
+    elif key == 13:
+        return "return"
     return "other"
 
 
