@@ -5,6 +5,7 @@ from jorcademy import *
 from Support.settings import screen_width, screen_height, scale
 from Level.level import Level
 from Level.boss_level import BossLevel
+from UI.button import Button
 
 # Levels
 active_level_index = 0
@@ -67,23 +68,41 @@ game_over_timer = 0
 # Music
 main_menu_music = load_sound("assets/music/main_menu.ogg")
 
+# Buttons
+start_button = Button(
+    (screen_width / 2, screen_height / 2 + 90 * scale),
+    275, 50,
+    "START NEW GAME", 30, (0, 255, 255),
+    (1, 1, 1), (50, 50, 50),
+    True, 5, (255, 0, 0))
+
+pause_button = Button(
+    (screen_width / 2, screen_height / 2 + 50 * scale),
+    250, 50,
+    "GO TO MAIN MENU", 25, (0, 0, 0),
+    (255, 255, 255), (240, 240, 240),
+    True, 5, (200, 200, 200))
+
 
 def show_paused_screen() -> None:
     global show_main_menu, game_paused, active_level_index
 
-    text("PAUSED", int(scale * 50), (0, 0, 0), screen_width / 2, screen_height / 2 - 30 * scale, "fonts/pixel.ttf")
+    text("PAUSED",
+         int(scale * 50),
+         (255, 255, 255),
+         screen_width / 2,
+         screen_height / 2 - 30 * scale,
+         "fonts/pixel.ttf")
 
     # Go back to main menu
-    text("GO TO MAIN MENU", int(scale * 30), (0, 255, 255),
-         screen_width / 2, screen_height / 2 + 20 * scale, "fonts/pixel.ttf")
+    pause_button.update()
+    pause_button.draw()
 
     # Check if user clicked on start new game
-    if is_mouse_button_down("left"):
-        if screen_height / 2 < pygame.mouse.get_pos()[1] < screen_height / 2 + 40 * scale and \
-                screen_width / 2 - 140 * scale < pygame.mouse.get_pos()[0] < screen_width / 2 + 140 * scale:
-            levels[active_level_index].level_music.fadeout(500)
-            show_main_menu = True
-            game_paused = False
+    if pause_button.clicked():
+        levels[active_level_index].level_music.fadeout(500)
+        show_main_menu = True
+        game_paused = False
 
 
 def show_starting_messages():
@@ -147,22 +166,18 @@ def show_main_menu_screen() -> None:
           screen_width / 2,
           screen_height / 2 - 90 * scale,
           0.8 * scale)
-    text("START NEW GAME",
-         int(30 * scale),
-         (0, 255, 255),
-         screen_width / 2,
-         screen_height / 2 + 90 * scale,
-         "fonts/pixel.ttf")
+
+    # Update start button
+    start_button.update()
+    start_button.draw()
 
     # Check if user clicked on start new game
-    if is_mouse_button_down("left"):
-        if screen_height / 2 + scale * 80 < pygame.mouse.get_pos()[1] < screen_height / 2 + scale * 120 and \
-                screen_width / 2 - scale * 140 < pygame.mouse.get_pos()[0] < screen_width / 2 + scale * 140:
-            show_main_menu = False
-            transitioning_from_main_menu = True
-            active_level_index = 0
-            levels[active_level_index].link.hard_reset()
-            levels[active_level_index].reset()
+    if start_button.clicked():
+        show_main_menu = False
+        transitioning_from_main_menu = True
+        active_level_index = 0
+        levels[active_level_index].link.hard_reset()
+        levels[active_level_index].reset()
 
 
 # Show game over screen
