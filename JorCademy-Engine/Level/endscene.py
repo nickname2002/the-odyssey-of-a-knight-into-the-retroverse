@@ -87,18 +87,29 @@ class EndScene(Level):
     def show_subtitles(self):
         subtitles = [
             # Ending messages for the game
-            "LINK'S ODYSSEY HAS COME TO AN END",
-            "THANK YOU FOR PLAYING",
-            "A GAME BY NICKNAME",
+            ["THE KNIGHT'S ODYSSEY HAS COME TO AN END"],
+            ["THANK YOU FOR PLAYING"],
+            ["A GAME BY NICKNAME"],
+            ["THANKS TO THE TESTING TEAM:", "SHOEBILL", "THE MILK MAN"],
         ]
 
-        # Show correct subtitle
-        text(subtitles[self.subtitles_index],
-             int(scale * 25),
-             (255, 255, 255),
-             screen_width / 2,
-             screen_height / 2,
-             "fonts/pixel.ttf")
+        # Subtitle properties
+        font_size = int(scale * 25)
+        text_color = (255, 255, 255)
+        text_font = "fonts/pixel.ttf"
+
+        # Calculate starting Y position of the subtitles
+        total_subtitles_height = len(subtitles[self.subtitles_index]) * font_size * scale
+        starting_y = (screen_height - total_subtitles_height) / 2  # Calculate starting Y position
+
+        # Draw subtitles
+        for i, item in enumerate(subtitles[self.subtitles_index]):
+            text(item,
+                 font_size,
+                 text_color,
+                 screen_width / 2,
+                 starting_y + i * font_size * scale,
+                 text_font)
 
         # Update timer
         self.switch_subtitles_timer += 1

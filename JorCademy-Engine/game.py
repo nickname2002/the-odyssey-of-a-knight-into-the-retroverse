@@ -1,15 +1,18 @@
-import pygame.mouse
 from GameObject.Monster.ganondorf import Ganondorf
-from Level.endscene import EndScene
-from jorcademy import *
-from Support.settings import screen_width, screen_height, scale
-from Level.level import Level
 from Level.boss_level import BossLevel
+from Level.endscene import EndScene
+from Level.level import Level
+from Support.settings import screen_width, screen_height, scale
 from UI.button import Button
+from jorcademy import *
 
 # Levels
 active_level_index = 0
 levels = [
+    EndScene("END",
+             1,
+             "assets/music/outro_song.ogg",
+             (147, 187, 236)),
     Level("1_1",
           10,
           "assets/music/1-1.ogg",
@@ -45,6 +48,7 @@ starting_message_shown = False
 switch_starting_message_timer = 0
 starting_message_delay = 300
 starting_message_index = 0
+skip_allowed = True
 
 # Controls screen
 show_controls = False
@@ -112,7 +116,8 @@ def show_starting_messages():
     global switch_starting_message_timer, \
         starting_message_shown, \
         starting_message_index, \
-        show_controls
+        show_controls, \
+        skip_allowed
 
     # Starting messages to show
     starting_messages = [
@@ -122,7 +127,12 @@ def show_starting_messages():
         "Be careful. And good luck".upper()
     ]
 
+    # Draw backdrop
     backdrop((255, 255, 255))
+
+    # Toggle skip allowed
+    if not is_key_down("space"):
+        skip_allowed = True
 
     # Show correct message
     text(starting_messages[starting_message_index],
@@ -132,11 +142,21 @@ def show_starting_messages():
          screen_height / 2,
          "fonts/pixel.ttf")
 
+    # Show skip option
+    text("PRESS SPACE TO SKIP",
+         int(scale * 15),
+         (150, 150, 150),
+         screen_width / 2,
+         screen_height - 30 * scale,
+         "fonts/pixel.ttf")
+
     # Update timer
     switch_starting_message_timer += 1
 
     # Switch to next message
-    if switch_starting_message_timer >= starting_message_delay:
+    if (switch_starting_message_timer >= starting_message_delay or
+            is_key_down("space") and skip_allowed):
+        skip_allowed = False
         if starting_message_index >= len(starting_messages) - 1:
             starting_message_shown = True
             return
