@@ -173,7 +173,7 @@ class Level:
     # Make new monster object and add it to the list of monsters
     def init_monster(self, tile_code, pos, chunk):
         if tile_code == BOKOBLIN:
-            chunk.monsters.append(Bokoblin(pos, tile_size * 1.5, tile_size * 1.5, self.link, self, chunk))
+            chunk.monsters.append(Bokoblin(pos, 16 * 3 * scale, 16 * 3 * scale, self.link, self, chunk))
         elif tile_code == GHOST:
             chunk.monsters.append(Ghost(pos, 48 * scale, 48 * scale, self.link, self, chunk))
         elif tile_code == DONKEY_KONG:

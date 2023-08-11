@@ -67,7 +67,7 @@ class GameObject:
             self.timer = 0
 
     def draw(self):
-        rect((255, 50, 50), self.x, self.y, self.width * scale, self.height * scale)
+        rect((255, 50, 50), self.x, self.y, self.width, self.height)
 
     def collision(self, other):
         # Check in range horizontally
