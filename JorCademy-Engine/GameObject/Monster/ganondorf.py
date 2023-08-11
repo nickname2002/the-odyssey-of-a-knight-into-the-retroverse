@@ -39,13 +39,23 @@ class Ganondorf(Monster):
         ]
         self.die_state_index = DEAD
         self.state = IDLE
-        self.speed = 2 * scale
-        self.health = 20
+        self.orig_speed = 2 * scale
+        self.speed = self.orig_speed
+        self.health = 5
         self.rotation = 0
+        self.jump_speed = -10 * scale
 
         # Idle delay
         self.idle_timer = 0
         self.random_idle_delay = random.randint(150, 600)
+
+        # Dodge delay
+        self.dodge_timer = 0
+        self.random_dodge_delay = random.randint(100, 150)
+
+        # Jump delay
+        self.min_jump_delay = 60 * 1
+        self.max_jump_delay = 60 * 4
 
         # Walking delay
         self.walk_animation_delay = 10
@@ -162,6 +172,12 @@ class Ganondorf(Monster):
         else:
             self.direction.x = -1
 
+    def face_random_direction(self):
+        if random.randint(0, 1) == 0:
+            self.direction.x = 1
+        else:
+            self.direction.x = -1
+
     def get_direction(self):
         # Get the difference between the monster and the player positions
         x_diff = self.player.x - self.x
@@ -176,14 +192,18 @@ class Ganondorf(Monster):
     def get_distance_from_player(self):
         return abs(self.player.x - self.x)
 
-    def attack(self):
-        pass
-
     def init_new_walking_delay(self):
         self.random_walking_delay = random.randint(150, 600)
 
     def init_idle_delay(self):
         self.random_idle_delay = random.randint(100, 150)
+
+    def jump(self, speed):
+        self.jump_timer = 0
+        super().jump(speed)
+
+    def init_new_jump_speed(self):
+        self.jump_speed = random.randint(-18, -12)
 
     def handle_movement(self, cam_pos, level_length):
         super().handle_movement(cam_pos, level_length)
@@ -207,6 +227,10 @@ class Ganondorf(Monster):
         # Update attack cooldown timer
         self.attack_timer += 1
 
+        # Update the jump timer
+        if self.is_grounded:
+            self.jump_timer += 1
+
         # Movement behavior based on state
         if self.state == IDLE:
             self.process_idle_state()
@@ -226,7 +250,7 @@ class Ganondorf(Monster):
             self.init_idle_delay()
 
         # Stop moving
-        self.direction.x = 0
+        self.speed = 0
 
         # Update timer
         self.idle_timer += 1
@@ -234,6 +258,7 @@ class Ganondorf(Monster):
     def process_walk_state(self):
         # Check if the timer is up
         if self.walking_timer >= self.random_walking_delay:
+
             # Reset timer
             self.walking_timer = 0
 
@@ -242,13 +267,22 @@ class Ganondorf(Monster):
 
             # Reset walking delay
             self.init_new_walking_delay()
+            self.face_random_direction()
+
+        # Make the monster jump when the timer is up
+        if self.is_grounded and self.jump_timer >= self.random_jump_delay:
+            print("Jumping")
+            self.jump(self.jump_speed)
+            self.init_new_jump_delay()
+            self.init_new_jump_speed()
 
         # Move monster
-        self.face_towards_player()
+        self.speed = self.orig_speed
         self.move_horizontally()
 
         # Update walking timer
         self.walking_timer += 1
+        self.jump_timer += 1
 
     def perform_short_range_attack(self):
         # Check if the timer is up
@@ -266,7 +300,7 @@ class Ganondorf(Monster):
             self.short_range_attack_animation_timer = 0
 
             # Reset speed
-            self.speed = 1
+            self.speed = self.orig_speed
 
             # Reset audio
             self.audio_played = False
@@ -290,6 +324,12 @@ class Ganondorf(Monster):
         # Update timer
         self.short_range_attack_timer += 1
 
+    def face_against_player(self):
+        if self.player.x > self.x:
+            self.direction.x = -1
+        else:
+            self.direction.x = 1
+
     def perform_long_range_attack(self):
         # Check if the timer is up
         if self.long_range_attack_timer >= self.long_range_attack_delay:
@@ -305,12 +345,15 @@ class Ganondorf(Monster):
             self.attack_timer = 0
 
             # Reset speed
-            self.speed = 1
+            self.speed = self.orig_speed
 
             # Reset audio
             self.audio_played = False
             return
 
+        self.face_towards_player()
+
+        # Play attack sound
         if not self.audio_played and not self.health <= 0:
             play_sound(self.long_range_attack_sound, 0.5)
             self.audio_played = True
@@ -320,7 +363,7 @@ class Ganondorf(Monster):
         self.state = LONG_RANGE_ATTACK
 
         # Make monster stand still
-        self.direction.x = 0
+        self.speed = 0
 
         # Shoot fireball
         if len(self.chunk.monsters) < 10:
@@ -336,5 +379,5 @@ class Ganondorf(Monster):
         self.update_sprite_state()
 
     def draw(self):
-        image(self.sprite_set[self.state], self.x, self.y, 1.5 * scale, self.player.x >= self.x, self.rotation)
+        image(self.sprite_set[self.state], self.x, self.y, 1.5 * scale, self.direction.x > 0, self.rotation)
         self.show_health_indicator()
