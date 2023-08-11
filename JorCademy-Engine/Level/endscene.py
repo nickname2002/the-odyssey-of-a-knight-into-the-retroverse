@@ -151,7 +151,7 @@ class EndScene(Level):
         # Play music
         if not self.level_music.get_num_channels() > 0:
             self.level_music.play(-1)
-            self.level_music.set_volume(0.25 * volume)
+            self.level_music.set_volume(0.25 * settings.volume)
 
         # Collision
         self.handle_collision()

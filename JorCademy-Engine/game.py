@@ -4,15 +4,12 @@ from Level.endscene import EndScene
 from Level.level import Level
 from Support.settings import screen_width, screen_height, scale
 from UI.button import Button
+from UI.slider import Slider
 from jorcademy import *
 
 # Levels
 active_level_index = 0
 levels = [
-    EndScene("END",
-             1,
-             "assets/music/outro_song.ogg",
-             (147, 187, 236)),
     Level("1_1",
           10,
           "assets/music/1-1.ogg",
@@ -50,6 +47,9 @@ starting_message_delay = 300
 starting_message_index = 0
 skip_allowed = True
 
+# Settings screen
+show_settings = False
+
 # Controls screen
 show_controls = False
 
@@ -75,9 +75,9 @@ game_over_timer = 0
 # Music
 main_menu_music = load_sound("assets/music/main_menu.ogg")
 
-# Buttons
+# UI components
 start_button = Button(
-    (screen_width / 2, screen_height / 2 + 110 * scale),
+    (screen_width / 2, screen_height / 2 + 90 * scale),
     275, 50,
     "START NEW GAME", 30, (0, 255, 255),
     (1, 1, 1), (50, 50, 50),
@@ -89,6 +89,28 @@ pause_button = Button(
     "GO TO MAIN MENU", 25, (0, 0, 0),
     (255, 255, 255), (240, 240, 240),
     True, 5, (200, 200, 200))
+
+settings_button = Button(
+    (screen_width / 2, screen_height / 2 + 150 * scale),
+    275, 50,
+    "SETTINGS", 30, (0, 255, 255),
+    (1, 1, 1), (50, 50, 50),
+    True, 5, (255, 0, 0))
+
+volume_slider = Slider(
+    screen_width / 2,
+    screen_height / 2 + 30 * scale,
+    500 * scale, 10 * scale,
+    (1, 1, 1),
+    0, 1, 0.5)
+
+to_main_menu_button = Button(
+    (screen_width / 2, screen_height / 2 + 220 * scale),  # Adjust position as needed
+    280, 50,  # Button size
+    "BACK TO MAIN MENU", 25, (255, 255, 255),  # Text, font size, text color
+    (1, 1, 1), (50, 50, 50),  # Button colors (normal, hover)
+    True, 5, (200, 200, 200)  # Rounded corners, border size, border color
+)
 
 
 def show_paused_screen() -> None:
@@ -207,7 +229,7 @@ def show_main_menu_screen() -> None:
     # Play music
     if not main_menu_music.get_num_channels() > 0:
         main_menu_music.play(-1)
-        main_menu_music.set_volume(0.5 * volume)
+        main_menu_music.set_volume(0.5 * settings.volume)
 
     # Draw menu
     backdrop((255, 255, 255))
@@ -217,15 +239,19 @@ def show_main_menu_screen() -> None:
           1.0 * scale)
     image("icons/odyssey-of-a-knight-into-retroverse.png",
           screen_width / 2,
-          screen_height / 2 - 80 * scale,
+          screen_height / 2 - 100 * scale,
           0.85 * scale)
     text("BY NICKNAME", int(scale * 30), (0, 0, 0),
-         screen_width / 2, screen_height / 2 + 40 * scale,
+         screen_width / 2, screen_height / 2 + 20 * scale,
          "fonts/pixel.ttf")
 
     # Update start button
     start_button.update()
     start_button.draw()
+
+    # Update settings button
+    settings_button.update()
+    settings_button.draw()
 
     # Check if user clicked on start new game
     if start_button.clicked():
@@ -234,6 +260,46 @@ def show_main_menu_screen() -> None:
         active_level_index = 0
         levels[active_level_index].link.hard_reset()
         levels[active_level_index].reset()
+
+    # Check if user clicked on settings
+    if settings_button.clicked():
+        global show_settings
+        show_settings = True
+
+
+# Show settings screen
+def show_settings_screen() -> None:
+    global show_settings
+
+    # Show backdrop
+    backdrop((255, 255, 255))
+
+    # Show title
+    text("SETTINGS", int(scale * 50), (0, 0, 0),
+         screen_width / 2, screen_height / 2 - 150 * scale,
+         "fonts/pixel.ttf")
+
+    # Show volume slider
+    text("VOLUME", int(scale * 30), (0, 0, 0),
+         screen_width / 2 - 200 * scale, screen_height / 2 - 50 * scale,
+         "fonts/pixel.ttf")
+    volume_slider.draw()
+    volume_slider.update()
+    settings.volume = volume_slider.value
+    main_menu_music.set_volume(0.5 * settings.volume)
+
+    # Show to main menu button
+    to_main_menu_button.draw()
+    to_main_menu_button.update()
+
+    # Go to main menu when button is clicked
+    if to_main_menu_button.clicked():
+        global show_settings
+        show_settings = False
+
+    # De-activate settings screen
+    if is_key_down("esc"):
+        show_settings = False
 
 
 # Show game over screen
@@ -373,6 +439,10 @@ def update() -> None:
     last_recorded_score = levels[active_level_index].link.coins
 
     if show_main_menu:
+        if show_settings:
+            show_settings_screen()
+            return
+
         show_main_menu_screen()
         return
     else:
