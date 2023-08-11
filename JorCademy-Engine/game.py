@@ -10,10 +10,6 @@ from UI.button import Button
 # Levels
 active_level_index = 0
 levels = [
-BossLevel("BOSS",
-              1,
-              "assets/music/boss.ogg",
-              (0, 0, 0), Ganondorf),
     Level("1_1",
           10,
           "assets/music/1-1.ogg",
