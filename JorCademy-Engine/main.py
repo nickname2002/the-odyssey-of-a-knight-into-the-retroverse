@@ -1,16 +1,19 @@
+import asyncio
+import os
+
 import pygame
 from pygame.locals import *
+
+import events
 import game
 import jorcademy as jc
-import events
-import asyncio
-
-from Support.settings import fps
+from Support.settings import fps, base_dir
 
 __debug = False
 
 # Set app icon
-pygame_icon = pygame.image.load('assets/icons/jc_icon.png')
+icon_path = os.path.join(base_dir, "assets", "icons", "jc_icon.png")
+pygame_icon = pygame.image.load(icon_path)
 pygame.display.set_icon(pygame_icon)
 
 # Init user setup

@@ -1,11 +1,15 @@
-import csv 
-from Support.settings import tile_size, scale
+import csv
+import os
+
 import pygame
+
+from Support.settings import tile_size, scale, base_dir
 
 
 # Convert selected level csv-file to list of lists, containing the tiles
 def import_level_data(path):
-    filepath = path
+    filepath = os.path.join(base_dir, path)
+    print(filepath)
     data = []
 
     # Open and parse csv
@@ -18,7 +22,7 @@ def import_level_data(path):
 
 
 def import_tile_set(path):
-    surface = pygame.image.load(path)
+    surface = pygame.image.load(os.path.join(base_dir, path))
     resized_surface = pygame.transform.scale(surface, (int(surface.get_width() * 2 * scale), surface.get_height() * 2 * scale))
 
     # Calculate the new tile size including the border
