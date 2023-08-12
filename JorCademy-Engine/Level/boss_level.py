@@ -7,7 +7,7 @@ from jorcademy import *
 class BossLevel(Level):
 
     def __init__(self, level_name, chunk_amount, level_music_path, level_backdrop_color, boss_type):
-        super().__init__(level_name, chunk_amount, level_backdrop_color)
+        super().__init__(level_name, chunk_amount, level_backdrop_color, (0, 0, 0), False)
         self.end_game_triforce = None
         self.boss_type = boss_type
         self.boss = None

@@ -134,6 +134,9 @@ class EndScene(Level):
         self.stop_moving_link_when_needed()
         self.link.update(self.cam_pos, self, False)
 
+        # Update environment
+        self.update_environmental_objects(self.cam_pos, self.level_length)
+
         # Move the map down when needed
         if self.to_subtitles_timer >= self.to_subtitles_delay:
             self.move_world_down()
@@ -160,6 +163,7 @@ class EndScene(Level):
 
         # == Background
         backdrop(self.backdrop_color)
+        self.draw_environmental_objects()
 
         # == Player
         self.link.draw()

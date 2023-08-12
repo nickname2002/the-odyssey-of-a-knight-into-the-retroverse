@@ -29,7 +29,7 @@ levels = [
     Level("1_5",
           10,
           "assets/music/1-5.ogg",
-          (0, 0, 0)),
+          (0, 0, 0), False),
     BossLevel("BOSS",
               1,
               "assets/music/boss.ogg",
