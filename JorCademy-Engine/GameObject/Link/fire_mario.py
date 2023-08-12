@@ -138,7 +138,6 @@ class FireMario(GameObject):
 
         # Start attack
         if is_key_down("shift") and \
-           self.is_grounded and \
            self.active_cooldown <= 0:
             self.attack()
 

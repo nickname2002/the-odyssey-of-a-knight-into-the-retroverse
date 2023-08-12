@@ -95,7 +95,7 @@ class Level:
 
     def transition_requested(self):
         return self.link.die_animation_timer >= self.link.die_animation_delay or \
-               self.end_game_triforce.reached
+            self.end_game_triforce.reached
 
     def init_chunks(self):
         self.chunk_size = round(self.level_length / self.chunk_amount)  # Maybe we can determine this automatically
@@ -123,7 +123,7 @@ class Level:
         # Determine the chunks to draw
         for i, chunk in enumerate(self.chunks):
             if chunk.start < self.link.x + self.cam_pos + screen_width and \
-               not chunk.end < self.link.x + self.cam_pos - screen_width:
+                    not chunk.end < self.link.x + self.cam_pos - screen_width:
                 chunks_to_draw.append(chunk)
 
         return chunks_to_draw
@@ -219,6 +219,9 @@ class Level:
         # Sort list so that tiles with parent type Loot are checked first
         tiles_to_check.sort(key=lambda x: issubclass(type(x), Loot), reverse=True)
 
+        # Check for collision
+        link_is_grounded = False
+
         for i, tile in enumerate(tiles_to_check):
 
             # No collision when tile is part of backdrop
@@ -236,12 +239,18 @@ class Level:
 
             # Link collision
             self.link.handle_collision(tile, i, self)
+            if not link_is_grounded:
+                if self.link.collision_bottom(tile):
+                    link_is_grounded = True
+
+        # Update link's grounded state
+        self.link.is_grounded = link_is_grounded
 
     # Check whether shift of the tiles should be prevented
     def prevent_tile_shift(self):
         return (self.cam_pos <= 0 and self.link.direction.x < 0) or \
-               (self.cam_pos >= (self.level_length - screen_width) and
-                self.link.direction.x > 0)
+            (self.cam_pos >= (self.level_length - screen_width) and
+             self.link.direction.x > 0)
 
     def reset(self):
         # Properties

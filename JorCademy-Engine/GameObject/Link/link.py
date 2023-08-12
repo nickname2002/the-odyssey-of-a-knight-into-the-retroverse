@@ -40,10 +40,10 @@ class Link(GameObject):
         self.speed = 6
         self.facing_left = False
         self.jump_speed = -15 * scale
-        self.is_grounded = False
+        self.is_grounded = True
         self.walk_animation_delay = 3
         self.state = IDLE
-        self.representation = FIRE_MARIO
+        self.representation = LINK
         self.attack_cooldown = 50
         self.active_cooldown = 0
         self.master_sword = MasterSword((self.x, self.y), 45 * scale, 33 * scale, self)
@@ -96,7 +96,7 @@ class Link(GameObject):
                 self.y = tile.y - tile.height / 2 - self.height / 2
                 self.direction.y = 0
 
-            self.is_grounded = True
+            # self.is_grounded = True
 
         # Handle collision on top side of object
         elif self.collision_top(tile):
@@ -139,6 +139,8 @@ class Link(GameObject):
                  "fonts/pixel.ttf")
 
     def handle_movement(self, cam_pos, level_length, at_level_end=False):
+        print(self.is_grounded)
+
         super().handle_movement(cam_pos, level_length)
         if (self.x < screen_width / 2 or cam_pos >= (level_length - screen_width)
                 and self.x > 10):
@@ -159,7 +161,8 @@ class Link(GameObject):
 
         # Update the vertical position of Link
         if is_key_down("space") or is_key_down("up") or is_key_down("w"):
-            self.jump(self.jump_speed)
+            if self.is_grounded:
+                self.jump(self.jump_speed)
 
     def move_right(self):
         self.facing_left = False
@@ -288,7 +291,10 @@ class Link(GameObject):
         self.master_sword.update(cam_pos, level.level_length)
 
     def activate_main_representation(self):
-        self.jump(self.jump_speed / 2)
+        if self.representation == LINK:
+            return
+
+        self.jump(self.jump_speed / 3)
         self.representation = LINK
         self.height = 64 * scale
         self.representation_change_timer = 0
@@ -359,14 +365,14 @@ class Link(GameObject):
             self.killed = True
 
     def soft_reset(self):
-        self.x = 100
-        self.y = screen_height / 2
         self.gravity = 0.8 * scale
         self.die_animation_timer = 0
         self.speed = self.orig_speed
         self.killed = False
         self.coins_earned_current_level = 0
         self.activate_main_representation()
+        self.x = 100
+        self.y = screen_height - 2 * tile_size - self.height / 2
 
     def hard_reset(self):
         self.coins = 0
