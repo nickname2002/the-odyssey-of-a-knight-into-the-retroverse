@@ -139,8 +139,6 @@ class Link(GameObject):
                  "fonts/pixel.ttf")
 
     def handle_movement(self, cam_pos, level_length, at_level_end=False):
-        print(self.is_grounded)
-
         super().handle_movement(cam_pos, level_length)
         if (self.x < screen_width / 2 or cam_pos >= (level_length - screen_width)
                 and self.x > 10):

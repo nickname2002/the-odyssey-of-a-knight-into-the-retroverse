@@ -57,9 +57,6 @@ class Monster(GameObject):
         new_text_anomaly = TextAnomaly(anomaly_pos, self.message, 20, (255, 255, 255))
         self.level.get_current_chunk().update_text_anomalies(new_text_anomaly)
 
-    def in_frame(self):
-        return self.x + self.width > 0 and self.x - self.width < screen_width
-
     def die(self):
         if not self.killed:
             self.die_y = self.y

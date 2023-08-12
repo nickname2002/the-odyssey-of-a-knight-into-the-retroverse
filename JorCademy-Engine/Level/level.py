@@ -1,3 +1,4 @@
+from Environment.cloud import Cloud
 from Loot.loot import Loot
 from Support.settings import tile_size, screen_width, screen_height, scale
 from jorcademy import *
@@ -15,11 +16,17 @@ from GameObject.Monster.donkey_kong import DonkeyKong
 from GameObject.Monster.ganondorf import Ganondorf
 from Support.support import import_level_data, import_tile_set
 from Level.Tiles.tile_data import *
+import random
 
 
 class Level:
 
-    def __init__(self, level_name, chunk_amount, level_music_path, level_backdrop_color=(0, 0, 0)):
+    def __init__(self,
+                 level_name,
+                 chunk_amount,
+                 level_music_path,
+                 level_backdrop_color=(0, 0, 0),
+                 clouds_enabled=True):
         # Properties
         self.level_length = None
         self.level_data = None
@@ -32,8 +39,15 @@ class Level:
         self.chunk_amount = chunk_amount
         self.chunk_size = None
 
+        # Clouds
+        self.clouds_enabled = clouds_enabled
+        self.clouds_amount = 10
+        if not self.clouds_enabled:
+            self.clouds_amount = 0
+
         # Collections
         self.chunks = []
+        self.environment = []
 
         # Music
         self.level_music = load_sound(level_music_path)
@@ -134,6 +148,8 @@ class Level:
         self.level_data = import_level_data(f"Maps/level_{self.level_name}.csv")
         self.level_length = len(self.level_data[0] * tile_size)
         self.init_chunks()
+        self.environment = []
+        self.init_environmental_objects(self.cam_pos)
         tile_set = import_tile_set("Maps/tileset.png")
 
         # Initial y-coordinate of tile
@@ -265,6 +281,29 @@ class Level:
         # Execute setup again to reset map
         self.setup(self.screen)
 
+    def init_environmental_objects(self, cam_pos):
+        # Add clouds in current view
+        for i in range(self.clouds_amount):
+            # Setup cloud object in screen
+            cloud = Cloud(cam_pos)
+            cloud.orig_pos = (random.randint(0, screen_width + 100),
+                              random.randint(0, 100))
+            self.environment.append(cloud)
+
+    def update_environmental_objects(self, cam_pos, level_length):
+        clouds_amount = 0
+
+        for obj in self.environment:
+            if obj.ready_to_remove():
+                self.environment.remove(obj)
+            else:
+                if type(obj) == Cloud:
+                    clouds_amount += 1
+                obj.update(cam_pos, level_length)
+
+        if clouds_amount < self.clouds_amount:
+            self.environment.append(Cloud(cam_pos))
+
     # Update the state of the level
     def update(self):
         # Stop music if game is over
@@ -287,6 +326,7 @@ class Level:
 
         # Other
         self.end_game_triforce.update(self.cam_pos, self.level_length)
+        self.update_environmental_objects(self.cam_pos, self.level_length)
 
         # Play music
         if not self.level_music.get_num_channels() > 0:
@@ -300,11 +340,20 @@ class Level:
         # Collision
         self.handle_collision()
 
+    def draw_environmental_objects(self):
+        for obj in self.environment:
+            if obj.in_frame():
+                obj.draw()
+
     # Draw the state of the level
     def draw(self):
 
         # == Background
         backdrop(self.backdrop_color)
+
+        # == Other
+        self.draw_environmental_objects()
+        self.end_game_triforce.draw()
 
         # == Player 
         self.link.draw()
@@ -313,9 +362,6 @@ class Level:
         chunks_to_draw = self.get_chunks_in_range()
         for chunk in chunks_to_draw:
             chunk.draw(self.screen)
-
-        # == Other
-        self.end_game_triforce.draw()
 
         # Coin amount
         text(f"COINS: {str(self.link.coins + self.link.coins_earned_current_level)}",

@@ -69,6 +69,9 @@ class GameObject:
     def draw(self):
         rect((255, 50, 50), self.x, self.y, self.width, self.height)
 
+    def in_frame(self):
+        return self.x + self.width > 0 and self.x - self.width < screen_width
+
     def collision(self, other):
         # Check in range horizontally
         in_x_range = (self.x + self.width / 2) >= (other.x - other.width / 2) and \

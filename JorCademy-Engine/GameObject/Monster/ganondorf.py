@@ -271,7 +271,6 @@ class Ganondorf(Monster):
 
         # Make the monster jump when the timer is up
         if self.is_grounded and self.jump_timer >= self.random_jump_delay:
-            print("Jumping")
             self.jump(self.jump_speed)
             self.init_new_jump_delay()
             self.init_new_jump_speed()

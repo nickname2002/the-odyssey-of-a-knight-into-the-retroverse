@@ -1,3 +1,6 @@
+from Environment.cloud import Cloud
+
+
 class Chunk:
 
     def __init__(self, chunk_start, chunk_end, index):
