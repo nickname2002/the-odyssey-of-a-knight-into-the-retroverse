@@ -35,13 +35,9 @@ class Ghost(Monster):
         if self.collision(self.player):
             if self.player.representation == PAC_MAN:
                 play_sound(self.eaten_sound, 0.02)
-                self.health -= 1
+                self.die()
             elif not self.player.killed:
                 self.player.die(level)
-
-        # Make sure to die if health is 0
-        if self.health <= 0:
-            self.die()
 
     def handle_collision(self, tile, _, level):
         # Handle collision on left side of monster

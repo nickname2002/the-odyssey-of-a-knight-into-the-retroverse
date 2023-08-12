@@ -41,6 +41,7 @@ class Monster(GameObject):
         # Sounds
         self.hit_by_player_sound = load_sound("assets/sounds/monsters/enemy_jump.ogg")
         self.hit_by_sword_sound = load_sound("assets/sounds/link/punch.ogg")
+        self.hit_by_fireball_sound = load_sound("assets/sounds/fire_mario/fireball_hit.ogg")
 
     def is_out_of_frame(self):
         if self.moving:
@@ -73,7 +74,7 @@ class Monster(GameObject):
             if ((self.collision(fireball) and
                     self.invincible_timer <= 0) and
                     not self.killed):
-                play_sound(self.hit_by_player_sound, 0.5)
+                play_sound(self.hit_by_fireball_sound, 1.5)
                 self.health -= 1
                 self.invincible_timer = self.invincible_delay
                 fireball.killed = True
