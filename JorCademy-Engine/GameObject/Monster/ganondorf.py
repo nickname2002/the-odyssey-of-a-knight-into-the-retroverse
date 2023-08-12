@@ -1,8 +1,9 @@
-from GameObject.Monster.monster import Monster
+import random
+
 from GameObject.Monster.Weapons.enemy_fireball import EnemyFireBall
+from GameObject.Monster.monster import Monster
 from Support.settings import scale
 from jorcademy import *
-import random
 
 # Ganondorf states
 IDLE = 0

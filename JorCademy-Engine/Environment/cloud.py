@@ -1,7 +1,8 @@
+import random
+
 from GameObject.gameobject import GameObject
 from Support.settings import screen_width, scale
 from jorcademy import *
-import random
 
 
 class Cloud(GameObject):

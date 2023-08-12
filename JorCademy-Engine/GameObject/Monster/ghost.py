@@ -1,8 +1,10 @@
+import math
+
+import pygame
+
 from GameObject.Monster.monster import Monster
 from Support.settings import scale
 from jorcademy import *
-import pygame
-import math
 
 # States
 NOT_VULNERABLE_HORIZONTAL = 0

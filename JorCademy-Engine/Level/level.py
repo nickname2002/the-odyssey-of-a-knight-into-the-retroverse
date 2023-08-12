@@ -1,22 +1,23 @@
+import random
+
 from Environment.cloud import Cloud
-from Loot.loot import Loot
-from Support.settings import tile_size, screen_width, screen_height, scale
-from jorcademy import *
-from Level.chunk import Chunk
-from Level.triforce import Triforce
-from Level.Tiles.tile import StaticTile, MysteryBox, MovingTile, BreakableTile
-from Loot.fire_flower import FireFlower
-from Loot.coin import Coin
-from Loot.extra_life import ExtraLife
-from Loot.cherry import Cherry
 from GameObject.Link.link import Link
 from GameObject.Monster.bokoblin import Bokoblin
-from GameObject.Monster.ghost import Ghost
 from GameObject.Monster.donkey_kong import DonkeyKong
 from GameObject.Monster.ganondorf import Ganondorf
-from Support.support import import_level_data, import_tile_set
+from GameObject.Monster.ghost import Ghost
+from Level.Tiles.tile import StaticTile, MysteryBox, MovingTile, BreakableTile
 from Level.Tiles.tile_data import *
-import random
+from Level.chunk import Chunk
+from Level.triforce import Triforce
+from Loot.cherry import Cherry
+from Loot.coin import Coin
+from Loot.extra_life import ExtraLife
+from Loot.fire_flower import FireFlower
+from Loot.loot import Loot
+from Support.settings import tile_size, screen_width, screen_height, scale
+from Support.support import import_level_data, import_tile_set
+from jorcademy import *
 
 
 class Level:

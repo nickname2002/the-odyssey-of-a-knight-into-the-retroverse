@@ -1,6 +1,7 @@
+from typing import Tuple
+
 from Support import settings
 from primitives import *
-from typing import Tuple
 
 # Game settings
 screen_size: tuple = (100, 100)

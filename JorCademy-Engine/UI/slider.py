@@ -1,5 +1,3 @@
-import pygame
-
 from Support.settings import scale
 from jorcademy import *
 
