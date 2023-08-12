@@ -34,12 +34,13 @@ class EnemyFireBall(Monster):
         # Update timer
         self.timer += 1
 
-    def handle_collision(self, tile, index, level):
-        if self.collision_left(tile) or self.collision_right(tile):
+    def handle_left_side_collision_with_map(self, tile):
+        if self.collision_left(tile):
             self.killed = True
 
-        # Make sure player dies when colliding with the fireball
-        self.handle_collision_with_player(level)
+    def handle_right_side_collision_with_map(self, tile):
+        if self.collision_right(tile):
+            self.killed = True
 
     def ready_to_remove(self):
         return self.killed

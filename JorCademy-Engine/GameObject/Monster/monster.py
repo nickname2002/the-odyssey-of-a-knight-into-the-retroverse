@@ -46,8 +46,8 @@ class Monster(GameObject):
     def is_out_of_frame(self):
         if self.moving:
             return \
-                self.x < 0 - self.width and \
-                (self.y < 0 - self.width or self.y > screen_height + self.height)
+                    self.x < 0 - self.width and \
+                    (self.y < 0 - self.width or self.y > screen_height + self.height)
 
     def ready_to_remove(self):
         return self.is_out_of_frame() or \
@@ -66,20 +66,24 @@ class Monster(GameObject):
 
         self.killed = True
 
-    def handle_collision_with_player(self, level):
-        self.invincible_timer -= 1
+    def handle_collision_with_sword(self):
+        if self.player.master_sword.collision(self) and \
+                self.player.master_sword.visible and \
+                self.invincible_timer <= 0:
+            self.health -= 1
+            self.invincible_timer = self.invincible_delay
 
-        # Check if fireball is visible and if it collides with the monster
+    def handle_collision_with_fireball(self):
         for fireball in self.player.fire_mario.fireballs:
             if ((self.collision(fireball) and
-                    self.invincible_timer <= 0) and
+                 self.invincible_timer <= 0) and
                     not self.killed):
                 play_sound(self.hit_by_fireball_sound, 1.5)
                 self.health -= 1
                 self.invincible_timer = self.invincible_delay
                 fireball.killed = True
 
-        # Process this object's damage
+    def handle_damage_from_player_body_collision(self):
         if self.collision_top(self.player) and self.player.collision_bottom(self):
 
             # Kill monster
@@ -92,22 +96,54 @@ class Monster(GameObject):
                 self.player.is_grounded = True
                 self.player.jump(self.player.jump_speed + 4, True)
 
-        # Process player damage
-        elif self.collision(self.player) and not self.killed:
+    def handle_player_damage_from_player_body_collision(self, level):
+        if self.collision(self.player) and not self.killed:
             if not self.player.killed:
                 self.player.die(level)
+
+    def handle_collision_with_player(self, level):
+        self.invincible_timer -= 1
+
+        # Handle collision with player and linked objects
+        self.handle_collision_with_fireball()
+        self.handle_collision_with_sword()
+        self.handle_damage_from_player_body_collision()
+        self.handle_player_damage_from_player_body_collision(level)
 
         # Make sure to die if health is 0
         if self.health <= 0:
             self.die()
 
-    def handle_collision_with_sword(self):
-        if self.player.master_sword.collision(self) and \
-                self.player.master_sword.visible and \
-                self.invincible_timer <= 0:
-            play_sound(self.hit_by_sword_sound, 1)
-            self.health -= 1
-            self.invincible_timer = self.invincible_delay
+    def handle_left_side_collision_with_map(self, tile):
+        if self.collision_left(tile):
+            if self.direction.x < 0:
+                self.direction.x *= -1
+
+    def handle_right_side_collision_with_map(self, tile):
+        if self.collision_right(tile):
+            if self.direction.x > 0:
+                self.direction.x *= -1
+
+    def handle_top_side_collision_with_map(self, tile):
+        if self.collision_top(tile):
+            if self.direction.y < 0:
+                self.y = tile.y + tile.height / 2 + self.height / 2
+                self.direction.y = 0
+
+    def handle_bottom_side_collision_with_map(self, tile):
+        if self.collision_bottom(tile):  # Bottom
+            if self.direction.y > 0:
+                self.y = tile.y - tile.height / 2 - self.height / 2
+                self.direction.y = 0
+
+            self.is_grounded = True
+
+    def handle_collision(self, tile, _, level):
+        self.handle_left_side_collision_with_map(tile)
+        self.handle_right_side_collision_with_map(tile)
+        self.handle_top_side_collision_with_map(tile)
+        self.handle_bottom_side_collision_with_map(tile)
+        self.handle_collision_with_player(level)
 
     def init_new_attack_delay(self):
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)

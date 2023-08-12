@@ -1,6 +1,6 @@
-from GameObject.gameobject import GameObject
-from Support.settings import screen_width, screen_height, scale
 from GameObject.Link.Weapons.fireball import FireBall
+from GameObject.gameobject import GameObject
+from Support.settings import screen_width, scale
 from jorcademy import *
 
 # States for FireMario
@@ -50,7 +50,7 @@ class FireMario(GameObject):
         if is_key_down("d") and not is_key_down('shift'):
             self.move_right(cam_pos, level_length)
         elif is_key_down("a") and not is_key_down("shift"):
-            self.move_left(cam_pos)
+            self.move_left()
         elif self.is_grounded and not self.active_cooldown > 0:
             self.direction.x = 0
             self.state = IDLE
@@ -84,7 +84,7 @@ class FireMario(GameObject):
             self.x += self.direction.x
 
     # Move left
-    def move_left(self, cam_pos):
+    def move_left(self):
         self.facing_left = True
 
         # Handle animation

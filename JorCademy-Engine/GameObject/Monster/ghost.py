@@ -39,34 +39,6 @@ class Ghost(Monster):
             elif not self.player.killed:
                 self.player.die(level)
 
-    def handle_collision(self, tile, _, level):
-        # Handle collision on left side of monster
-        if self.collision_left(tile):
-            if self.direction.x < 0:
-                self.direction.x *= -1
-
-        # Handle collision on right side of monster
-        elif self.collision_right(tile):
-            if self.direction.x > 0:
-                self.direction.x *= -1
-
-        # Handle collision on bottom side of monster
-        if self.collision_bottom(tile):
-            if self.direction.y > 0:
-                self.y = tile.y - tile.height / 2 - self.height / 2
-                self.direction.y = 0
-
-            self.is_grounded = True
-
-        # Handle collision on top side of monster
-        elif self.collision_top(tile):
-            if self.direction.y < 0:
-                self.y = tile.y + tile.height / 2 + self.height / 2
-                self.direction.y = 0
-
-        # Player game events
-        self.handle_collision_with_player(level)
-
     def handle_movement(self, cam_pos, level_length):
         if self.moving:
             self.offset += self.direction.x * self.speed

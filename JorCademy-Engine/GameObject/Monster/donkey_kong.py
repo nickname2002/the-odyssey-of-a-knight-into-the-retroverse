@@ -1,8 +1,7 @@
-from GameObject.Monster.monster import Monster
 from GameObject.Monster.Weapons.barrel import Barrel
+from GameObject.Monster.monster import Monster
 from Support.settings import scale
 from jorcademy import *
-import random
 
 # Donkey Kong states
 IDLE_1 = 0
@@ -37,35 +36,6 @@ class DonkeyKong(Monster):
         self.min_attack_delay = 60 * 5
         self.max_attack_delay = 60 * 10
 
-    def handle_collision(self, tile, _, level):
-        # Handle collision on left side of monster
-        if self.collision_left(tile):
-            if self.direction.x < 0:
-                self.direction.x *= -1
-
-        # Handle collision on right side of monster
-        elif self.collision_right(tile):
-            if self.direction.x > 0:
-                self.direction.x *= -1
-
-        # Handle collision on bottom side of monster
-        if self.collision_bottom(tile):
-            if self.direction.y > 0:
-                self.y = tile.y - tile.height / 2 - self.height / 2
-                self.direction.y = 0
-
-            self.is_grounded = True
-
-        # Handle collision on top side of monster
-        elif self.collision_top(tile):
-            if self.direction.y < 0:
-                self.y = tile.y + tile.height / 2 + self.height / 2
-                self.direction.y = 0
-
-        # Player game events
-        self.handle_collision_with_player(level)
-        self.handle_collision_with_sword()
-
     def jump(self, speed):
         self.jump_timer = 0
         super().jump(speed)
@@ -80,13 +50,6 @@ class DonkeyKong(Monster):
         # Reset attack timer
         self.init_new_attack_delay()
         self.attack_timer = 0
-
-    def handle_collision_with_sword(self):
-        if self.player.master_sword.collision(self) and \
-                self.player.master_sword.visible and \
-                self.invincible_timer <= 0:
-            self.health -= 1
-            self.invincible_timer = self.invincible_delay
 
     def get_direction(self):
         if self.player.x <= self.x:

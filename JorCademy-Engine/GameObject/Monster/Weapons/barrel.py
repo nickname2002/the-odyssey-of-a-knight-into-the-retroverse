@@ -1,6 +1,5 @@
 from GameObject.Monster.monster import Monster
 from Support.settings import scale
-from Level.Tiles.tile_data import *
 from jorcademy import *
 
 
@@ -47,28 +46,10 @@ class Barrel(Monster):
     def ready_to_remove(self):
         return self.killed
 
-    def handle_collision(self, tile, _, level):
-        # Handle collision on left side
+    def handle_left_side_collision_with_map(self, tile):
         if self.collision_left(tile):
             self.killed = True
 
-        # Handle collision on right side
-        elif self.collision_right(tile):
+    def handle_right_side_collision_with_map(self, tile):
+        if self.collision_right(tile):
             self.killed = True
-
-        # Handle collision on bottom side
-        if self.collision_bottom(tile):
-            if self.direction.y > 0:
-                self.y = tile.y - tile.height / 2 - self.height / 2
-                self.direction.y = 0
-
-            self.is_grounded = True
-
-        # Player game events
-        self.handle_collision_with_player(level)
-        self.handle_collision_with_sword()
-
-    def handle_collision_with_sword(self):
-        if self.player.master_sword.collision(self) and \
-                self.player.master_sword.visible:
-            self.die()
