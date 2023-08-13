@@ -21,6 +21,10 @@ settings_button = Button(
 # Music
 main_menu_music = load_sound("assets/music/main_menu.ogg")
 
+# Images
+menu_backdrop = load_image("other/main_menu_backdrop_light.png")
+logo = load_image("icons/odyssey-of-a-knight-into-retroverse.png")
+
 
 def show_main_menu_screen(active_level) -> string:
     # Stop music in active level
@@ -33,11 +37,11 @@ def show_main_menu_screen(active_level) -> string:
 
     # Draw menu
     backdrop((255, 255, 255))
-    image("other/main_menu_backdrop_light.png",
+    image(menu_backdrop,
           screen_width / 2,
           screen_height / 2,
           1.0 * scale)
-    image("icons/odyssey-of-a-knight-into-retroverse.png",
+    image(logo,
           screen_width / 2,
           screen_height / 2 - 100 * scale,
           0.85 * scale)

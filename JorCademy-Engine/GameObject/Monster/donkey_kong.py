@@ -14,10 +14,10 @@ class DonkeyKong(Monster):
     def __init__(self, pos, w, h, player, level, chunk):
         super().__init__(pos, w, h, player, level, chunk)
         self.sprite_set = [
-            "monsters/donkey_kong/donkey_idle_1.png",
-            "monsters/donkey_kong/donkey_idle_2.png",
-            "monsters/donkey_kong/donkey_throw.png",
-            "monsters/donkey_kong/donkey_kong_dead.png"
+            load_image("monsters/donkey_kong/donkey_idle_1.png"),
+            load_image("monsters/donkey_kong/donkey_idle_2.png"),
+            load_image("monsters/donkey_kong/donkey_throw.png"),
+            load_image("monsters/donkey_kong/donkey_kong_dead.png")
         ]
         self.state = IDLE_1
         self.die_state_index = 3

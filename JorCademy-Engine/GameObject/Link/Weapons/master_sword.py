@@ -14,7 +14,7 @@ class MasterSword(GameObject):
         self.timer = 0
         self.attack_animation_delay = 20
         self.sword_reach = 10 * scale
-        self.sprite = "link/master_sword.png"
+        self.sprite = load_image("link/master_sword.png")
         self.player = player
         self.gravity = 0 * scale
         self.rotation = -75

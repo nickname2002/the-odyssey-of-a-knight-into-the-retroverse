@@ -41,6 +41,7 @@ class Level:
         self.chunk_size = None
 
         # Clouds
+        self.cloud_image = load_image("other/cloud.png")
         self.clouds_enabled = clouds_enabled
         self.clouds_amount = 10
 
@@ -289,7 +290,7 @@ class Level:
         # Add clouds in current view
         for i in range(self.clouds_amount):
             # Setup cloud object in screen
-            cloud = Cloud(cam_pos)
+            cloud = Cloud(self.cloud_image, cam_pos)
             cloud.orig_pos = (random.randint(0, screen_width + 100),
                               random.randint(0, 100))
             self.environment.append(cloud)
@@ -306,7 +307,7 @@ class Level:
                 obj.update(cam_pos, level_length)
 
         if clouds_amount < self.clouds_amount:
-            self.environment.append(Cloud(cam_pos))
+            self.environment.append(Cloud(self.cloud_image, cam_pos))
 
     # Update the state of the level
     def update(self):

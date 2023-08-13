@@ -10,6 +10,7 @@ class Cherry(Loot):
         self.message = "+50 COINS"
         self.triggered_representation = "PAC_MAN"
         self.collect_sound = load_sound("assets/sounds/power_ups/power_up.ogg")
+        self.image = load_image("power_ups/cherry.png")
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -26,6 +27,6 @@ class Cherry(Loot):
         play_sound(self.collect_sound, 1)
         self.player.trigger_new_representation(self.triggered_representation)
 
-    def draw(self, screen):
-        self.make_image("assets/power_ups/cherry.png")
-        super().draw(screen)
+    def draw(self, game_screen):
+        self.make_image(self.image)
+        super().draw(game_screen)

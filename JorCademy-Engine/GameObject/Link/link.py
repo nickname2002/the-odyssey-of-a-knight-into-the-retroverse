@@ -58,21 +58,25 @@ class Link(GameObject):
         self.coins_earned_current_level = 0
         self.die_state_index = DEAD
         self.sprites = [
-            'link/link_idle.png',
-            'link/link_fight.png',
-            'link/link_walking_1.png',
-            'link/link_walking_2.png',
-            'link/link_walking_3.png',
-            'link/link_walking_4.png',
-            'link/link_walking_5.png',
-            'link/link_walking_6.png',
-            'link/link_walking_7.png',
-            'link/link_walking_8.png',
-            'link/link_walking_9.png',
-            'link/link_walking_10.png',
-            'link/link_jumping.png',
-            "link/link_dead.png"
+            load_image('link/link_idle.png'),
+            load_image('link/link_fight.png'),
+            load_image('link/link_walking_1.png'),
+            load_image('link/link_walking_2.png'),
+            load_image('link/link_walking_3.png'),
+            load_image('link/link_walking_4.png'),
+            load_image('link/link_walking_5.png'),
+            load_image('link/link_walking_6.png'),
+            load_image('link/link_walking_7.png'),
+            load_image('link/link_walking_8.png'),
+            load_image('link/link_walking_9.png'),
+            load_image('link/link_walking_10.png'),
+            load_image('link/link_jumping.png'),
+            load_image("link/link_dead.png")
         ]
+
+        # Power-up indicators
+        self.fire_mario_indicator = load_image("power_ups/power_up_indicator_mario.png")
+        self.pac_man_indicator = load_image("power_ups/power_up_indicator_pac_man.png")
 
         # Sprite data
         self.sprite_scale = 1.28 * scale
@@ -128,9 +132,9 @@ class Link(GameObject):
 
             # Get sprite for power up indicator
             if self.representation == FIRE_MARIO:
-                sprite = "power_ups/power_up_indicator_mario.png"
+                sprite = self.fire_mario_indicator
             else:
-                sprite = "power_ups/power_up_indicator_pac_man.png"
+                sprite = self.pac_man_indicator
 
             # Show power up indicator
             image(sprite, 45 * scale, 60 * scale, 0.66 * scale)

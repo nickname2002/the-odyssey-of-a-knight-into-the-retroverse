@@ -7,7 +7,7 @@ class Triforce(GameObject):
 
     def __init__(self, pos, w, h, player):
         super().__init__(pos, w, h)
-        self.sprite = "other/triforce.png"
+        self.image = load_image("other/triforce.png")
         self.player = player
         self.reached = False
 
@@ -27,4 +27,4 @@ class Triforce(GameObject):
             self.reached = True
 
     def draw(self):
-        image(self.sprite, self.x, self.y, 0.5 * scale, False, 0)
+        image(self.image, self.x, self.y, 0.5 * scale, False, 0)

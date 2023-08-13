@@ -20,13 +20,13 @@ class FireMario(GameObject):
         self.MAX_FIREBALLS = 5
         self.player = player
         self.sprites = [
-            'fire_mario/fire_mario_idle.png',
-            'fire_mario/fire_mario_jumping.png',
-            'fire_mario/fire_mario_walking_1.png',
-            'fire_mario/fire_mario_walking_2.png',
-            'fire_mario/fire_mario_walking_3.png',
-            'fire_mario/fire_mario_attack.png',
-            "fire_mario/fire_mario_dead.png"
+            load_image('fire_mario/fire_mario_idle.png'),
+            load_image('fire_mario/fire_mario_jumping.png'),
+            load_image('fire_mario/fire_mario_walking_1.png'),
+            load_image('fire_mario/fire_mario_walking_2.png'),
+            load_image('fire_mario/fire_mario_walking_3.png'),
+            load_image('fire_mario/fire_mario_attack.png'),
+            load_image("fire_mario/fire_mario_dead.png")
         ]
         self.attack_cooldown = 50
         self.active_cooldown = 0

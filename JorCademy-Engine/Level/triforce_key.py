@@ -9,6 +9,7 @@ class TriforceKey(Triforce):
         super().__init__(pos, w, h, player)
         self.x = screen_width / 2
         self.y = 0 - self.height * 2
+        self.image = load_image("other/triforce.png")
         self.moving_allowed = False
         self.speed = 2 * scale
         self.final_y = screen_height / 2 + self.height
@@ -26,5 +27,5 @@ class TriforceKey(Triforce):
         self.y += self.speed
 
     def draw(self):
-        image(self.sprite, self.x, self.y, 0.25 * scale, False, 0)
+        image(self.image, self.x, self.y, 0.25 * scale, False, 0)
 

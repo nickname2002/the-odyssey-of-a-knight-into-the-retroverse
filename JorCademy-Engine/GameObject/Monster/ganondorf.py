@@ -25,18 +25,18 @@ class Ganondorf(Monster):
     def __init__(self, pos, w, h, player, level, chunk):
         super().__init__(pos, w, h, player, level, chunk)
         self.sprite_set = [
-            "monsters/ganondorf/ganondorf_idle_1.png",
-            "monsters/ganondorf/ganondorf_walking_1.png",
-            "monsters/ganondorf/ganondorf_walking_2.png",
-            "monsters/ganondorf/ganondorf_walking_3.png",
-            "monsters/ganondorf/ganondorf_walking_4.png",
-            "monsters/ganondorf/ganondorf_walking_5.png",
-            "monsters/ganondorf/ganondorf_walking_6.png",
-            "monsters/ganondorf/ganondorf_short_attack_1.png",
-            "monsters/ganondorf/ganondorf_short_attack_2.png",
-            "monsters/ganondorf/ganondorf_short_attack_3.png",
-            "monsters/ganondorf/ganondorf_long_attack.png",
-            "monsters/ganondorf/ganondorf_dead.png"
+            load_image("monsters/ganondorf/ganondorf_idle_1.png"),
+            load_image("monsters/ganondorf/ganondorf_walking_1.png"),
+            load_image("monsters/ganondorf/ganondorf_walking_2.png"),
+            load_image("monsters/ganondorf/ganondorf_walking_3.png"),
+            load_image("monsters/ganondorf/ganondorf_walking_4.png"),
+            load_image("monsters/ganondorf/ganondorf_walking_5.png"),
+            load_image("monsters/ganondorf/ganondorf_walking_6.png"),
+            load_image("monsters/ganondorf/ganondorf_short_attack_1.png"),
+            load_image("monsters/ganondorf/ganondorf_short_attack_2.png"),
+            load_image("monsters/ganondorf/ganondorf_short_attack_3.png"),
+            load_image("monsters/ganondorf/ganondorf_long_attack.png"),
+            load_image("monsters/ganondorf/ganondorf_dead.png")
         ]
         self.die_state_index = DEAD
         self.state = IDLE

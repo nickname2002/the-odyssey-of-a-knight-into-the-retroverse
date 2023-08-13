@@ -7,10 +7,11 @@ from jorcademy import *
 
 class Cloud(GameObject):
 
-    def __init__(self, cam_pos):
+    def __init__(self, image, cam_pos):
         x = screen_width + cam_pos / 10
         y = random.randint(50, 150)
         pos = (x, y)
+        self.image = image
         self.image_scale = random.randint(50, 200) / 100
         w = 64 * self.image_scale
         h = 37 * self.image_scale
@@ -29,4 +30,4 @@ class Cloud(GameObject):
         self.offset -= self.speed
 
     def draw(self):
-        image("other/cloud.png", self.x * scale, self.y * scale, self.image_scale)
+        image(self.image, self.x * scale, self.y * scale, self.image_scale)

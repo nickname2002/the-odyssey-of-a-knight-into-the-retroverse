@@ -11,6 +11,7 @@ class ExtraLife(Loot):
         self.moving = False
         self.speed = 2 * scale
         self.collect_sound = load_sound("assets/sounds/power_ups/1_up.ogg")
+        self.image = load_image("power_ups/1up.png")
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -39,7 +40,7 @@ class ExtraLife(Loot):
 
     def draw(self, shift_x):
         if self.moving:
-            image("power_ups/1up.png", self.x, self.y, 0.129 * scale)
+            image(self.image, self.x, self.y, 0.7 * scale)
         else:
-            self.make_image("assets/power_ups/1up.png")
+            self.make_image(self.image)
             super().draw(shift_x)

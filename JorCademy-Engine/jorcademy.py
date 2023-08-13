@@ -104,9 +104,17 @@ def text(content: str, size: int, c: color, x: float, y: float, font="Nunito", r
     __draw_buffer.append(t)
 
 
+# Load an image
+def load_image(path: str) -> pygame.Surface:
+    try:
+        return pygame.image.load("assets/" + path)
+    except:
+        print("Error: Image could not be loaded.")
+
+
 # Draw an image
-def image(url: str, x: float, y: float, scale: float, flipped=False, rotation=0) -> None:
-    i = Image(url, scale, x, y, flipped, rotation)
+def image(surface: pygame.Surface, x: float, y: float, scale: float, flipped=False, rotation=0) -> None:
+    i = Image(surface, scale, x, y, flipped, rotation)
     __draw_buffer.append(i)
 
 

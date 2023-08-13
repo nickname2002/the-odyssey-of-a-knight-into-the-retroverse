@@ -13,7 +13,7 @@ class FireBall(GameObject):
         self.killed = None
         self.visible = False
         self.player = player
-        self.sprite = "fire_mario/fireball.png"
+        self.sprite = load_image("fire_mario/fireball.png")
         self.speed = 8 * scale
         self.amplitude = 5 * scale
         self.frequency = 0.1 * scale

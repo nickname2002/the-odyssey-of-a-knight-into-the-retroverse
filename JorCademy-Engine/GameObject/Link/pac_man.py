@@ -24,13 +24,13 @@ class PacMan(GameObject):
         self.is_grounded = False
         self.visible = False
         self.sprites = [
-            "pac_man/pac_man_walking_1.png",
-            "pac_man/pac_man_walking_1.png",
-            "pac_man/pac_man_walking_2.png",
-            "pac_man/pac_man_walking_3.png",
-            "pac_man/pac_man_walking_2.png",
-            "pac_man/pac_man_walking_1.png",
-            "pac_man/pac_man_death.png"
+            load_image("pac_man/pac_man_walking_1.png"),
+            load_image("pac_man/pac_man_walking_1.png"),
+            load_image("pac_man/pac_man_walking_2.png"),
+            load_image("pac_man/pac_man_walking_3.png"),
+            load_image("pac_man/pac_man_walking_2.png"),
+            load_image("pac_man/pac_man_walking_1.png"),
+            load_image("pac_man/pac_man_death.png")
         ]
 
         # Sprite data

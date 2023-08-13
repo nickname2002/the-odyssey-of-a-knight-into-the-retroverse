@@ -10,6 +10,7 @@ class FireFlower(Loot):
         self.message = "+50 COINS"
         self.triggered_representation = "FIRE_MARIO"
         self.collect_sound = load_sound("assets/sounds/power_ups/power_up.ogg")
+        self.image = load_image("power_ups/flower_power.png")
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -27,5 +28,5 @@ class FireFlower(Loot):
         self.player.trigger_new_representation(self.triggered_representation)
 
     def draw(self, screen):
-        self.make_image("assets/power_ups/flower_power.png")
+        self.make_image(self.image)
         super().draw(screen)

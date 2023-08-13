@@ -5,6 +5,9 @@ from jorcademy import *
 transition_time = 60 * 3
 transition_timer = transition_time
 
+# Images
+link_image = load_image('link/link_idle.png')
+
 
 # Get next level index
 def get_next_level_index(active_level, levels) -> int:
@@ -50,7 +53,7 @@ def show_transition_screen(active_level, levels, current_screen):
          screen_width / 2,
          30 * scale,
          "fonts/pixel.ttf")
-    image("link/link_idle.png", screen_width / 2 - 40 * scale, screen_height / 2, 2 * scale)
+    image(link_image, screen_width / 2 - 40 * scale, screen_height / 2, 2 * scale)
 
     # Reset level if timer is over
     if transition_timer <= 0:

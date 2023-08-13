@@ -20,10 +20,10 @@ class Ghost(Monster):
     def __init__(self, pos, w, h, player, level, chunk):
         super().__init__(pos, w, h, player, level, chunk)
         self.sprite_set = [
-            "monsters/ghost/ghost_horizontal.png",
-            "monsters/ghost/ghost_vertical.png",
-            "monsters/ghost/ghost_vulnerable.png",
-            "monsters/ghost/ghost_dead.png"
+            load_image("monsters/ghost/ghost_horizontal.png"),
+            load_image("monsters/ghost/ghost_vertical.png"),
+            load_image("monsters/ghost/ghost_vulnerable.png"),
+            load_image("monsters/ghost/ghost_dead.png")
         ]
         self.die_state_index = 3
         self.speed = 1.5 * scale

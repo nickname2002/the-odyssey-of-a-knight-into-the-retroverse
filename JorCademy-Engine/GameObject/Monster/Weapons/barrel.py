@@ -11,10 +11,10 @@ class Barrel(Monster):
         self.sel_sprite_index = 0
         self.orig_cam_pos = donkey_kong.level.cam_pos
         self.sprite_set = [
-            "monsters/donkey_kong/barrel/barrel_1.png",
-            "monsters/donkey_kong/barrel/barrel_2.png",
-            "monsters/donkey_kong/barrel/barrel_3.png",
-            "monsters/donkey_kong/barrel/barrel_4.png"
+            load_image("monsters/donkey_kong/barrel/barrel_1.png"),
+            load_image("monsters/donkey_kong/barrel/barrel_2.png"),
+            load_image("monsters/donkey_kong/barrel/barrel_3.png"),
+            load_image("monsters/donkey_kong/barrel/barrel_4.png")
         ]
         self.walk_animation_delay = 5
         self.direction = pygame.Vector2(donkey_kong.get_direction(), 0)

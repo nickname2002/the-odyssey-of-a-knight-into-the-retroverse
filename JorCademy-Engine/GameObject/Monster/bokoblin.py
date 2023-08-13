@@ -8,9 +8,9 @@ class Bokoblin(Monster):
     def __init__(self, pos, w, h, player, level, chunk):
         super().__init__(pos, w, h, player, level, chunk)
         self.sprite_set = [
-            "monsters/bokoblin/bokoblin_1.png",
-            "monsters/bokoblin/bokoblin_2.png",
-            "monsters/bokoblin/bokoblin_dead.png"
+            load_image("monsters/bokoblin/bokoblin_1.png"),
+            load_image("monsters/bokoblin/bokoblin_2.png"),
+            load_image("monsters/bokoblin/bokoblin_dead.png")
         ]
         self.speed = 1
         self.direction = pygame.Vector2(-self.speed, 0)

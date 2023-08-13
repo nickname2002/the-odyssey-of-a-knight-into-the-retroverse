@@ -12,6 +12,7 @@ class Coin(Loot):
         self.message = "+100 COINS"
         self.coins = 100
         self.collect_sound = load_sound("assets/sounds/power_ups/coin.ogg")
+        self.image = load_image("power_ups/coin.png")
 
     def show(self, level):
         super().show(level)
@@ -35,5 +36,5 @@ class Coin(Loot):
                 self.y = 800
 
     def draw(self, screen):
-        self.make_image("assets/power_ups/coin.png")
+        self.make_image(self.image)
         super().draw(screen)
