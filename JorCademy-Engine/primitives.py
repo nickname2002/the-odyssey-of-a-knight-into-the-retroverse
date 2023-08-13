@@ -100,7 +100,7 @@ class Image(DrawableObject):
 
     # NOTE: image must be inside the assets folder
     def draw(self, context: pygame.display):
-        image = pygame.image.load("assets/" + self.url)
+        image = pygame.image.load("assets/" + self.url).convert_alpha()
 
         # Resize image
         w = image.get_width()
