@@ -147,6 +147,7 @@ def setup() -> None:
     # Screen properties
     title("The Odyssey of a Knight | Into the Retro-Verse")
     screen(screen_width, screen_height)
+    icon("icons/game_icon.png")
     # NOTE: setting up level happened in main.py
 
 
