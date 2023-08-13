@@ -22,8 +22,11 @@ pygame.display.set_icon(pygame_icon)
 game.setup()
 
 # pygame setup
+flags = pygame.DOUBLEBUF | pygame.HWSURFACE
+pygame.mixer.pre_init(44100, 16, 2, 4096)
 pygame.init()
-screen = pygame.display.set_mode(jc.screen_size)
+screen = pygame.display.set_mode(jc.screen_size, flags, 16)
+pygame.event.set_allowed([QUIT, KEYDOWN, KEYUP])
 
 # Load game data
 game.load_levels(screen)
@@ -32,7 +35,7 @@ load_transition_screen_images()
 
 # Setup game loop
 clock = pygame.time.Clock()
-running = True
+running = 1
 
 # Set amount of audio channels
 pygame.mixer.set_num_channels(32)
@@ -112,7 +115,7 @@ async def main():
 
             # Quit game
             if event.type == pygame.QUIT:
-                running = False
+                running = 0
 
         # fill the screen with a color to wipe away anything from last frame
         pygame.display.set_caption(jc.screen_title)
