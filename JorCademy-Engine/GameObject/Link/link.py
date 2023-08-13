@@ -5,6 +5,7 @@ from GameObject.Link.pac_man import PacMan
 from GameObject.gameobject import GameObject
 from Level.Tiles.tile_data import *
 from Support.settings import screen_width, screen_height, scale, tile_size
+from Support.input import *
 from jorcademy import *
 
 # States for Link
@@ -23,11 +24,18 @@ WALKING_10 = 11
 JUMPING = 12
 DEAD = 13
 
-
 # Representations for Link
 LINK = 0
 FIRE_MARIO = 1
 PAC_MAN = 2
+
+
+def move_right_key_pressed():
+    return is_key_down("d") or is_key_down('right')
+
+
+def move_left_key_pressed():
+    return is_key_down("a") or is_key_down('left')
 
 
 class Link(GameObject):
@@ -74,6 +82,12 @@ class Link(GameObject):
             "link/link_dead.png"
         ]
 
+        # Sprite data
+        self.sprite_scale = 1.28 * scale
+
+        # Dimensions
+        self.die_height = 16 * scale
+
         # Load sounds
         self.jump_sound = load_sound('assets/sounds/link/jump.ogg')
         self.one_up_sound = load_sound("assets/sounds/power_ups/1_up.ogg")
@@ -96,8 +110,6 @@ class Link(GameObject):
                 self.y = tile.y - tile.height / 2 - self.height / 2
                 self.direction.y = 0
 
-            # self.is_grounded = True
-
         # Handle collision on top side of object
         elif self.collision_top(tile):
             if self.direction.y < 0:
@@ -110,7 +122,7 @@ class Link(GameObject):
                         loot = tile.give_loot(level)
                         level.get_current_chunk().tiles.insert(loot.index, loot)
                     except:
-                        pass
+                        print("Loot in mystery box is not defined")
 
                 elif tile.code in BREAKABLE:
                     tile.break_tile(level.get_right_sky_tile())
@@ -150,9 +162,9 @@ class Link(GameObject):
             return
 
         # Update horizontal direction and position of Link
-        if is_key_down("d") or is_key_down('right'):
+        if move_right_key_pressed() and not move_left_key_pressed():
             self.move_right()
-        elif is_key_down("a") or is_key_down('left'):
+        elif move_left_key_pressed() and not move_right_key_pressed():
             self.move_left()
         elif self.is_grounded:
             self.state = IDLE
@@ -262,7 +274,8 @@ class Link(GameObject):
             if self.visible:
                 self.play_death_sound()
 
-            self.y = self.die_y + self.height / 2 - 15 * scale
+            self.height = self.die_height * self.sprite_scale
+            self.apply_gravity()
             self.show_die_animation()
             return
 
@@ -294,7 +307,7 @@ class Link(GameObject):
 
         self.jump(self.jump_speed / 3)
         self.representation = LINK
-        self.height = 64 * scale
+        self.height = self.orig_height
         self.representation_change_timer = 0
 
         # Disable other representations
@@ -346,7 +359,7 @@ class Link(GameObject):
 
         # Only draw when visible
         if self.visible:
-            image(sprite, self.x, self.y, 1.28 * scale, self.facing_left)
+            image(sprite, self.x, self.y, self.sprite_scale, self.facing_left)
             self.master_sword.draw()
 
         # Draw alternative representations
@@ -355,9 +368,6 @@ class Link(GameObject):
         self.pac_man.draw()
 
     def die(self, level=None):
-        if not self.killed:
-            self.die_y = self.y
-
         if not self.at_game_end:
             self.lives -= 1
             self.killed = True
@@ -369,6 +379,7 @@ class Link(GameObject):
         self.killed = False
         self.coins_earned_current_level = 0
         self.activate_main_representation()
+        self.height = self.orig_height
         self.x = 100
         self.y = screen_height - 2 * tile_size - self.height / 2
 

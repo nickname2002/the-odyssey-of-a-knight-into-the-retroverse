@@ -38,6 +38,11 @@ class FireMario(GameObject):
         self.active_cooldown = 0
         self.fireball_thrown = False
         self.fireballs = []
+
+        # Sprite data
+        self.sprite_scale = 2
+
+        # Sounds
         self.fire_sound = load_sound('assets/sounds/fire_mario/fireball.ogg')
         self.jump_sound = load_sound('assets/sounds/fire_mario/mario_jump.ogg')
         self.death_sound = load_sound('assets/sounds/fire_mario/fire_mario_death.ogg')
@@ -156,7 +161,7 @@ class FireMario(GameObject):
         sprite = self.sprites[self.state]
 
         if self.visible:
-            image(sprite, self.x, self.y, 2 * scale, self.facing_left)
+            image(sprite, self.x, self.y, self.sprite_scale * scale, self.facing_left)
 
         # Draw linked objects
         for fireball in self.fireballs:

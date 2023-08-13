@@ -32,8 +32,15 @@ class PacMan(GameObject):
             "pac_man/pac_man_walking_1.png",
             "pac_man/pac_man_death.png"
         ]
+
+        # Sprite data
+        self.sprite_scale = self.width / 26
+
+        # Sounds
         self.waka_sound = load_sound('assets/sounds/pac_man/waka.ogg')
         self.death_sound = load_sound('assets/sounds/pac_man/pac_man_death.ogg')
+
+        # Sound data
         self.play_sound_delay = 15
         self.play_sound_timer = 0
 
@@ -125,4 +132,4 @@ class PacMan(GameObject):
         sprite = self.sprites[self.state]
 
         if self.visible:
-            image(sprite, self.x, self.y, self.width / 26, self.facing_left)
+            image(sprite, self.x, self.y, self.sprite_scale, self.facing_left)

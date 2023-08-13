@@ -15,7 +15,6 @@ class GameObject:
         self.orig_pos = pos
         self.offset = 0
         self.width = w
-        self.height = h
         self.direction: pygame.Vector2 = pygame.Vector2(0, 0)
         self.gravity = 0.8 * scale
         self.walk_animation_delay = 5
@@ -24,6 +23,14 @@ class GameObject:
         self.state = 0
         self.die_y = 0
         self.health = 1
+
+        # Sprite data
+        self.sprite_scale = 1
+
+        # Height
+        self.height = h
+        self.orig_height = h
+        self.die_height = h
 
         # Die animation
         self.die_animation_delay = 80
