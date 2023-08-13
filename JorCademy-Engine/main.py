@@ -8,6 +8,8 @@ import events
 import game
 import jorcademy as jc
 from Support.settings import fps, base_dir
+from View.main_menu_screen import load_main_menu_images
+from View.transition_screen import load_transition_screen_images
 
 __debug = False
 
@@ -23,9 +25,10 @@ game.setup()
 pygame.init()
 screen = pygame.display.set_mode(jc.screen_size)
 
-# Setup levels
-for level in game.levels:
-    level.setup(screen)
+# Load game data
+game.load_levels(screen)
+load_main_menu_images()
+load_transition_screen_images()
 
 # Setup game loop
 clock = pygame.time.Clock()

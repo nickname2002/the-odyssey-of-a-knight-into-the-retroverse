@@ -6,7 +6,12 @@ transition_time = 60 * 3
 transition_timer = transition_time
 
 # Images
-link_image = load_image('link/link_idle.png')
+link_image = None
+
+
+def load_transition_screen_images() -> None:
+    global link_image
+    link_image = load_image('link/link_idle.png')
 
 
 # Get next level index

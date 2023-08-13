@@ -20,39 +20,6 @@ from jorcademy import *
 # Support
 from Support.settings import screen_width, screen_height, scale
 
-# Levels
-active_level_index = 0
-levels = [
-    Level("1_1",
-          20,
-          "assets/music/1-1.ogg",
-          (147, 187, 236)),
-    Level("1_2",
-          15,
-          "assets/music/1-2.ogg",
-          (147, 187, 236)),
-    Level("1_3",
-          15,
-          "assets/music/1-3.ogg",
-          (147, 187, 236)),
-    Level("1_4",
-          15,
-          "assets/music/1-4.ogg",
-          (147, 187, 236)),
-    Level("1_5",
-          10,
-          "assets/music/1-5.ogg",
-          (0, 0, 0), False),
-    BossLevel("BOSS",
-              1,
-              "assets/music/boss.ogg",
-              (0, 0, 0), Ganondorf),
-    EndScene("END",
-             1,
-             "assets/music/outro_song.ogg",
-             (147, 187, 236))
-]
-
 current_screen = "MAIN_MENU"
 transition_screens = [
     "TRANSITION_FROM_MAIN_MENU",
@@ -60,6 +27,10 @@ transition_screens = [
     "CONTROLS",
     "STARTING_MESSAGES"
 ]
+
+# Levels
+active_level_index = 0
+levels = []
 
 # Transition properties
 last_recorded_score = 0
@@ -84,7 +55,6 @@ def activate_next_level() -> None:
     global last_recorded_score
     stored_link = levels[active_level_index].link
     active_level_index = get_next_level_index(levels[active_level_index], levels)
-    print(active_level_index)
 
     # Initialize new level
     levels[active_level_index].init_link(stored_link)
@@ -131,7 +101,49 @@ def process_transition_game() -> None:
                     levels[active_level_index].reset()
 
 
+def load_levels(game_screen) -> None:
+    global levels
+
+    levels = [
+        Level("1_1",
+              20,
+              "assets/music/1-1.ogg",
+              (147, 187, 236)),
+        Level("1_2",
+              15,
+              "assets/music/1-2.ogg",
+              (147, 187, 236)),
+        Level("1_3",
+              15,
+              "assets/music/1-3.ogg",
+              (147, 187, 236)),
+        Level("1_4",
+              15,
+              "assets/music/1-4.ogg",
+              (147, 187, 236)),
+        Level("1_5",
+              10,
+              "assets/music/1-5.ogg",
+              (0, 0, 0), False),
+        BossLevel("BOSS",
+                  1,
+                  "assets/music/boss.ogg",
+                  (0, 0, 0), Ganondorf),
+        EndScene("END",
+                 1,
+                 "assets/music/outro_song.ogg",
+                 (147, 187, 236))
+    ]
+
+    # Setup levels
+    for level in levels:
+        level.clouds_enabled = settings.clouds
+        level.setup(game_screen)
+
+
 def setup() -> None:
+    global levels
+
     # Screen properties
     title("The Odyssey of a Knight | Into the Retro-Verse")
     screen(screen_width, screen_height)

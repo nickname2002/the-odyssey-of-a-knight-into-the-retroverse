@@ -95,7 +95,6 @@ class Image(DrawableObject):
         super().__init__(x, y, None, None, rotation)
         self.flipped = flipped
         self.object_name = "Image"
-        print(surface)
         self.image = surface
         self.scale = scale
 

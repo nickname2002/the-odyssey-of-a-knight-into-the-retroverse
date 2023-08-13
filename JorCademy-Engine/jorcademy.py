@@ -106,10 +106,11 @@ def text(content: str, size: int, c: color, x: float, y: float, font="Nunito", r
 
 # Load an image
 def load_image(path: str) -> pygame.Surface:
+    full_path = "assets/" + path
     try:
-        return pygame.image.load("assets/" + path)
-    except:
-        print("Error: Image could not be loaded.")
+        return pygame.image.load(full_path).convert_alpha()
+    except pygame.error as e:
+        print(f"Error loading image '{full_path}': {e}")
 
 
 # Draw an image

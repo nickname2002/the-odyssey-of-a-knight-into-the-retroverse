@@ -22,8 +22,14 @@ settings_button = Button(
 main_menu_music = load_sound("assets/music/main_menu.ogg")
 
 # Images
-menu_backdrop = load_image("other/main_menu_backdrop_light.png")
-logo = load_image("icons/odyssey-of-a-knight-into-retroverse.png")
+menu_backdrop = None
+logo = None
+
+
+def load_main_menu_images():
+    global menu_backdrop, logo
+    menu_backdrop = load_image("other/main_menu_backdrop_light.png")
+    logo = load_image("icons/odyssey-of-a-knight-into-retroverse.png")
 
 
 def show_main_menu_screen(active_level) -> string:

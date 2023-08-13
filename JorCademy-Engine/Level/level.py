@@ -271,7 +271,6 @@ class Level:
     def reset(self):
         # Properties
         self.cam_pos = 0
-        print("Clouds enabled: ", settings.clouds)
         self.clouds_enabled = settings.clouds
 
         # Reset link for new level
