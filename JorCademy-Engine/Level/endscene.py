@@ -33,6 +33,10 @@ class EndScene(Level):
         self.level_music = load_sound(level_music_path)
         self.level_music_started = False
 
+        # Images
+        self.heart_image = load_image("other/heart.png")
+        self.zelda_image = load_image("zelda/zelda.png")
+
         # Subtitles index
         self.subtitles_index = 0
 
@@ -169,11 +173,11 @@ class EndScene(Level):
         self.link.draw()
 
         # Zelda
-        image("zelda/zelda.png", self.zelda.x, self.zelda.y, 0.7 * scale, True, 0)
+        image(self.zelda_image, self.zelda.x, self.zelda.y, 0.7 * scale, True, 0)
 
         # Heart
         if self.end_reached:
-            image("other/heart.png", self.heart.x, self.heart.y, 0.2 * scale, True, 0)
+            image(self.heart_image, self.heart.x, self.heart.y, 0.2 * scale, True, 0)
 
         # Draw necessary tiles
         chunks_to_draw = self.get_chunks_in_range()

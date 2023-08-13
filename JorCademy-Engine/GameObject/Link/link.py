@@ -97,6 +97,7 @@ class Link(GameObject):
 
         # Handle collision on right side of object
         elif self.collision_right(tile):
+            print(tile.code)
             if self.direction.x > 0:
                 self.x = tile.x - tile.width / 2 - self.width / 2
 
@@ -252,7 +253,7 @@ class Link(GameObject):
         level.get_current_chunk().update_text_anomalies(new_text_anomaly)
 
     def handle_1up_with_coins(self, level):
-        if self.coins + self.coins_earned_current_level >= 2500:
+        if self.coins + self.coins_earned_current_level >= 2000:
             self.coins = 0
             self.coins_earned_current_level = 0
             self.lives += 1
@@ -382,7 +383,7 @@ class Link(GameObject):
         self.activate_main_representation()
         self.height = self.orig_height
         self.x = 100
-        self.y = screen_height - 2 * tile_size - self.height / 2
+        self.y = screen_height - 2 * tile_size - self.height
 
     def hard_reset(self):
         self.coins = 0

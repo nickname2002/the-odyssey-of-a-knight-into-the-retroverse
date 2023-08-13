@@ -1,4 +1,3 @@
-# TODO: add game info here
 
 # Levels
 from GameObject.Monster.ganondorf import Ganondorf
@@ -87,6 +86,10 @@ def process_transition_game() -> None:
             current_screen == "TRANSITION_FROM_MAIN_MENU" or
             levels[active_level_index].transition_requested()):
 
+        if levels[active_level_index].link.is_game_over():
+            current_screen = "GAME_OVER"
+            return
+
         if levels[active_level_index].transition_requested():
             current_screen = "TRANSITION"
         current_screen = show_transition_screen(levels[active_level_index], levels, current_screen)
@@ -137,7 +140,8 @@ def load_levels(game_screen) -> None:
 
     # Setup levels
     for level in levels:
-        level.clouds_enabled = settings.clouds
+        if level.clouds_enabled and not settings.clouds:
+            level.clouds_enabled = False
         level.setup(game_screen)
 
 
@@ -167,6 +171,7 @@ def update() -> None:
     # Show main menu screen
     if current_screen == "MAIN_MENU":
         levels[active_level_index].level_music.fadeout(500)
+        levels[active_level_index].level_music.stop()
         current_screen = show_main_menu_screen(levels[active_level_index])
         return
     else:

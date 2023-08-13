@@ -84,6 +84,10 @@ class Level:
         elif tile in MONSTERS:
             self.init_monster(tile, pos, chunk)
 
+            # Make sky tile
+            sel_tile = tile_set[int(self.get_right_sky_tile())]
+            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, self.get_right_sky_tile(), len(chunk.tiles)))
+
         # Initialize breakable tiles
         elif tile in BREAKABLE:
             sel_tile = tile_set[int(tile)]
@@ -97,7 +101,7 @@ class Level:
 
             # Make sky tile
             sel_tile = tile_set[int(self.get_right_sky_tile())]
-            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, tile, len(chunk.tiles)))
+            chunk.tiles.append(StaticTile(tile_size, pos, sel_tile, self.get_right_sky_tile(), len(chunk.tiles)))
 
         # Initialize normal static tiles
         else:
