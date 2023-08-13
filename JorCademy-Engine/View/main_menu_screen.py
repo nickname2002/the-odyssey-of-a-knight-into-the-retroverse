@@ -57,7 +57,7 @@ def show_main_menu_screen(active_level) -> string:
     if start_button.clicked():
         active_level.link.hard_reset()
         active_level.reset()
-        return "TRANSITION_FROM_MAIN_MENU"
+        return "STARTING_MESSAGES"
 
     # Check if user clicked on settings
     if settings_button.clicked():

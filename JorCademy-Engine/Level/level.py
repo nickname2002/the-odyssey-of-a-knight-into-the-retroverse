@@ -312,7 +312,7 @@ class Level:
     def update(self):
         # Stop music if game is over
         if self.transition_requested():
-            self.level_music.stop(500)
+            self.level_music.fadeout(500)
 
         if self.end_game_triforce.reached:
             self.reset()
