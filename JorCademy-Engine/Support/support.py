@@ -9,7 +9,6 @@ from Support.settings import tile_size, scale, base_dir
 # Convert selected level csv-file to list of lists, containing the tiles
 def import_level_data(path):
     filepath = os.path.join(base_dir, path)
-    print(filepath)
     data = []
 
     # Open and parse csv

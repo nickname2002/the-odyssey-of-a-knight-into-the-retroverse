@@ -1,11 +1,21 @@
+# TODO: add game info here
+
+# Levels
 from GameObject.Monster.ganondorf import Ganondorf
 from Level.boss_level import BossLevel
 from Level.endscene import EndScene
 from Level.level import Level
-from Support.settings import screen_width, screen_height, scale
-from UI.button import Button
-from UI.slider import Slider
+
+# Screens
+from View import main_menu_screen
+from View.main_menu_screen import show_main_menu_screen
+from View.settings_screen import show_settings_screen
+from View.game_over_screen import show_game_over_screen
+from View.pause_screen import show_paused_screen
 from jorcademy import *
+
+# Support
+from Support.settings import screen_width, screen_height, scale
 
 # Levels
 active_level_index = 0
@@ -40,15 +50,14 @@ levels = [
              (147, 187, 236))
 ]
 
+current_screen = "MAIN_MENU"
+
 # Starting message properties
 starting_message_shown = False
 switch_starting_message_timer = 0
 starting_message_delay = 300
 starting_message_index = 0
 skip_allowed = True
-
-# Settings screen
-show_settings = False
 
 # Controls screen
 show_controls = False
@@ -60,9 +69,7 @@ transition_time = 60 * 3
 last_recorded_score = 0
 
 # Menu flags
-show_main_menu = True
 transitioning_from_main_menu = False
-game_paused = False
 
 # Additional timers
 pause_cooldown = 30
@@ -72,74 +79,14 @@ pause_timer = 0
 game_over_delay = 300
 game_over_timer = 0
 
-# Music
-main_menu_music = load_sound("assets/music/main_menu.ogg")
-
-# UI components
-start_button = Button(
-    (screen_width / 2, screen_height / 2 + 90 * scale),
-    275, 50,
-    "START NEW GAME", 30, (0, 255, 255),
-    (1, 1, 1), (50, 50, 50),
-    True, 5, (255, 0, 0))
-
-pause_button = Button(
-    (screen_width / 2, screen_height / 2 + 50 * scale),
-    250, 50,
-    "GO TO MAIN MENU", 25, (0, 0, 0),
-    (255, 255, 255), (240, 240, 240),
-    True, 5, (200, 200, 200))
-
-settings_button = Button(
-    (screen_width / 2, screen_height / 2 + 150 * scale),
-    275, 50,
-    "SETTINGS", 30, (0, 255, 255),
-    (1, 1, 1), (50, 50, 50),
-    True, 5, (255, 0, 0))
-
-volume_slider = Slider(
-    screen_width / 2,
-    screen_height / 2 + 30 * scale,
-    500 * scale, 10 * scale,
-    (1, 1, 1),
-    0, 1, 0.5)
-
-to_main_menu_button = Button(
-    (screen_width / 2, screen_height / 2 + 220 * scale),  # Adjust position as needed
-    280, 50,  # Button size
-    "BACK TO MAIN MENU", 25, (255, 255, 255),  # Text, font size, text color
-    (1, 1, 1), (50, 50, 50),  # Button colors (normal, hover)
-    True, 5, (200, 200, 200)  # Rounded corners, border size, border color
-)
-
-
-def show_paused_screen() -> None:
-    global show_main_menu, game_paused, active_level_index
-
-    text("PAUSED",
-         int(scale * 50),
-         (255, 255, 255),
-         screen_width / 2,
-         screen_height / 2 - 30 * scale,
-         "fonts/pixel.ttf")
-
-    # Go back to main menu
-    pause_button.update()
-    pause_button.draw()
-
-    # Check if user clicked on start new game
-    if pause_button.clicked():
-        levels[active_level_index].level_music.fadeout(500)
-        show_main_menu = True
-        game_paused = False
-
 
 def show_starting_messages():
     global switch_starting_message_timer, \
         starting_message_shown, \
         starting_message_index, \
         show_controls, \
-        skip_allowed
+        skip_allowed, \
+        current_screen
 
     # Starting messages to show
     starting_messages = [
@@ -217,132 +164,6 @@ def show_controls_screen() -> None:
         show_controls = False
 
 
-# Show main menu screen
-def show_main_menu_screen() -> None:
-    global show_main_menu, \
-        active_level_index, \
-        transitioning_from_main_menu
-
-    # Stop music in active level
-    levels[active_level_index].level_music.fadeout(500)
-
-    # Play music
-    if not main_menu_music.get_num_channels() > 0:
-        main_menu_music.play(-1)
-        main_menu_music.set_volume(0.5 * settings.volume)
-
-    # Draw menu
-    backdrop((255, 255, 255))
-    image("other/main_menu_backdrop_light.png",
-          screen_width / 2,
-          screen_height / 2,
-          1.0 * scale)
-    image("icons/odyssey-of-a-knight-into-retroverse.png",
-          screen_width / 2,
-          screen_height / 2 - 100 * scale,
-          0.85 * scale)
-    text("BY NICKNAME", int(scale * 30), (0, 0, 0),
-         screen_width / 2, screen_height / 2 + 20 * scale,
-         "fonts/pixel.ttf")
-
-    # Update start button
-    start_button.update()
-    start_button.draw()
-
-    # Update settings button
-    settings_button.update()
-    settings_button.draw()
-
-    # Check if user clicked on start new game
-    if start_button.clicked():
-        show_main_menu = False
-        transitioning_from_main_menu = True
-        active_level_index = 0
-        levels[active_level_index].link.hard_reset()
-        levels[active_level_index].reset()
-
-    # Check if user clicked on settings
-    if settings_button.clicked():
-        global show_settings
-        show_settings = True
-
-
-# Show settings screen
-def show_settings_screen() -> None:
-    global show_settings
-
-    # Show backdrop
-    backdrop((255, 255, 255))
-
-    # Show title
-    text("SETTINGS", int(scale * 50), (0, 0, 0),
-         screen_width / 2, screen_height / 2 - 150 * scale,
-         "fonts/pixel.ttf")
-
-    # Show volume slider
-    text("VOLUME", int(scale * 30), (0, 0, 0),
-         screen_width / 2 - 200 * scale, screen_height / 2 - 50 * scale,
-         "fonts/pixel.ttf")
-    volume_slider.draw()
-    volume_slider.update()
-    settings.volume = volume_slider.value
-    main_menu_music.set_volume(0.5 * settings.volume)
-
-    # Show to main menu button
-    to_main_menu_button.draw()
-    to_main_menu_button.update()
-
-    # Go to main menu when button is clicked
-    if to_main_menu_button.clicked():
-        global show_settings
-        show_settings = False
-
-    # De-activate settings screen
-    if is_key_down("esc"):
-        show_settings = False
-
-
-# Show game over screen
-def show_game_over_screen() -> None:
-    global last_recorded_score, \
-        active_level_index, \
-        show_main_menu, \
-        game_over_timer
-
-    # Stop music in active level
-    levels[active_level_index].level_music.fadeout(500)
-
-    # Set backdrop to black
-    backdrop((0, 0, 0))
-
-    # Display properties on screen
-    text("GAME OVER", int(scale * 50), (255, 255, 255),
-         screen_width / 2, screen_height / 2 - 30 * scale, "fonts/pixel.ttf")
-    text(f"SCORE: {last_recorded_score}", int(20 * scale), (255, 255, 255), screen_width / 2,
-         screen_height / 2 + 20 * scale, "fonts/pixel.ttf")
-
-    game_over_timer += 1
-
-    if game_over_timer >= game_over_delay:
-        show_main_menu = True
-        game_over_timer = 0
-
-
-# Pause/play game
-def toggle_pause_game() -> None:
-    global game_paused, pause_timer
-
-    # Toggle pause
-    if not game_paused:
-        if pause_timer <= 0:
-            game_paused = True
-            pause_timer = pause_cooldown
-    else:
-        if pause_timer <= 0:
-            game_paused = False
-            pause_timer = pause_cooldown
-
-
 # Update game timers
 def update_timers() -> None:
     global pause_timer
@@ -354,7 +175,8 @@ def update_timers() -> None:
 
 # Get name of the current level (might be different from active level)
 def get_current_level_name() -> int:
-    if levels[active_level_index].link.killed or transitioning_from_main_menu:
+    print(current_screen)
+    if levels[active_level_index].link.killed or current_screen == "TRANSITION_FROM_MAIN_MENU":
         return levels[active_level_index].level_name
     else:
         return levels[get_next_level_index()].level_name
@@ -369,7 +191,7 @@ def transition_screen() -> None:
     try:
         levels[active_level_index].level_music.fadeout(500)
     except:
-        pass
+        print("No music to fade out")
 
     # Set backdrop to black
     backdrop((0, 0, 0))
@@ -416,6 +238,7 @@ def activate_next_level() -> None:
     stored_link = levels[active_level_index].link
     active_level_index = get_next_level_index()
     levels[active_level_index].init_link(stored_link)
+    levels[active_level_index].clouds_enabled = settings.clouds
 
 
 def setup() -> None:
@@ -429,35 +252,39 @@ def update() -> None:
     global transition_started, \
         transition_timer, \
         active_level_index, \
-        game_paused, \
         pause_timer, \
         transitioning_from_main_menu, \
-        show_main_menu, \
         last_recorded_score, \
-        starting_message_shown
+        starting_message_shown, \
+        current_screen
 
     last_recorded_score = levels[active_level_index].link.coins
 
-    if show_main_menu:
-        if show_settings:
-            show_settings_screen()
-            return
+    # Show settings screen
+    if current_screen == "SETTINGS":
+        current_screen = show_settings_screen(main_menu_screen.main_menu_music)
+        return
 
-        show_main_menu_screen()
+    # Show main menu screen
+    if current_screen == "MAIN_MENU":
+        levels[active_level_index].level_music.fadeout(500)
+        current_screen = show_main_menu_screen(levels[active_level_index])
         return
     else:
-        main_menu_music.fadeout(500)
+        main_menu_screen.main_menu_music.fadeout(500)
 
     # Check if game is over
     if levels[active_level_index].link.lives == 0:
-        show_game_over_screen()
+        current_screen = show_game_over_screen(levels[active_level_index], last_recorded_score)
         return
 
     # Check if level is over
-    if levels[active_level_index].transition_requested() or transitioning_from_main_menu:
+    if (levels[active_level_index].transition_requested() or
+            current_screen == "TRANSITION" or
+            current_screen == "TRANSITION_FROM_MAIN_MENU"):
 
         # Show starting message when transitioning from main menu
-        if transitioning_from_main_menu and not starting_message_shown:
+        if current_screen == "TRANSITION_FROM_MAIN_MENU" and not starting_message_shown:
             show_starting_messages()
             return
 
@@ -469,7 +296,8 @@ def update() -> None:
         # Check if transitioning to main menu from EndScene
         if type(levels[active_level_index]) == EndScene and \
                 levels[active_level_index].transition_requested():
-            show_main_menu = True
+            current_screen = "MAIN_MENU"
+            active_level_index = 0
             return
 
         # Show transition screen
@@ -488,23 +316,23 @@ def update() -> None:
 
             # Reset level
             levels[active_level_index].reset()
-            transitioning_from_main_menu = False
+            current_screen = "GAME"
         return
 
     # Draw levels
     levels[active_level_index].draw()
 
+    # Check if game paused needs to be toggled
+    if current_screen == "GAME":
+        if is_key_down("esc") and pause_timer == 0:
+            current_screen = "PAUSED"
+            pause_timer = 10
+    else:
+        current_screen = show_paused_screen(levels[active_level_index])
+        return
+
     # Update timers
     update_timers()
-
-    # Check if game paused needs to be toggled
-    if is_key_down("esc"):
-        toggle_pause_game()
-
-    # Show paused screen if game is paused
-    if game_paused:
-        show_paused_screen()
-        return
 
     # Update levels
     levels[active_level_index].update()

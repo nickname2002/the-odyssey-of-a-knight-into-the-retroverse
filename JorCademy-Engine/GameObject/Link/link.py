@@ -30,14 +30,6 @@ FIRE_MARIO = 1
 PAC_MAN = 2
 
 
-def move_right_key_pressed():
-    return is_key_down("d") or is_key_down('right')
-
-
-def move_left_key_pressed():
-    return is_key_down("a") or is_key_down('left')
-
-
 class Link(GameObject):
 
     def __init__(self, pos, w, h):

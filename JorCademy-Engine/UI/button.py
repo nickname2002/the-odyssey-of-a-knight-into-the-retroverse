@@ -13,16 +13,27 @@ class Button:
         self.y = pos[1]
         self.width = w
         self.height = h
+
+        # Button text
         self.content = content
         self.content_size = content_size
         self.content_color = content_color
         self.font = "fonts/pixel.ttf"
+
+        # Button color
         self.button_color = button_color
         self.orig_button_color = button_color
         self.hover_color = hover_color
+
+        # Border
         self.border_enabled = border
         self.border_size = border_size
         self.border_color = border_color
+
+        # Click delay
+        self.click_delay = 10
+        self.click_timer = 0
+        self.clickable = True
 
     def is_hovered(self):
         if self.x - self.width / 2 * scale <= pygame.mouse.get_pos()[0] <= self.x + self.width / 2 * scale and \
@@ -30,7 +41,11 @@ class Button:
             return True
 
     def clicked(self):
+        if not self.clickable:
+            return False
+
         if self.is_hovered():
+            self.clickable = not pygame.mouse.get_pressed()[0]
             return pygame.mouse.get_pressed()[0]
 
     def update(self):
@@ -38,6 +53,13 @@ class Button:
             self.button_color = self.hover_color
         else:
             self.button_color = self.orig_button_color
+
+        # Click delay
+        if not self.clickable:
+            self.click_timer += 1
+            if self.click_timer >= self.click_delay:
+                self.clickable = True
+                self.click_timer = 0
 
     def draw(self):
         # Draw border

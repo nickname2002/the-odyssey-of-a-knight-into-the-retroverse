@@ -43,8 +43,6 @@ class Level:
         # Clouds
         self.clouds_enabled = clouds_enabled
         self.clouds_amount = 10
-        if not self.clouds_enabled:
-            self.clouds_amount = 0
 
         # Collections
         self.chunks = []
@@ -272,6 +270,8 @@ class Level:
     def reset(self):
         # Properties
         self.cam_pos = 0
+        print("Clouds enabled: ", settings.clouds)
+        self.clouds_enabled = settings.clouds
 
         # Reset link for new level
         self.link.soft_reset()
@@ -283,6 +283,9 @@ class Level:
         self.setup(self.screen)
 
     def init_environmental_objects(self, cam_pos):
+        if not self.clouds_enabled:
+            self.clouds_amount = 0
+
         # Add clouds in current view
         for i in range(self.clouds_amount):
             # Setup cloud object in screen

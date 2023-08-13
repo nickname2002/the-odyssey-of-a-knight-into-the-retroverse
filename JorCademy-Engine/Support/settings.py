@@ -5,6 +5,7 @@ import sys
 scale = 1.5
 fps = 60
 volume = 0.5
+clouds = True
 
 # Get the current script's directory
 script_dir = os.path.abspath(os.path.dirname(__file__))

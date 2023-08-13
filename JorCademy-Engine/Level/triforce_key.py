@@ -10,7 +10,7 @@ class TriforceKey(Triforce):
         self.x = screen_width / 2
         self.y = 0 - self.height * 2
         self.moving_allowed = False
-        self.speed = 1
+        self.speed = 2 * scale
         self.final_y = screen_height / 2 + self.height
 
     def update(self, cam_pos, level_length):
