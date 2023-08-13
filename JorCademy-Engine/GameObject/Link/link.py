@@ -255,6 +255,11 @@ class Link(GameObject):
             self.make_text_anomaly(level, "+1 UP")
             play_sound(self.one_up_sound, 0.5)
 
+    def is_game_over(self):
+        return self.killed and \
+            self.lives == 0 and \
+            self.die_animation_timer >= self.die_animation_delay
+
     def update(self, cam_pos, level, at_level_end=False):
         # Update state of linked representations
         self.fire_mario.update(cam_pos, level.level_length)

@@ -55,9 +55,6 @@ def show_transition_screen(active_level, levels, current_screen):
     # Reset level if timer is over
     if transition_timer <= 0:
         transition_timer = transition_time
-
-        # Reset level
-        active_level.reset()
         return "GAME"
 
     transition_timer -= 1

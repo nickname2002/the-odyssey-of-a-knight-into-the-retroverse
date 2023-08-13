@@ -29,4 +29,4 @@ def show_game_over_screen(active_level, last_recorded_score) -> string:
 
     game_over_timer += 1
 
-    return "SETTINGS"
+    return "GAME_OVER"

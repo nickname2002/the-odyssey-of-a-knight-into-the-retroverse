@@ -47,7 +47,7 @@ class Monster(GameObject):
     def is_out_of_frame(self):
         if self.moving:
             return \
-                    self.x < 0 - self.width and \
+                    self.x < 0 - self.width or \
                     (self.y < 0 - self.width or self.y > screen_height + self.height)
 
     def ready_to_remove(self):
