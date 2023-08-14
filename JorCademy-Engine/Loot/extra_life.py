@@ -35,7 +35,7 @@ class ExtraLife(Loot):
 
     def rise_animation(self):
         super().rise_animation()
-        if self.y == self.orig_position[1] - tile_size:
+        if self.y <= self.orig_position[1] - tile_size:
             self.moving = True
 
     def draw(self, shift_x):

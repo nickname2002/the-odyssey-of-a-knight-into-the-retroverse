@@ -217,8 +217,12 @@ class MysteryBox(StaticTile):
         super().__init__(size, pos, surface, code, index)
         self.loot = loot
         self.alt_surface = alt_surface
+        self.emptied = False
 
     def give_loot(self, level):
+        if self.emptied:
+            return
+
         if self.image != self.alt_surface:
             self.image = self.alt_surface
 
@@ -228,4 +232,5 @@ class MysteryBox(StaticTile):
             except:
                 pass
 
+        self.emptied = True
         return self.loot

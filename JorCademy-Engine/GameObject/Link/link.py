@@ -121,6 +121,7 @@ class Link(GameObject):
             if self.direction.y < 0:
                 self.y = tile.y + tile.height / 2 + self.height / 2
                 self.direction.y = 0
+                self.jumping_locked = True
 
                 # Handle collision with mystery box
                 if tile.code == MYSTERY_BOX:
@@ -259,6 +260,10 @@ class Link(GameObject):
         jump_boost = 2.3
         self.direction.y = self.max_jump_speed * jump_boost
 
+    def switch_representation_jump(self):
+        jump_boost = 1.5
+        self.direction.y = self.max_jump_speed * jump_boost
+
     def trigger_new_representation(self, representation):
         if representation == "FIRE_MARIO":
             self.representation = FIRE_MARIO
@@ -335,7 +340,7 @@ class Link(GameObject):
         if self.representation == LINK:
             return
 
-        self.kill_jump()
+        self.switch_representation_jump()
         self.representation = LINK
         self.height = self.orig_height
         self.representation_change_timer = 0
@@ -379,7 +384,7 @@ class Link(GameObject):
 
     def reset_representation_timer(self, representation_object):
         if not representation_object.visible:
-            self.kill_jump()
+            self.switch_representation_jump()
             self.representation_change_timer = 0
 
     # Draw Link

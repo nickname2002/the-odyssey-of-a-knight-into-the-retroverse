@@ -1,3 +1,6 @@
+from Loot.loot import Loot
+
+
 class Chunk:
 
     def __init__(self, chunk_start, chunk_end, index):

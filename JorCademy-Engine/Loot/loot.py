@@ -2,6 +2,7 @@ import pygame
 
 from Environment.text_anomaly import TextAnomaly
 from Level.Tiles.tile import MovingTile
+from Support import settings
 from Support.settings import tile_size
 
 
@@ -9,7 +10,6 @@ class Loot(MovingTile):
 
     def __init__(self, size, pos, surface, code, player, index):
         super().__init__(size, pos, surface, code, index)
-        self.direction_y = 0
         self.activated = False
         self.speed = 2
         self.player = player
@@ -21,7 +21,7 @@ class Loot(MovingTile):
 
     def show(self, level):
         self.activated = True
-        self.direction_y = -self.speed
+        self.direction.y = -self.speed
         self.level = level
 
     def make_text_anomaly(self):
@@ -38,14 +38,14 @@ class Loot(MovingTile):
         self.image = new_surf
 
     def correct_position_with_camera(self, cam_pos):
-        self.x = self.orig_pos[0] - cam_pos
+        self.x = self.orig_position[0] - cam_pos
         self.x += self.offset
 
     def rise_animation(self):
         if self.activated and self.y > self.orig_position[1] - tile_size:
-            self.y += self.direction_y
+            self.y += self.direction.y
         else:
-            self.direction_y = 0
+            self.direction.y = 0
 
     def collision_with_player(self):
         return self.player.collision(self)
