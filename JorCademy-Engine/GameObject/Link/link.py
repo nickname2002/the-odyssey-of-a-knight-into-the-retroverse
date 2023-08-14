@@ -4,6 +4,7 @@ from GameObject.Link.fire_mario import FireMario
 from GameObject.Link.pac_man import PacMan
 from GameObject.gameobject import GameObject
 from Level.Tiles.tile_data import *
+from Loot.loot import Loot
 from Support.settings import screen_width, screen_height, scale, tile_size
 from Support.input import *
 from jorcademy import *
@@ -90,6 +91,10 @@ class Link(GameObject):
         self.death_sound = load_sound("assets/sounds/link/link_death_sound.ogg")  # TODO: find improved dead sound
 
     def handle_collision(self, tile, index, level):
+        # Ignore loot for terrain collision
+        if issubclass(type(tile), Loot):
+            return
+
         # Handle collision on left side of object
         if self.collision_left(tile):
             if self.direction.x < 0:
@@ -97,7 +102,6 @@ class Link(GameObject):
 
         # Handle collision on right side of object
         elif self.collision_right(tile):
-            print(tile.code)
             if self.direction.x > 0:
                 self.x = tile.x - tile.width / 2 - self.width / 2
 
