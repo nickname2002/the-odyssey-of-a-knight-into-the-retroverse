@@ -56,7 +56,7 @@ class PacMan(GameObject):
 
         # Update the vertical position of Link
         if is_key_down("space"):
-            self.jump(self.player.jump_speed)
+            self.jump(self.player.max_jump_speed)
 
     # Move right
     def move_right(self, cam_pos, level_length):

@@ -40,7 +40,6 @@ class Link(GameObject):
         self.orig_speed = 6
         self.speed = 6
         self.facing_left = False
-        self.jump_speed = -15 * scale
         self.is_grounded = True
         self.walk_animation_delay = 3
         self.state = IDLE
@@ -77,6 +76,9 @@ class Link(GameObject):
 
         # Jumping
         self.jumping_locked = False
+        self.max_jump_speed = -5 * scale
+        self.min_jump_speed = -12 * scale
+        self.jump_offset = 0
 
         # Power-up indicators
         self.fire_mario_indicator = load_image("power_ups/power_up_indicator_mario.png")
@@ -184,7 +186,7 @@ class Link(GameObject):
         # Update the vertical position of Link
         if jump_key_pressed():
             if not self.jumping_locked:
-                self.jump(self.jump_speed)
+                self.jump()
 
     def move_right(self):
         self.facing_left = False
@@ -234,32 +236,28 @@ class Link(GameObject):
             self.master_sword.attack()
             self.state = ATTACK
 
-    def jump(self, speed, enemy_killed=False):
+    def jump(self, enemy_killed=False):
         self.state = JUMPING
 
-        # Base level jump
-        if self.is_grounded:
-            self.timer = 0
-            self.direction.y = speed / 2
-            self.is_grounded = False
+        if self.direction.y <= self.min_jump_speed:
+            self.jumping_locked = True
+            return
 
-            # Play jump sound
+        # Play jump sound
+        if self.is_grounded:
+            self.jump_offset = 0
             if not enemy_killed and self.representation == LINK:
                 play_sound(self.jump_sound, 0.8)
             elif not enemy_killed and self.representation == FIRE_MARIO:
                 play_sound(self.fire_mario.jump_sound, 1.5)
-        # High jump
-        else:
-            if jump_key_pressed():
-                self.timer += 1
 
-                # Prevent extreme jumping
-                if self.timer >= 7.5:
-                    self.direction.y = speed
-                    self.jumping_locked = True
-                    return
+        self.jump_offset += -2 * scale
+        self.direction.y = self.max_jump_speed + self.jump_offset
+        self.is_grounded = False
 
-                self.direction.y += speed / 10
+    def kill_jump(self):
+        jump_boost = 2.3
+        self.direction.y = self.max_jump_speed * jump_boost
 
     def trigger_new_representation(self, representation):
         if representation == "FIRE_MARIO":
@@ -337,7 +335,7 @@ class Link(GameObject):
         if self.representation == LINK:
             return
 
-        self.jump(self.jump_speed / 3)
+        self.kill_jump()
         self.representation = LINK
         self.height = self.orig_height
         self.representation_change_timer = 0
@@ -381,7 +379,7 @@ class Link(GameObject):
 
     def reset_representation_timer(self, representation_object):
         if not representation_object.visible:
-            self.jump(self.jump_speed / 2)
+            self.kill_jump()
             self.representation_change_timer = 0
 
     # Draw Link

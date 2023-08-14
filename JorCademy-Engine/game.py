@@ -1,5 +1,3 @@
-
-# Levels
 from GameObject.Monster.ganondorf import Ganondorf
 from Level.boss_level import BossLevel
 from Level.endscene import EndScene
@@ -78,7 +76,6 @@ def process_transition_game() -> None:
     if type(levels[active_level_index]) == EndScene and \
             levels[active_level_index].transition_requested():
         current_screen = "MAIN_MENU"
-        active_level_index = 0
         return
 
     # Show transition screen
@@ -173,6 +170,7 @@ def update() -> None:
         levels[active_level_index].level_music.fadeout(500)
         levels[active_level_index].level_music.stop()
         current_screen = show_main_menu_screen(levels[active_level_index])
+        active_level_index = 0
         return
     else:
         main_menu_screen.main_menu_music.fadeout(500)

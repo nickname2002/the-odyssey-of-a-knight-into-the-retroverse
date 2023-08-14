@@ -95,7 +95,7 @@ class Monster(GameObject):
 
                 # Make player jump when landing on top of monster
                 self.player.is_grounded = True
-                self.player.jump(self.player.jump_speed + 4, True)
+                self.player.kill_jump()
 
     def handle_player_damage_from_player_body_collision(self, level):
         if self.collision(self.player) and not self.killed:

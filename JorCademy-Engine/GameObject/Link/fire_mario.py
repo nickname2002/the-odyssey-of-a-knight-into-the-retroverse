@@ -62,7 +62,7 @@ class FireMario(GameObject):
 
         # Update the vertical position of Link
         if is_key_down("space"):
-            self.jump(self.player.jump_speed)
+            self.jump(self.player.max_jump_speed)
 
     def handle_collision(self, tile, index, level):
         if self.visible:
