@@ -8,6 +8,7 @@ import events
 import game
 import jorcademy as jc
 from Support.settings import fps, base_dir
+from Support import settings
 from View.main_menu_screen import load_main_menu_images
 from View.transition_screen import load_transition_screen_images
 
@@ -124,6 +125,10 @@ async def main():
         # Update mouse position
         jc.mouse_position = pygame.mouse.get_pos()
 
+        # Get elapsed time between frames
+        delta_time = clock.tick(fps) / 1000.0
+        settings.delta_time = delta_time
+
         # Render game
         game.update()
         __render_objects_on_screen()
@@ -131,8 +136,6 @@ async def main():
         # flip() the display to put your work on screen
         pygame.display.flip()
         jc.__draw_buffer.clear()
-
-        clock.tick(fps)
         await asyncio.sleep(0)
 
     pygame.quit()
