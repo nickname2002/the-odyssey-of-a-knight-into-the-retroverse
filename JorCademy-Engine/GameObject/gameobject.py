@@ -16,7 +16,7 @@ class GameObject:
         self.offset = 0
         self.width = w
         self.direction: pygame.Vector2 = pygame.Vector2(0, 0)
-        self.gravity = 0.8 * scale
+        self.gravity = 1 * scale
         self.walk_animation_delay = 5
         self.timer = 0
         self.visible = False
@@ -150,6 +150,6 @@ class GameObject:
 
     # Applying gravity
     def apply_gravity(self):
-        if self.direction.y < 10:
+        if self.direction.y < 15:
             self.direction.y += self.gravity
         self.y += self.direction.y

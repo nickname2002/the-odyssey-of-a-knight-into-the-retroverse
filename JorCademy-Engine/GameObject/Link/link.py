@@ -75,6 +75,9 @@ class Link(GameObject):
             load_image("link/link_dead.png")
         ]
 
+        # Jumping
+        self.jumping_locked = False
+
         # Power-up indicators
         self.fire_mario_indicator = load_image("power_ups/power_up_indicator_mario.png")
         self.pac_man_indicator = load_image("power_ups/power_up_indicator_pac_man.png")
@@ -157,6 +160,10 @@ class Link(GameObject):
                 and self.x > 10):
             self.x += self.direction.x * self.speed
 
+        # Update jumping lock
+        if self.is_grounded:
+            self.jumping_locked = False
+
         # Prevent movement if at end of level
         if at_level_end or self.speed == 0:
             self.state = IDLE
@@ -170,9 +177,13 @@ class Link(GameObject):
         elif self.is_grounded:
             self.state = IDLE
 
+        # Make sure jumping direction cannot change negatively midair
+        if not self.is_grounded and not jump_key_pressed():
+            self.jumping_locked = True
+
         # Update the vertical position of Link
-        if is_key_down("space") or is_key_down("up") or is_key_down("w"):
-            if self.is_grounded:
+        if jump_key_pressed():
+            if not self.jumping_locked:
                 self.jump(self.jump_speed)
 
     def move_right(self):
@@ -223,17 +234,32 @@ class Link(GameObject):
             self.master_sword.attack()
             self.state = ATTACK
 
-    # Let character jump
     def jump(self, speed, enemy_killed=False):
-        self.timer = 0
         self.state = JUMPING
+
+        # Base level jump
         if self.is_grounded:
-            self.direction.y = speed
+            self.timer = 0
+            self.direction.y = speed / 2
             self.is_grounded = False
+
+            # Play jump sound
             if not enemy_killed and self.representation == LINK:
-                play_sound(self.jump_sound, 0.6)
+                play_sound(self.jump_sound, 0.8)
             elif not enemy_killed and self.representation == FIRE_MARIO:
                 play_sound(self.fire_mario.jump_sound, 1.5)
+        # High jump
+        else:
+            if jump_key_pressed():
+                self.timer += 1
+
+                # Prevent extreme jumping
+                if self.timer >= 7.5:
+                    self.direction.y = speed
+                    self.jumping_locked = True
+                    return
+
+                self.direction.y += speed / 10
 
     def trigger_new_representation(self, representation):
         if representation == "FIRE_MARIO":
