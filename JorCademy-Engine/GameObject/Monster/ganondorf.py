@@ -161,9 +161,6 @@ class Ganondorf(Monster):
 
         return vec
 
-    def get_distance_from_player(self):
-        return abs(self.player.x - self.x)
-
     def init_new_walking_delay(self):
         self.random_walking_delay = random.randint(150, 600)
 

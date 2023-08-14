@@ -155,6 +155,9 @@ class Monster(GameObject):
     def init_new_jump_speed(self):
         self.jump_speed = random.randint(-13, -5)
 
+    def get_distance_from_player(self):
+        return abs(self.player.x - self.x)
+
     def move_horizontally(self):
         self.offset += self.direction.x * self.speed
 
@@ -165,5 +168,5 @@ class Monster(GameObject):
         self.correct_position_with_camera(cam_pos)
         self.timer += 1
 
-        if (self.x - self.width) - self.player.x < screen_width / 2:
+        if self.get_distance_from_player() < screen_width:
             self.moving = True
