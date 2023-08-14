@@ -6,6 +6,7 @@ A game created for the Summer of GameDev 2023 game jam, inspired by the theme _R
 - [Game Structure](#game-structure)
 - [Dependencies](#dependencies)
 - [Running the Application](#running-the-application)
+- [Controls](#controls)
 - [Maintenance](#maintenance)
 - [Known issues](#known-issues)
 - [Contact](#contact)
@@ -54,6 +55,14 @@ To launch the application locally, use the following terminal command:
 python3 JorCademy-Engine/main.py
 ```
 If this command fails, you can try python `JorCademy-Engine/main.py` or simply `JorCademy-Engine/main.py`, depending on your Python version and operating system.
+
+## Controls
+The game is controlled using the keyboard. The following keys are used:
+- `W`, `UP` or `SPACE` to jump
+- `A` or `LEFT` to move left
+- `D` or `RIGHT` to move right
+- `SHIFT` to attack
+- `ESC` to pause the game
 
 ## Maintenance
 This project will be actively maintained until the conclusion of the game jam on 19/08/2023. Afterward, no further updates are expected.
