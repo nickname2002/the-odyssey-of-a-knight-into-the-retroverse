@@ -94,8 +94,8 @@ class GameObject:
 
     def collision_top(self, other):
         # Check in range horizontally
-        in_x_range = (self.x + self.width / 2 - 10 * scale) >= (other.x - other.width / 2) and \
-                     (self.x - self.width / 2 + 10 * scale) <= (other.x + other.width / 2)
+        in_x_range = (self.x + self.width / 2 - 5 * scale) >= (other.x - other.width / 2) and \
+                     (self.x - self.width / 2 + 5 * scale) <= (other.x + other.width / 2)
 
         # Check in range vertically
         in_y_range = (self.y - self.height / 2 - 10 * scale) <= (other.y + other.height / 2) and \
@@ -106,8 +106,8 @@ class GameObject:
 
     def collision_bottom(self, other):
         # Check in range horizontally
-        in_x_range = (self.x + self.width / 2 - 10 * scale) >= (other.x - other.width / 2) and \
-                     (self.x - self.width / 2 + 10 * scale) <= (other.x + other.width / 2)
+        in_x_range = (self.x + self.width / 2 - 5 * scale) >= (other.x - other.width / 2) and \
+                     (self.x - self.width / 2 + 5 * scale) <= (other.x + other.width / 2)
 
         # Check in range vertically
         in_y_range = (self.y + self.height / 2 - 10 * scale) <= \

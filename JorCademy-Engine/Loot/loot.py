@@ -37,6 +37,10 @@ class Loot(MovingTile):
         new_surf.blit(resized_surface, (0, 0))
         self.image = new_surf
 
+    def correct_position_with_camera(self, cam_pos):
+        self.x = self.orig_pos[0] - cam_pos
+        self.x += self.offset
+
     def rise_animation(self):
         if self.activated and self.y > self.orig_position[1] - tile_size:
             self.y += self.direction_y
@@ -54,4 +58,3 @@ class Loot(MovingTile):
     def update(self, shift_x):
         super().update(shift_x)
         self.rise_animation()
-
