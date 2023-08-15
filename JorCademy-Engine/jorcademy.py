@@ -55,7 +55,10 @@ def is_nintendo_switch_pro_button_down(button: int) -> bool:
 
 
 def vibrate_nintendo_switch_pro(duration: float) -> None:
-    __nintendo_switch_joystick[0].rumble(1.0, 1.0, int(duration * 1000))
+    try:
+        __nintendo_switch_joystick[0].rumble(1.0, 1.0, int(duration * 1000))
+    except KeyError:
+        print("No Nintendo Switch Pro controller detected.")
 
 
 # ==== Mouse input ====

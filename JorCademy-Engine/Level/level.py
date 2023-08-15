@@ -1,22 +1,32 @@
 import random
 
+# Environment
 from Environment.cloud import Cloud
+
+# GameObject
 from GameObject.Link.link import Link
 from GameObject.Monster.bokoblin import Bokoblin
 from GameObject.Monster.donkey_kong import DonkeyKong
 from GameObject.Monster.ganondorf import Ganondorf
 from GameObject.Monster.ghost import Ghost
+
+# Level helpers
 from Level.Tiles.tile import StaticTile, MysteryBox, MovingTile, BreakableTile
 from Level.Tiles.tile_data import *
 from Level.chunk import Chunk
 from Level.triforce import Triforce
+
+# Loot
 from Loot.cherry import Cherry
 from Loot.coin import Coin
 from Loot.extra_life import ExtraLife
 from Loot.fire_flower import FireFlower
 from Loot.loot import Loot
+
+# Support
 from Support.settings import tile_size, screen_width, screen_height, scale
 from Support.support import import_level_data, import_tile_set
+from Support.input import *
 from jorcademy import *
 
 
@@ -224,7 +234,9 @@ class Level:
         if self.link.killed:
             return
 
-        if self.link.x >= screen_width / 2 and not is_key_down('a'):
+        if (self.link.x >= screen_width / 2 and
+                not move_left_key_pressed() and not
+                self.link.direction.x <= 0):
             self.cam_pos += self.link.direction.x * self.link.speed
 
     # Handle collision

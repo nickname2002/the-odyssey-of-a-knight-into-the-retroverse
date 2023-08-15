@@ -202,6 +202,10 @@ class Link(GameObject):
     def move_right(self):
         self.facing_left = False
 
+        # Clamp direction
+        if self.direction.x < 0:
+            self.direction.x = 0
+
         # Handle animation
         if self.is_grounded:
             if self.state < WALKING_1 or self.state >= WALKING_10:
@@ -219,6 +223,10 @@ class Link(GameObject):
     # Move left
     def move_left(self):
         self.facing_left = True
+
+        # Clamp direction
+        if self.direction.x > 0:
+            self.direction.x = 0
 
         # Handle animation
         if self.is_grounded:

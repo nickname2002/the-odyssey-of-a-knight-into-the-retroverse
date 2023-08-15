@@ -132,8 +132,6 @@ async def main():
         for event in pygame.event.get():
             __handle_keyboard_events(event)
             __handle_mouse_events(event)
-
-            # === TODO: Add controller support === #
             __handle_controller_events(event)
 
             # Handle hotplugging
@@ -147,8 +145,6 @@ async def main():
             if event.type == pygame.JOYDEVICEREMOVED:
                 del joysticks[event.instance_id]
                 print(f"Joystick {event.instance_id} disconnected")
-
-            # === TODO: Add controller support === #
 
             # Quit game
             if event.type == pygame.QUIT:
@@ -164,8 +160,6 @@ async def main():
         # Get elapsed time between frames
         delta_time = clock.tick(fps) / 1000.0
         settings.delta_time = delta_time
-
-        # TODO: Add controller support
 
         # Render game
         game.update()

@@ -30,11 +30,11 @@ class DonkeyKong(Monster):
 
         # Jump delay
         self.min_jump_delay = 60 * 1
-        self.max_jump_delay = 60 * 4
+        self.max_jump_delay = 60 * 3
 
         # Attack delay
-        self.min_attack_delay = 60 * 5
-        self.max_attack_delay = 60 * 10
+        self.min_attack_delay = 60 * 3
+        self.max_attack_delay = 60 * 6
 
     def jump(self, speed):
         self.jump_timer = 0
