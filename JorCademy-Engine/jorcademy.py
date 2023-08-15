@@ -19,6 +19,24 @@ color = Tuple[int, int, int]
 
 __key_status = {}
 
+# === Nintendo Switch controller input ===
+
+__nintendo_switch_button_status = {
+    0: False,  # A
+    1: False,  # B
+    2: False,  # X
+    3: False,  # Y
+    4: False,  # - (MINUS)
+    5: False,  # HOME
+    6: False,  # + (PLUS)
+    9: False,  # PLUS
+    11: False,  # D_UP
+    12: False,  # D_DOWN
+    13: False,  # D_LEFT
+    14: False,  # D_RIGHT
+}
+__nintendo_switch_joystick = {}
+
 
 # Get whether a specific key is down
 def is_key_down(key: str) -> bool:
@@ -26,6 +44,18 @@ def is_key_down(key: str) -> bool:
         return __key_status[key]
     else:
         return False
+
+
+# Get whether a specific Switch button is down
+def is_nintendo_switch_pro_button_down(button: int) -> bool:
+    if button in __nintendo_switch_button_status:
+        return __nintendo_switch_button_status[button]
+    else:
+        return False
+
+
+def vibrate_nintendo_switch_pro(duration: float) -> None:
+    __nintendo_switch_joystick[0].rumble(1.0, 1.0, int(duration * 1000))
 
 
 # ==== Mouse input ====

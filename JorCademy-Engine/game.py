@@ -3,19 +3,20 @@ from Level.boss_level import BossLevel
 from Level.endscene import EndScene
 from Level.level import Level
 
+# Support
+from Support.settings import screen_width, screen_height
+from Support.input import *
+
 # Screens
 from View import main_menu_screen
 from View.controls_screen import show_controls_screen
-from View.main_menu_screen import show_main_menu_screen
-from View.settings_screen import show_settings_screen
 from View.game_over_screen import show_game_over_screen
+from View.main_menu_screen import show_main_menu_screen
 from View.pause_screen import show_paused_screen
+from View.settings_screen import show_settings_screen
 from View.starting_messages_screen import show_starting_messages
 from View.transition_screen import get_next_level_index, show_transition_screen
 from jorcademy import *
-
-# Support
-from Support.settings import screen_width, screen_height, scale
 
 current_screen = "MAIN_MENU"
 transition_screens = [
@@ -105,10 +106,6 @@ def load_levels(game_screen) -> None:
     global levels
 
     levels = [
-        Level("1_5",
-              10,
-              "assets/music/1-5.ogg",
-              (0, 0, 0), False),
         Level("1_1",
               20,
               "assets/music/1-1.ogg",
@@ -194,7 +191,7 @@ def update() -> None:
 
     # Check if game paused needs to be toggled
     if current_screen == "GAME":
-        if is_key_down("esc") and pause_timer == 0:
+        if pause_key_pressed() and pause_timer == 0:
             current_screen = "PAUSED"
             pause_timer = 10
     else:

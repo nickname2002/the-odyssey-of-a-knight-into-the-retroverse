@@ -1,5 +1,6 @@
 import string
 from Support.settings import scale, screen_width, screen_height
+from Support.input import *
 from jorcademy import *
 
 switch_starting_message_timer = 0
@@ -25,7 +26,7 @@ def show_starting_messages() -> string:
     backdrop((255, 255, 255))
 
     # Toggle skip allowed
-    if not is_key_down("space"):
+    if not skip_key_pressed():
         skip_allowed = True
 
     # Show correct message
@@ -37,7 +38,7 @@ def show_starting_messages() -> string:
          "fonts/pixel.ttf")
 
     # Show skip option
-    text("PRESS SPACE TO SKIP",
+    text("PRESS SPACE/X TO SKIP",
          int(scale * 15),
          (150, 150, 150),
          screen_width / 2,
@@ -49,7 +50,8 @@ def show_starting_messages() -> string:
 
     # Switch to next message
     if (switch_starting_message_timer >= starting_message_delay or
-            is_key_down("space") and skip_allowed):
+            skip_key_pressed() and
+            skip_allowed):
         skip_allowed = False
         if starting_message_index >= len(starting_messages) - 1:
             starting_message_index = 0

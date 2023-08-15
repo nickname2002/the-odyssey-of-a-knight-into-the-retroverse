@@ -1,5 +1,6 @@
 import string
 from Support.settings import screen_width, screen_height, scale
+from Support.input import *
 from UI.button import Button
 from jorcademy import *
 
@@ -23,6 +24,9 @@ def show_paused_screen(active_level) -> string:
          screen_width / 2,
          screen_height / 2 - 30 * scale,
          "fonts/pixel.ttf")
+
+    if is_nintendo_switch_pro_button_down(SWITCH_D_UP):
+        pause_button.selected = True
 
     # Go back to main menu
     pause_button.update()

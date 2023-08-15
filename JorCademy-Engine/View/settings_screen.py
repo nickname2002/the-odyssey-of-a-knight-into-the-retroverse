@@ -29,6 +29,8 @@ to_main_menu_button = Button(
 view_displayed_prev_frame = False
 
 
+# TODO: add support for Nintendo Switch Pro Controller navigation
+
 def show_settings_screen(main_menu_music) -> string:
     global view_displayed_prev_frame
 

@@ -1,5 +1,6 @@
 from GameObject.gameobject import GameObject
 from Support.settings import screen_width, scale
+from Support.input import *
 from jorcademy import *
 
 IDLE = 0
@@ -46,16 +47,16 @@ class PacMan(GameObject):
 
     def handle_movement(self, cam_pos, level_length):
         # Update horizontal direction and position of Link
-        if is_key_down("d") and not is_key_down('shift'):
+        if move_right_key_pressed() and not attack_key_pressed():
             self.move_right(cam_pos, level_length)
-        elif is_key_down("a") and not is_key_down("shift"):
+        elif move_left_key_pressed() and not attack_key_pressed():
             self.move_left(cam_pos)
         elif self.is_grounded:
             self.direction.x = 0
             self.state = IDLE
 
         # Update the vertical position of Link
-        if is_key_down("space"):
+        if jump_key_pressed():
             self.jump(self.player.max_jump_speed)
 
     # Move right

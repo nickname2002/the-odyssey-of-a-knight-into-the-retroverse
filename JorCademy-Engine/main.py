@@ -29,6 +29,9 @@ pygame.init()
 screen = pygame.display.set_mode(jc.screen_size, flags, 16)
 pygame.event.set_allowed([QUIT, KEYDOWN, KEYUP])
 
+# Controller
+joysticks = {}
+
 # Load game data
 game.load_levels(screen)
 load_main_menu_images()
@@ -102,6 +105,22 @@ def __handle_mouse_events(event_args: pygame.event):
         jc.__mouse_status[button] = False
 
 
+# === Controller input === #
+
+def __handle_controller_events(event_args: pygame.event):
+    responsive_buttons = [0, 1, 2, 3, 11, 12, 13, 14]
+
+    # Button down event
+    if event_args.type == pygame.JOYBUTTONDOWN:
+        if event_args.button in responsive_buttons:
+            jc.__nintendo_switch_button_status[event_args.button] = True
+
+    # Button up event
+    elif event_args.type == pygame.JOYBUTTONUP:
+        if event_args.button in responsive_buttons:
+            jc.__nintendo_switch_button_status[event_args.button] = False
+
+
 # Application entry point
 async def main():
     global running
@@ -113,6 +132,23 @@ async def main():
         for event in pygame.event.get():
             __handle_keyboard_events(event)
             __handle_mouse_events(event)
+
+            # === TODO: Add controller support === #
+            __handle_controller_events(event)
+
+            # Handle hotplugging
+            if event.type == pygame.JOYDEVICEADDED:
+                # This event will be generated when the program starts for every
+                # joystick, filling up the list without needing to create them manually.
+                joy = pygame.joystick.Joystick(event.device_index)
+                jc.__nintendo_switch_joystick[joy.get_instance_id()] = joy
+                print(f"Joystick {joy.get_instance_id()} connencted")
+
+            if event.type == pygame.JOYDEVICEREMOVED:
+                del joysticks[event.instance_id]
+                print(f"Joystick {event.instance_id} disconnected")
+
+            # === TODO: Add controller support === #
 
             # Quit game
             if event.type == pygame.QUIT:
@@ -128,6 +164,8 @@ async def main():
         # Get elapsed time between frames
         delta_time = clock.tick(fps) / 1000.0
         settings.delta_time = delta_time
+
+        # TODO: Add controller support
 
         # Render game
         game.update()

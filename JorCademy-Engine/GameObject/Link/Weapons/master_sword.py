@@ -1,4 +1,5 @@
 from GameObject.gameobject import GameObject
+from Support.input import attack_key_pressed
 from Support.settings import scale
 from jorcademy import *
 
@@ -44,7 +45,7 @@ class MasterSword(GameObject):
             self.timer += 1
 
             # Make sure cooldown for weapon usage is activated when triggered too long
-            if is_key_down("shift"):
+            if attack_key_pressed() and self.timer < 100000:
                 if self.timer == 100000:
                     self.timer = 0
                 if self.timer % self.attack_animation_delay == 0:

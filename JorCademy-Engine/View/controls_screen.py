@@ -1,4 +1,6 @@
 import string
+
+from Support.input import return_key_pressed
 from Support.settings import scale, screen_width, screen_height
 from jorcademy import *
 
@@ -21,12 +23,12 @@ def show_controls_screen() -> string:
     text("PAUSE: ESCAPE", int(scale * 30), (255, 255, 255),
          screen_width / 2, screen_height / 2 + 100 * scale,
          "fonts/pixel.ttf")
-    text("PRESS ENTER TO START", int(scale * 30), (255, 255, 255),
+    text("PRESS ENTER/A TO START", int(scale * 30), (255, 255, 255),
          screen_width / 2, screen_height / 2 + 200 * scale,
          "fonts/pixel.ttf")
 
     # Go to game when enter is pressed
-    if is_key_down("return"):
+    if return_key_pressed():
         return "TRANSITION_FROM_MAIN_MENU"
 
     return "CONTROLS"

@@ -1,5 +1,6 @@
 import string
 from Support.settings import screen_width, screen_height, scale
+from Support.input import *
 from UI.button import Button
 from jorcademy import *
 
@@ -18,6 +19,9 @@ settings_button = Button(
     (1, 1, 1), (50, 50, 50),
     True, 5, (255, 0, 0))
 
+menu_buttons = [start_button, settings_button]
+selected_index = None
+
 # Music
 main_menu_music = load_sound("assets/music/main_menu.ogg")
 
@@ -33,6 +37,8 @@ def load_main_menu_images():
 
 
 def show_main_menu_screen(active_level) -> string:
+    global selected_index
+
     # Stop music in active level
     active_level.level_music.fadeout(500)
 
@@ -54,6 +60,24 @@ def show_main_menu_screen(active_level) -> string:
     text("BY NICKNAME", int(scale * 30), (0, 0, 0),
          screen_width / 2, screen_height / 2 + 20 * scale,
          "fonts/pixel.ttf")
+
+    if is_nintendo_switch_pro_button_down(SWITCH_D_UP):
+        if selected_index is None:
+            selected_index = 0
+        elif selected_index > 0:
+            selected_index -= 1
+    elif is_nintendo_switch_pro_button_down(SWITCH_D_DOWN):
+        if selected_index is None:
+            selected_index = 0
+        elif selected_index < len(menu_buttons) - 1:
+            selected_index += 1
+
+    if selected_index is not None:
+        for i in range(len(menu_buttons)):
+            if i == selected_index:
+                menu_buttons[i].selected = True
+            else:
+                menu_buttons[i].selected = False
 
     # Update start button
     start_button.update()

@@ -134,6 +134,7 @@ class Link(GameObject):
                 self.y = tile.y + tile.height / 2 + self.height / 2
                 self.direction.y = 0
                 self.jumping_locked = True
+                vibrate_nintendo_switch_pro(0.01)
 
                 # Handle collision with mystery box
                 if tile.code == MYSTERY_BOX:
@@ -212,7 +213,7 @@ class Link(GameObject):
         self.timer += 1
 
         # Update coordinates
-        if abs(self.direction.x) < self.max_speed and not is_key_down("shift"):
+        if abs(self.direction.x) < self.max_speed and not attack_key_pressed():
             self.direction.x += 0.25 * scale
 
     # Move left
@@ -230,7 +231,7 @@ class Link(GameObject):
         self.timer += 1
 
         # Update coordinates
-        if abs(self.direction.x) < self.max_speed and self.x > 30 and not is_key_down("shift"):
+        if abs(self.direction.x) < self.max_speed and self.x > 30 and not attack_key_pressed():
             self.direction.x -= 0.25 * scale
 
         if self.x > 30:
@@ -266,6 +267,7 @@ class Link(GameObject):
         self.is_grounded = False
 
     def kill_jump(self):
+        vibrate_nintendo_switch_pro(0.01)
         jump_boost = 2.3
         self.direction.y = self.max_jump_speed * jump_boost
 
@@ -338,7 +340,7 @@ class Link(GameObject):
         self.handle_1up_with_coins(level)
 
         # Start attack
-        if is_key_down("shift") and self.is_grounded:
+        if attack_key_pressed() and self.is_grounded:
             self.attack()
 
         # Update weapon attack cooldown
@@ -415,6 +417,7 @@ class Link(GameObject):
 
     def die(self, level=None):
         if not self.at_game_end:
+            vibrate_nintendo_switch_pro(0.05)
             self.lives -= 1
             self.killed = True
 

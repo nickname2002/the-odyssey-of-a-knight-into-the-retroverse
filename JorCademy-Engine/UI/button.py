@@ -1,4 +1,5 @@
 from Support.settings import scale
+from Support.input import *
 from jorcademy import *
 
 
@@ -13,6 +14,9 @@ class Button:
         self.y = pos[1]
         self.width = w
         self.height = h
+
+        # Button state
+        self.selected = False
 
         # Button text
         self.content = content
@@ -36,6 +40,9 @@ class Button:
         self.clickable = True
 
     def is_hovered(self):
+        if self.selected:
+            return True
+
         if self.x - self.width / 2 * scale <= pygame.mouse.get_pos()[0] <= self.x + self.width / 2 * scale and \
                 self.y - self.height / 2 * scale <= pygame.mouse.get_pos()[1] <= self.y + self.height / 2 * scale:
             return True
@@ -46,7 +53,7 @@ class Button:
 
         if self.is_hovered():
             self.clickable = not pygame.mouse.get_pressed()[0]
-            return pygame.mouse.get_pressed()[0]
+            return pygame.mouse.get_pressed()[0] or return_key_pressed()
 
     def update(self):
         if self.is_hovered():

@@ -1,6 +1,7 @@
 from GameObject.Link.Weapons.fireball import FireBall
 from GameObject.gameobject import GameObject
 from Support.settings import screen_width, scale
+from Support.input import *
 from jorcademy import *
 
 # States for FireMario
@@ -52,16 +53,16 @@ class FireMario(GameObject):
             self.active_cooldown -= 1
 
         # Update horizontal direction and position of Link
-        if is_key_down("d") and not is_key_down('shift'):
+        if move_right_key_pressed() and not attack_key_pressed():
             self.move_right(cam_pos, level_length)
-        elif is_key_down("a") and not is_key_down("shift"):
+        elif move_left_key_pressed() and not attack_key_pressed():
             self.move_left()
         elif self.is_grounded and not self.active_cooldown > 0:
             self.direction.x = 0
             self.state = IDLE
 
         # Update the vertical position of Link
-        if is_key_down("space"):
+        if jump_key_pressed():
             self.jump(self.player.max_jump_speed)
 
     def handle_collision(self, tile, index, level):
@@ -142,7 +143,7 @@ class FireMario(GameObject):
             fireball.update(cam_pos, level_length)
 
         # Start attack
-        if is_key_down("shift") and \
+        if attack_key_pressed() and \
            self.active_cooldown <= 0:
             self.attack()
 
