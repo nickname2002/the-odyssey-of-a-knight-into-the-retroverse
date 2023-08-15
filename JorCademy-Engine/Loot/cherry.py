@@ -1,4 +1,5 @@
 from Loot.loot import Loot
+from Support.settings import scale
 from jorcademy import *
 
 
@@ -27,6 +28,5 @@ class Cherry(Loot):
         play_sound(self.collect_sound, 1)
         self.player.trigger_new_representation(self.triggered_representation)
 
-    def draw(self, game_screen):
-        self.make_image(self.image)
-        super().draw(game_screen)
+    def draw(self, image_scale=scale):
+        image(self.image, self.x, self.y, image_scale)

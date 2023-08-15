@@ -38,8 +38,8 @@ class StaticTile(Tile):
         self.image = surface
         self.code = code
 
-    def draw(self, screen):
-        screen.blit(self.image, (self.x - tile_size / 2, self.y - tile_size / 2))
+    def draw(self):
+        image(self.image, self.x, self.y, self.image.get_width() / tile_size)
 
 
 class MovingTile(Tile):
@@ -54,8 +54,8 @@ class MovingTile(Tile):
         self.gravity = 0.2
         self.direction = pygame.Vector2(0, 0)
 
-    def draw(self, screen):
-        screen.blit(self.image, (self.x - tile_size / 2, self.y - tile_size / 2))
+    def draw(self):
+        image(self.image, self.x, self.y, self.image.get_width() / tile_size)
 
     # Applying gravity
     def apply_gravity(self):

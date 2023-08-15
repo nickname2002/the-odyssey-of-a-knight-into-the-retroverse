@@ -353,6 +353,65 @@ class Level:
             if obj.in_frame():
                 obj.draw()
 
+    def draw_tiles(self, chunks_to_draw):
+        # Gather and categorize tiles in a single loop
+        backdrop_tiles = []
+        loot_tiles = []
+        other_tiles = []
+
+        # Gather all tiles to draw
+        for chunk in chunks_to_draw:
+            for tile in chunk.tiles:
+                if tile.code in BACKDROP_TILES:
+                    backdrop_tiles.append(tile)
+                elif isinstance(tile, Loot):
+                    loot_tiles.append(tile)
+                else:
+                    other_tiles.append(tile)
+
+        # Draw backdrop tiles first
+        for tile in backdrop_tiles:
+            tile.draw()
+
+        # Draw clouds
+        self.draw_environmental_objects()
+
+        # Draw loot
+        for tile in loot_tiles:
+            tile.draw()
+
+        # Draw other tiles
+        for tile in other_tiles:
+            tile.draw()
+
+    @staticmethod
+    def draw_monsters(chunks_to_draw):
+        # Gather all monsters to draw in a list
+        monsters_to_draw = []
+        for chunk in chunks_to_draw:
+            monsters_to_draw.extend(chunk.monsters)
+
+        # Draw monsters
+        for monster in monsters_to_draw:
+            monster.draw()
+
+    @staticmethod
+    def draw_text_anomalies(chunks_to_draw):
+        # Gather all text anomalies to draw in a list
+        text_anomalies_to_draw = []
+        for chunk in chunks_to_draw:
+            text_anomalies_to_draw.extend(chunk.text_anomalies)
+
+        # Draw text anomalies
+        for text_anomaly in text_anomalies_to_draw:
+            text_anomaly.draw()
+
+    def draw_environment(self):
+        chunks_to_draw = self.get_chunks_in_range()
+        self.draw_tiles(chunks_to_draw)
+        self.draw_monsters(chunks_to_draw)
+        self.draw_text_anomalies(chunks_to_draw)
+
     # Draw the state of the level
     def draw(self):
 
@@ -360,16 +419,16 @@ class Level:
         backdrop(self.backdrop_color)
 
         # == Other
-        self.draw_environmental_objects()
         self.end_game_triforce.draw()
 
-        # == Player 
-        self.link.draw()
+        # Draw environment
+        self.draw_environment()
 
-        # Draw necessary tiles and monsters
-        chunks_to_draw = self.get_chunks_in_range()
-        for chunk in chunks_to_draw:
-            chunk.draw(self.screen)
+        # Draw end game triforce
+        self.end_game_triforce.draw()
+
+        # == Player
+        self.link.draw()
 
         # Coin amount
         text(f"COINS: {str(self.link.coins + self.link.coins_earned_current_level)}",

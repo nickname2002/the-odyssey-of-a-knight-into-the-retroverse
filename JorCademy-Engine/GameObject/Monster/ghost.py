@@ -33,10 +33,13 @@ class Ghost(Monster):
         self.eaten_sound = load_sound("assets/sounds/pac_man/eat_pac_man.ogg")
 
     def handle_collision_with_player(self, level):
+        if self.killed:
+            return
+
         # Process player damage & damage from player
         if self.collision(self.player):
             if self.player.representation == PAC_MAN:
-                play_sound(self.eaten_sound, 0.02)
+                play_sound(self.eaten_sound, 0.4)
                 self.die()
             elif not self.player.killed:
                 self.player.die(level)

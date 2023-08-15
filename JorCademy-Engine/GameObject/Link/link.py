@@ -95,6 +95,18 @@ class Link(GameObject):
         self.one_up_sound = load_sound("assets/sounds/power_ups/1_up.ogg")
         self.death_sound = load_sound("assets/sounds/link/link_death_sound.ogg")  # TODO: find improved dead sound
 
+    def collision_top(self, other):
+        # Check in range horizontally
+        in_x_range = (self.x + self.width / 2 - 7.5 * scale) >= (other.x - other.width / 2) and \
+                     (self.x - self.width / 2 + 7.5 * scale) <= (other.x + other.width / 2)
+
+        # Check in range vertically
+        in_y_range = (self.y - self.height / 2 - 10 * scale) <= (other.y + other.height / 2) and \
+                     (self.y - self.height / 2 + 10 * scale) >= (other.y - other.height / 2)
+
+        # Check horizontally and vertically in range
+        return in_x_range and in_y_range
+
     def handle_collision(self, tile, index, level):
         # Ignore loot for terrain collision
         if issubclass(type(tile), Loot):
@@ -125,12 +137,9 @@ class Link(GameObject):
 
                 # Handle collision with mystery box
                 if tile.code == MYSTERY_BOX:
-                    try:
+                    if not tile.emptied:
                         loot = tile.give_loot(level)
                         level.get_current_chunk().tiles.insert(loot.index, loot)
-                    except:
-                        print("Loot in mystery box is not defined")
-
                 elif tile.code in BREAKABLE:
                     tile.break_tile(level.get_right_sky_tile())
 
@@ -286,7 +295,9 @@ class Link(GameObject):
         level.get_current_chunk().update_text_anomalies(new_text_anomaly)
 
     def handle_1up_with_coins(self, level):
-        if self.coins + self.coins_earned_current_level >= 2000:
+        # Give better name
+        level_up_coin_threshold = 1000
+        if self.coins + self.coins_earned_current_level >= level_up_coin_threshold:
             self.coins = 0
             self.coins_earned_current_level = 0
             self.lives += 1
@@ -300,6 +311,7 @@ class Link(GameObject):
 
     def update(self, cam_pos, level, at_level_end=False):
         # Update state of linked representations
+        self.handle_representation()
         self.fire_mario.update(cam_pos, level.level_length)
         self.pac_man.update(cam_pos, level.level_length)
 
@@ -389,7 +401,6 @@ class Link(GameObject):
 
     # Draw Link
     def draw(self):
-        self.handle_representation()
         sprite = self.sprites[self.state]
 
         # Only draw when visible

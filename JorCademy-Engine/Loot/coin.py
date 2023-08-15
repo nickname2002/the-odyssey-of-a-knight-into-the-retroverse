@@ -1,5 +1,5 @@
 from Loot.loot import Loot
-from Support.settings import tile_size
+from Support.settings import tile_size, scale
 from jorcademy import *
 
 
@@ -35,6 +35,5 @@ class Coin(Loot):
             if self.timer % self.disappear_delay == 0:
                 self.y = 800
 
-    def draw(self, screen):
-        self.make_image(self.image)
-        super().draw(screen)
+    def draw(self, image_scale=1):
+        image(self.image, self.x, self.y, scale=scale)

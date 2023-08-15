@@ -1,10 +1,9 @@
-import pygame
-
 from Environment.text_anomaly import TextAnomaly
 from Level.Tiles.tile import MovingTile
-from Support import settings
 from Support.settings import tile_size
 
+
+# TODO: create generic draw method for all loot
 
 class Loot(MovingTile):
 
@@ -28,14 +27,6 @@ class Loot(MovingTile):
         anomaly_pos = (self.level.link.x, self.y - tile_size)
         new_text_anomaly = TextAnomaly(anomaly_pos, self.message, 20, (255, 255, 255))
         self.level.get_current_chunk().update_text_anomalies(new_text_anomaly)
-
-    def make_image(self, surface):
-        factor = tile_size / int(surface.get_width())
-        resized_surface = pygame.transform.scale(surface,
-                                                 (int(surface.get_width() * factor), surface.get_height() * factor))
-        new_surf = pygame.Surface((tile_size, tile_size), pygame.SRCALPHA)
-        new_surf.blit(resized_surface, (0, 0))
-        self.image = new_surf
 
     def correct_position_with_camera(self, cam_pos):
         self.x = self.orig_position[0] - cam_pos

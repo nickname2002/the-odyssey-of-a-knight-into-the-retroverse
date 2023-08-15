@@ -1,3 +1,4 @@
+from Level.Tiles.tile_data import BACKDROP_TILES
 from Loot.loot import Loot
 
 
@@ -44,22 +45,3 @@ class Chunk:
         self.update_monsters(cam_pos, level_length)
         self.update_tiles(cam_pos)
         self.update_text_anomalies()
-
-    def draw_monsters(self):
-        for monster in self.monsters:
-            if monster.in_frame():
-                monster.draw()
-
-    def draw_tiles(self, screen):
-        for tile in self.tiles:
-            if tile.in_frame():
-                tile.draw(screen)
-
-    def draw_text_anomalies(self):
-        for anomaly in self.text_anomalies:
-            anomaly.draw()
-
-    def draw(self, screen):
-        self.draw_monsters()
-        self.draw_tiles(screen)
-        self.draw_text_anomalies()

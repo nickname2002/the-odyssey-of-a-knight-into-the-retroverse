@@ -38,9 +38,5 @@ class ExtraLife(Loot):
         if self.y <= self.orig_position[1] - tile_size:
             self.moving = True
 
-    def draw(self, shift_x):
-        if self.moving:
-            image(self.image, self.x, self.y, 0.7 * scale)
-        else:
-            self.make_image(self.image)
-            super().draw(shift_x)
+    def draw(self, image_scale=tile_size/256):
+        image(self.image, self.x, self.y, scale=image_scale)

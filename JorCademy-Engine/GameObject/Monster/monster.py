@@ -98,6 +98,9 @@ class Monster(GameObject):
                 self.player.kill_jump()
 
     def handle_player_damage_from_player_body_collision(self, level):
+        if self.player.collision_bottom(self) and self.collision_top(self.player):
+            return
+
         if self.collision(self.player) and not self.killed:
             if not self.player.killed:
                 self.player.die(level)

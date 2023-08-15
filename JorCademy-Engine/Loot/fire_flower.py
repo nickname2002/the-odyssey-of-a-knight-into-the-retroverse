@@ -1,4 +1,5 @@
 from Loot.loot import Loot
+from Support.settings import tile_size
 from jorcademy import *
 
 
@@ -27,6 +28,5 @@ class FireFlower(Loot):
         play_sound(self.collect_sound, 1)
         self.player.trigger_new_representation(self.triggered_representation)
 
-    def draw(self, screen):
-        self.make_image(self.image)
-        super().draw(screen)
+    def draw(self, image_scale=tile_size/256):
+        image(self.image, self.x, self.y, scale=image_scale)
