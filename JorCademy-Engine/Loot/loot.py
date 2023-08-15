@@ -21,6 +21,7 @@ class Loot(MovingTile):
         self.image_scale = 1
 
     def show(self, level):
+        self.correct_position_with_camera(level.cam_pos)
         self.activated = True
         self.direction.y = -self.speed
         self.level = level
