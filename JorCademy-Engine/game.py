@@ -105,6 +105,10 @@ def load_levels(game_screen) -> None:
     global levels
 
     levels = [
+        Level("1_5",
+              10,
+              "assets/music/1-5.ogg",
+              (0, 0, 0), False),
         Level("1_1",
               20,
               "assets/music/1-1.ogg",

@@ -4,8 +4,6 @@ from Support.settings import tile_size
 from jorcademy import *
 
 
-# TODO: create generic draw method for all loot
-
 class Loot(MovingTile):
 
     def __init__(self, size, pos, surface, code, player, index):
