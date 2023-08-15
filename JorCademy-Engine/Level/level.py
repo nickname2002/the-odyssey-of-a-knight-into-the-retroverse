@@ -418,9 +418,6 @@ class Level:
         # == Background
         backdrop(self.backdrop_color)
 
-        # == Other
-        self.end_game_triforce.draw()
-
         # Draw environment
         self.draw_environment()
 

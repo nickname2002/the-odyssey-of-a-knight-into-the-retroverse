@@ -11,16 +11,16 @@ def show_controls_screen() -> string:
     text("CONTROLS", int(scale * 50), (255, 255, 255),
          screen_width / 2, screen_height / 2 - 150 * scale,
          "fonts/pixel.ttf")
-    text("MOVE: ARROW KEYS & WASD", int(scale * 30), (255, 255, 255),
+    text("MOVE: ARROW KEYS/WAS/D-PAD", int(scale * 30), (255, 255, 255),
          screen_width / 2, screen_height / 2 - 50 * scale,
          "fonts/pixel.ttf")
-    text("JUMP: SPACE", int(scale * 30), (255, 255, 255),
+    text("JUMP: SPACE/B/A", int(scale * 30), (255, 255, 255),
          screen_width / 2, screen_height / 2,
          "fonts/pixel.ttf")
-    text("ATTACK: SHIFT", int(scale * 30), (255, 255, 255),
+    text("ATTACK: SHIFT/Y", int(scale * 30), (255, 255, 255),
          screen_width / 2, screen_height / 2 + 50 * scale,
          "fonts/pixel.ttf")
-    text("PAUSE: ESCAPE", int(scale * 30), (255, 255, 255),
+    text("PAUSE: ESCAPE/X", int(scale * 30), (255, 255, 255),
          screen_width / 2, screen_height / 2 + 100 * scale,
          "fonts/pixel.ttf")
     text("PRESS ENTER/A TO START", int(scale * 30), (255, 255, 255),

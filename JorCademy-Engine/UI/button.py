@@ -1,5 +1,6 @@
 from Support.settings import scale
 from Support.input import *
+import Support.input as inp
 from jorcademy import *
 
 
@@ -34,11 +35,6 @@ class Button:
         self.border_size = border_size
         self.border_color = border_color
 
-        # Click delay
-        self.click_delay = 10
-        self.click_timer = 0
-        self.clickable = True
-
     def is_hovered(self):
         if self.selected:
             return True
@@ -48,11 +44,11 @@ class Button:
             return True
 
     def clicked(self):
-        if not self.clickable:
+        if not inp.clickable:
             return False
 
         if self.is_hovered():
-            self.clickable = not pygame.mouse.get_pressed()[0]
+            inp.clickable = not (pygame.mouse.get_pressed()[0] or is_nintendo_switch_pro_button_down(SWITCH_A))
             return pygame.mouse.get_pressed()[0] or return_key_pressed()
 
     def update(self):
@@ -60,13 +56,6 @@ class Button:
             self.button_color = self.hover_color
         else:
             self.button_color = self.orig_button_color
-
-        # Click delay
-        if not self.clickable:
-            self.click_timer += 1
-            if self.click_timer >= self.click_delay:
-                self.clickable = True
-                self.click_timer = 0
 
     def draw(self):
         # Draw border

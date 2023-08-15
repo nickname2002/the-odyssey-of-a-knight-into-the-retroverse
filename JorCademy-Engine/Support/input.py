@@ -12,6 +12,10 @@ SWITCH_D_DOWN = 12
 SWITCH_D_LEFT = 13
 SWITCH_D_RIGHT = 14
 
+click_delay = 10
+click_timer = 0
+clickable = True
+
 
 def move_right_key_pressed():
     return (is_key_down("d") or

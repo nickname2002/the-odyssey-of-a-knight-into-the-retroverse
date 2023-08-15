@@ -1,4 +1,5 @@
 import string
+from Support.input import *
 from Support.settings import screen_width, screen_height, scale
 from UI.button import Button
 from UI.slider import Slider
@@ -14,7 +15,7 @@ volume_slider = Slider(
 clouds_button = Button(
     (screen_width / 2, screen_height / 2 + 140 * scale),
     500, 50,
-    f"CLOUDS {str(settings.clouds).upper()}", 25, (255, 255, 255),
+    f"CLOUDS: {str(settings.clouds).upper()}", 25, (255, 255, 255),
     (1, 1, 1), (50, 50, 50),
     True, 5, (200, 200, 200))
 
@@ -28,11 +29,40 @@ to_main_menu_button = Button(
 
 view_displayed_prev_frame = False
 
+# Setting components
+setting_components = [volume_slider, clouds_button, to_main_menu_button]
+setting_component_index = None
+switching_delay = 30
+switching_timer = 0
 
-# TODO: add support for Nintendo Switch Pro Controller navigation
+
+def increase_selected_component_index():
+    global setting_component_index
+    if setting_component_index is None:
+        setting_component_index = 0
+    else:
+        if setting_component_index == len(setting_components) - 1:
+            setting_component_index = 0
+        else:
+            setting_component_index += 1
+
+
+def decrease_selected_component_index():
+    global setting_component_index
+    if setting_component_index is None:
+        setting_component_index = len(setting_components) - 1
+    else:
+        if setting_component_index == 0:
+            setting_component_index = len(setting_components) - 1
+        else:
+            setting_component_index -= 1
+
 
 def show_settings_screen(main_menu_music) -> string:
-    global view_displayed_prev_frame
+    global view_displayed_prev_frame, \
+        setting_components, \
+        setting_component_index, \
+        switching_timer
 
     # Show backdrop
     backdrop((255, 255, 255))
@@ -41,6 +71,23 @@ def show_settings_screen(main_menu_music) -> string:
         clouds_button.clickable = False
         to_main_menu_button.clickable = False
         view_displayed_prev_frame = True
+
+    # Manage selected component
+    if switching_timer == 0:
+        if is_nintendo_switch_pro_button_down(SWITCH_D_UP):
+            switching_timer = switching_delay
+            decrease_selected_component_index()
+        elif is_nintendo_switch_pro_button_down(SWITCH_D_DOWN):
+            switching_timer = switching_delay
+            increase_selected_component_index()
+    else:
+        switching_timer -= 1
+
+    for i in range(len(setting_components)):
+        if setting_component_index == i:
+            setting_components[i].selected = True
+        else:
+            setting_components[i].selected = False
 
     # Show title
     text("SETTINGS", int(scale * 50), (0, 0, 0),

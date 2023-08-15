@@ -1,3 +1,4 @@
+from Support.input import *
 from Support.settings import scale
 from jorcademy import *
 
@@ -9,12 +10,15 @@ class Slider:
         self.y = y
         self.width = width
         self.height = height
+        self.orig_color = component_color
         self.color = component_color
+        self.hover_color = (component_color[0] + 50, component_color[1] + 50, component_color[2] + 50)
 
         self.min_value = min_value
         self.max_value = max_value
         self.value = value
 
+        self.selected = False
         self.dragging = False
 
     def update(self):
@@ -34,10 +38,28 @@ class Slider:
             elif self.value > self.max_value:
                 self.value = self.max_value
 
-        if not is_mouse_button_down("left"):
+        # Update value with controller
+        elif self.selected:
+            if is_nintendo_switch_pro_button_down(SWITCH_D_LEFT):
+                self.value -= 0.01
+            elif is_nintendo_switch_pro_button_down(SWITCH_D_RIGHT):
+                self.value += 0.01
+
+            # Clamp value
+            if self.value < self.min_value:
+                self.value = self.min_value
+            elif self.value > self.max_value:
+                self.value = self.max_value
+
+        if not is_mouse_button_down("left") and not self.selected:
             self.dragging = False
 
     def draw(self):
+        if self.selected:
+            self.color = self.hover_color
+        else:
+            self.color = self.orig_color
+
         # Draw component backdrop
         rect(self.color, self.x, self.y, self.width, self.height)
 

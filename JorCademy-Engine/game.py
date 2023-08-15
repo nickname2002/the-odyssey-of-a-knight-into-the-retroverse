@@ -6,6 +6,7 @@ from Level.level import Level
 # Support
 from Support.settings import screen_width, screen_height
 from Support.input import *
+import Support.input as inp
 
 # Screens
 from View import main_menu_screen
@@ -160,6 +161,13 @@ def update() -> None:
         current_screen
 
     last_recorded_score = levels[active_level_index].link.coins
+
+    # Click delay
+    if not inp.clickable:
+        inp.click_timer += 1
+        if inp.click_timer >= inp.click_delay:
+            inp.clickable = True
+            inp.click_timer = 0
 
     # Show settings screen
     if current_screen == "SETTINGS":

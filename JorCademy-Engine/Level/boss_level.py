@@ -76,16 +76,14 @@ class BossLevel(Level):
         # == Background
         backdrop(self.backdrop_color)
 
-        # == Player
-        self.link.draw()
-
-        # Draw necessary tiles and monsters
-        chunks_to_draw = self.get_chunks_in_range()
-        for chunk in chunks_to_draw:
-            chunk.draw(self.screen)
+        # == Chunks
+        self.draw_environment()
 
         # Draw triforce key
         self.end_game_triforce.draw()
+
+        # == Player
+        self.link.draw()
 
         # Coin amount
         text(f"COINS: {str(self.link.coins)}",

@@ -1,9 +1,6 @@
 import math
-
-import pygame
-
 from GameObject.Monster.monster import Monster
-from Support.settings import scale
+from Support.settings import scale, tile_size
 from jorcademy import *
 
 # States
@@ -25,6 +22,7 @@ class Ghost(Monster):
             load_image("monsters/ghost/ghost_vulnerable.png"),
             load_image("monsters/ghost/ghost_dead.png")
         ]
+        self.y = pos[1] + tile_size / 2
         self.die_state_index = 3
         self.speed = 1.5 * scale
         self.direction = pygame.Vector2(-self.speed, 0)

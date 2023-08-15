@@ -167,7 +167,9 @@ class EndScene(Level):
 
         # == Background
         backdrop(self.backdrop_color)
-        self.draw_environmental_objects()
+
+        # Draw environment
+        self.draw_environment()
 
         # == Player
         self.link.draw()
@@ -178,11 +180,6 @@ class EndScene(Level):
         # Heart
         if self.end_reached:
             image(self.heart_image, self.heart.x, self.heart.y, 0.2 * scale, True, 0)
-
-        # Draw necessary tiles
-        chunks_to_draw = self.get_chunks_in_range()
-        for chunk in chunks_to_draw:
-            chunk.draw(self.screen)
 
         # Coin amount
         text(f"COINS: {str(self.link.coins)}",
