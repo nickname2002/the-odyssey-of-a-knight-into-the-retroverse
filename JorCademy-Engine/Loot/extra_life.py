@@ -12,6 +12,7 @@ class ExtraLife(Loot):
         self.speed = 2 * scale
         self.collect_sound = load_sound("assets/sounds/power_ups/1_up.ogg")
         self.image = load_image("power_ups/1up.png")
+        self.image_scale = tile_size/256
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -37,6 +38,3 @@ class ExtraLife(Loot):
         super().rise_animation()
         if self.y <= self.orig_position[1] - tile_size:
             self.moving = True
-
-    def draw(self, image_scale=tile_size/256):
-        image(self.image, self.x, self.y, scale=image_scale)

@@ -13,6 +13,7 @@ class Coin(Loot):
         self.coins = 100
         self.collect_sound = load_sound("assets/sounds/power_ups/coin.ogg")
         self.image = load_image("power_ups/coin.png")
+        self.image_scale = scale
 
     def show(self, level):
         super().show(level)
@@ -34,6 +35,3 @@ class Coin(Loot):
             self.timer += 1
             if self.timer % self.disappear_delay == 0:
                 self.y = 800
-
-    def draw(self, image_scale=1):
-        image(self.image, self.x, self.y, scale=scale)

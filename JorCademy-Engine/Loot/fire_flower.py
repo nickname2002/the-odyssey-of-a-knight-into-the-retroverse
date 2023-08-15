@@ -12,6 +12,7 @@ class FireFlower(Loot):
         self.triggered_representation = "FIRE_MARIO"
         self.collect_sound = load_sound("assets/sounds/power_ups/power_up.ogg")
         self.image = load_image("power_ups/flower_power.png")
+        self.image_scale = tile_size/256
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -27,6 +28,3 @@ class FireFlower(Loot):
         super().process_loot()
         play_sound(self.collect_sound, 1)
         self.player.trigger_new_representation(self.triggered_representation)
-
-    def draw(self, image_scale=tile_size/256):
-        image(self.image, self.x, self.y, scale=image_scale)

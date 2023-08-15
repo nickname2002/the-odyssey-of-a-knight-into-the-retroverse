@@ -1,6 +1,7 @@
 from Environment.text_anomaly import TextAnomaly
 from Level.Tiles.tile import MovingTile
 from Support.settings import tile_size
+from jorcademy import *
 
 
 # TODO: create generic draw method for all loot
@@ -17,6 +18,7 @@ class Loot(MovingTile):
         self.coins = 0
         self.message = "SAMPLE_MESSAGE"
         self.triggered_representation = "SAMPLE_TRIGGERED_REPRESENTATION"
+        self.image_scale = 1
 
     def show(self, level):
         self.activated = True
@@ -49,3 +51,6 @@ class Loot(MovingTile):
     def update(self, shift_x):
         super().update(shift_x)
         self.rise_animation()
+
+    def draw(self):
+        image(self.image, self.x, self.y, self.image_scale)

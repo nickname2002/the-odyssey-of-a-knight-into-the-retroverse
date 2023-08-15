@@ -12,6 +12,7 @@ class Cherry(Loot):
         self.triggered_representation = "PAC_MAN"
         self.collect_sound = load_sound("assets/sounds/power_ups/power_up.ogg")
         self.image = load_image("power_ups/cherry.png")
+        self.image_scale = scale
 
     def update(self, shift_x):
         super().update(shift_x)
@@ -28,5 +29,3 @@ class Cherry(Loot):
         play_sound(self.collect_sound, 1)
         self.player.trigger_new_representation(self.triggered_representation)
 
-    def draw(self, image_scale=scale):
-        image(self.image, self.x, self.y, image_scale)
