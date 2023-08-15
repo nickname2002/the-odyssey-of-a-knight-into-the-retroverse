@@ -57,12 +57,23 @@ python3 JorCademy-Engine/main.py
 If this command fails, you can try python `JorCademy-Engine/main.py` or simply `JorCademy-Engine/main.py`, depending on your Python version and operating system.
 
 ## Controls
+
 The game is controlled using the keyboard. The following keys are used:
-- `W`, `UP` or `SPACE` to jump
-- `A` or `LEFT` to move left
-- `D` or `RIGHT` to move right
-- `SHIFT` to attack
-- `ESC` to pause the game
+
+- `W`/`UP`/`SPACE`/`B`/`A`: Jump
+- `A`/`LEFT`/`D_LEFT`: Move left
+- `D`/`RIGHT`/`D_RIGHT`: Move right
+- `SHIFT`/`Y`: Attack
+- `ESC`/`X`: Pause the game
+
+**Note**: The `D` suffix indicates the D-pad on a game controller.
+
+### Supported Peripherals
+
+The game currently supports the following peripherals:
+
+- Keyboard
+- Nintendo&reg; Switch Pro Controller
 
 ## Maintenance
 This project will be actively maintained until the conclusion of the game jam on 19/08/2023. Afterward, no further updates are expected.
