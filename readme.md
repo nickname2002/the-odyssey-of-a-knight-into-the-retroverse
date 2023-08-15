@@ -58,7 +58,7 @@ If this command fails, you can try python `JorCademy-Engine/main.py` or simply `
 
 ## Controls
 
-The game is controlled using the keyboard. The following keys are used:
+The game is controlled using a keyboard or controller. The following keys/buttons are used:
 
 - `W`/`UP`/`SPACE`/`B`/`A`: Jump
 - `A`/`LEFT`/`D_LEFT`: Move left
