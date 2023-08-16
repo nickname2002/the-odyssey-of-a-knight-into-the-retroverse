@@ -1,4 +1,4 @@
-# The Odyssey of Link | Into the Retro-Verse
+# The Odyssey of a Knight | Into the Retro-Verse
 
 A game created for the Summer of GameDev 2023 game jam, inspired by the theme _Retro Remix_. It's a 2D platformer, drawing inspiration from the original Super Mario Bros. game and featuring characters from various retro game classics. The game is built using the JorCademy Engine.
 
