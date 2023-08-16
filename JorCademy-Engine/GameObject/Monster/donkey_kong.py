@@ -71,6 +71,7 @@ class DonkeyKong(Monster):
             self.init_new_jump_delay()
             self.init_new_jump_speed()
 
+        # Attack randomly
         if self.attack_timer >= self.random_attack_delay:
             self.attack()
 

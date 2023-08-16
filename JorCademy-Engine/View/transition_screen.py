@@ -16,11 +16,9 @@ def load_transition_screen_images() -> None:
 
 # Get next level index
 def get_next_level_index(active_level, levels) -> int:
-    # Get the index of the active level
     active_level_index = levels.index(active_level)
-
     if active_level_index == (len(levels) - 1):
-        return 0  # NOTE: find right behavior when outplayed all levels
+        return 0
     else:
         return active_level_index + 1
 

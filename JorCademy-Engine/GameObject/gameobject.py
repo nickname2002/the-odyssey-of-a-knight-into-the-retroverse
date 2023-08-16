@@ -117,31 +117,19 @@ class GameObject:
         # Check horizontally and vertically in range
         return in_x_range and in_y_range
 
+    def in_y_range_horizontal_collision(self, other):
+        return (self.y + self.height / 2 - 5 * scale) >= \
+               (other.y - other.height / 2) and \
+               (self.y - self.height / 2 + 5 * scale) <= \
+               (other.y + other.height / 2)
+
     def collision_left(self, other):
-        # Check in range horizontally
         in_x_range = (other.x + other.width / 2) >= (self.x - self.width / 2) >= (other.x - other.width / 2)
-
-        # Check in range vertically
-        in_y_range = (self.y + self.height / 2 - 5 * scale) >= \
-                     (other.y - other.height / 2) and \
-                     (self.y - self.height / 2 + 5 * scale) <= \
-                     (other.y + other.height / 2)
-
-        # Check horizontally and vertically in range
-        return in_x_range and in_y_range
+        return in_x_range and self.in_y_range_horizontal_collision(other)
 
     def collision_right(self, other):
-        # Check in range horizontally
         in_x_range = (other.x - other.width / 2) <= (self.x + self.width / 2) <= (other.x + other.width / 2)
-
-        # Check in range vertically
-        in_y_range = (self.y + self.height / 2 - 5 * scale) >= \
-                     (other.y - other.height / 2) and \
-                     (self.y - self.height / 2 + 5 * scale) <= \
-                     (other.y + other.height / 2)
-
-        # Check horizontally and vertically in range
-        return in_x_range and in_y_range
+        return in_x_range and self.in_y_range_horizontal_collision(other)
 
     def jump(self, speed):
         if self.is_grounded:

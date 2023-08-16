@@ -207,15 +207,10 @@ class Ganondorf(Monster):
             self.process_walk_state()
 
     def process_idle_state(self):
-        # Check if the timer is up
+        # Start walking randomly
         if self.idle_timer >= self.random_idle_delay:
-            # Reset timer
             self.idle_timer = 0
-
-            # Reset state
             self.state = WALKING_1
-
-            # Reset idle delay
             self.init_idle_delay()
 
         # Stop moving
@@ -225,20 +220,14 @@ class Ganondorf(Monster):
         self.idle_timer += 1
 
     def process_walk_state(self):
-        # Check if the timer is up
+        # Make the player walk randomly
         if self.walking_timer >= self.random_walking_delay:
-
-            # Reset timer
             self.walking_timer = 0
-
-            # Reset state
             self.state = IDLE
-
-            # Reset walking delay
             self.init_new_walking_delay()
             self.face_random_direction()
 
-        # Make the monster jump when the timer is up
+        # Make the monster jump randomly
         if self.is_grounded and self.jump_timer >= self.random_jump_delay:
             self.jump(self.jump_speed)
             self.init_new_jump_delay()
@@ -255,7 +244,7 @@ class Ganondorf(Monster):
     def perform_short_range_attack(self):
         # Check if the timer is up
         if self.short_range_attack_timer >= self.short_range_attack_delay:
-            # Reset timer
+
             self.short_range_attack_timer = 0
 
             # Reset state

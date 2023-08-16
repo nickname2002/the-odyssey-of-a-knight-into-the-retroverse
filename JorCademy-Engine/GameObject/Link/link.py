@@ -254,6 +254,8 @@ class Link(GameObject):
         if self.active_cooldown <= 0 and self.visible:
             self.master_sword.attack()
             self.state = ATTACK
+        else:
+            self.state = IDLE
 
     def jump(self, enemy_killed=False):
         self.state = JUMPING
@@ -294,6 +296,7 @@ class Link(GameObject):
             self.direction.x = 0
             return
 
+        # Make player slow down
         if self.direction.x < 0:
             self.direction.x += 0.1
         elif self.direction.x > 0:
@@ -305,7 +308,6 @@ class Link(GameObject):
         level.get_current_chunk().update_text_anomalies(new_text_anomaly)
 
     def handle_1up_with_coins(self, level):
-        # Give better name
         level_up_coin_threshold = 1000
         if self.coins + self.coins_earned_current_level >= level_up_coin_threshold:
             self.coins = 0
@@ -327,7 +329,6 @@ class Link(GameObject):
 
         # Handle Link DEAD state
         if self.killed:
-
             if self.visible:
                 self.play_death_sound()
 
@@ -390,16 +391,24 @@ class Link(GameObject):
         if self.representation_change_timer >= self.representation_change_delay:
             self.activate_main_representation()
 
-        # Determine which representation to show
+        # == Determine which representation to show
+
+        # Link
         if self.representation == LINK:
             self.representation_change_timer = 0
             self.visible = True
+
+        # Fire Mario
         elif self.representation == FIRE_MARIO:
             self.reset_representation_timer(self.fire_mario)
             self.activate_alt_representation(FIRE_MARIO)
+
+        # Pac-Man
         elif self.representation == PAC_MAN:
             self.reset_representation_timer(self.pac_man)
             self.activate_alt_representation(PAC_MAN)
+
+        # Other
         else:
             self.visible = True
             self.representation_change_timer += 1

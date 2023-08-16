@@ -10,11 +10,7 @@ game_over_delay = 300
 # Show game over screen
 def show_game_over_screen(active_level, last_recorded_score) -> string:
     global game_over_timer
-
-    # Stop music in active level
     active_level.level_music.fadeout(500)
-
-    # Set backdrop to black
     backdrop((0, 0, 0))
 
     # Display properties on screen

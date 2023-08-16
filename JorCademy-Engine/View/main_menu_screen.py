@@ -36,6 +36,21 @@ def load_main_menu_images():
     logo = load_image("icons/odyssey-of-a-knight-into-retroverse.png")
 
 
+def decrease_selected_button_index():
+    global selected_index
+    if selected_index is None:
+        selected_index = 0
+    elif selected_index > 0:
+        selected_index -= 1
+
+
+def increase_selected_button_index():
+    global selected_index
+    if selected_index is None:
+        selected_index = 0
+    elif selected_index < len(menu_buttons) - 1:
+        selected_index += 1
+
 def show_main_menu_screen(active_level) -> string:
     global selected_index
 
@@ -61,17 +76,13 @@ def show_main_menu_screen(active_level) -> string:
          screen_width / 2, screen_height / 2 + 20 * scale,
          "fonts/pixel.ttf")
 
+    # Nintendo Switch Pro Controller navigation
     if is_nintendo_switch_pro_button_down(SWITCH_D_UP):
-        if selected_index is None:
-            selected_index = 0
-        elif selected_index > 0:
-            selected_index -= 1
+        decrease_selected_button_index()
     elif is_nintendo_switch_pro_button_down(SWITCH_D_DOWN):
-        if selected_index is None:
-            selected_index = 0
-        elif selected_index < len(menu_buttons) - 1:
-            selected_index += 1
+        increase_selected_button_index()
 
+    # Determine selected button
     if selected_index is not None:
         for i in range(len(menu_buttons)):
             if i == selected_index:

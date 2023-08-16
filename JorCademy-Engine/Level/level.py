@@ -126,7 +126,7 @@ class Level:
             self.end_game_triforce.reached
 
     def init_chunks(self):
-        self.chunk_size = round(self.level_length / self.chunk_amount)  # Maybe we can determine this automatically
+        self.chunk_size = round(self.level_length / self.chunk_amount)
 
         for i in range(self.chunk_amount):
             chunk_end = (i + 1) * self.chunk_size
@@ -304,7 +304,6 @@ class Level:
 
         # Add clouds in current view
         for i in range(self.clouds_amount):
-            # Setup cloud object in screen
             cloud = Cloud(self.cloud_image, cam_pos)
             cloud.orig_pos = (random.randint(0, screen_width + 100),
                               random.randint(0, 100))
@@ -313,6 +312,7 @@ class Level:
     def update_environmental_objects(self, cam_pos, level_length):
         clouds_amount = 0
 
+        # Remove/update clouds
         for obj in self.environment:
             if obj.ready_to_remove():
                 self.environment.remove(obj)
@@ -321,6 +321,7 @@ class Level:
                     clouds_amount += 1
                 obj.update(cam_pos, level_length)
 
+        # Add clouds when needed
         if clouds_amount < self.clouds_amount:
             self.environment.append(Cloud(self.cloud_image, cam_pos))
 
@@ -330,6 +331,7 @@ class Level:
         if self.transition_requested():
             self.level_music.fadeout(500)
 
+        # Reset the game when the level endpoint is reached
         if self.end_game_triforce.reached:
             self.reset()
 
@@ -341,6 +343,7 @@ class Level:
         # == Player
         self.link.update(self.cam_pos, self, self.end_game_triforce.reached)
 
+        # Manage world shift
         if not self.prevent_tile_shift():
             self.world_shift()
 
@@ -366,7 +369,6 @@ class Level:
                 obj.draw()
 
     def draw_tiles(self, chunks_to_draw):
-        # Gather and categorize tiles in a single loop
         backdrop_tiles = []
         loot_tiles = []
         other_tiles = []
@@ -385,7 +387,6 @@ class Level:
         for tile in backdrop_tiles:
             tile.draw()
 
-        # Draw clouds
         self.draw_environmental_objects()
 
         # Draw loot
@@ -427,7 +428,7 @@ class Level:
     # Draw the state of the level
     def draw(self):
 
-        # == Background
+        # == Backdrop
         backdrop(self.backdrop_color)
 
         # Draw environment

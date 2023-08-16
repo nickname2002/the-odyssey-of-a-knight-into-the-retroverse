@@ -45,17 +45,9 @@ class Ghost(Monster):
     def handle_movement(self, cam_pos, level_length):
         if self.moving:
             self.offset += self.direction.x * self.speed
-
-            # Get the time passed since the game started in milliseconds
             current_time = pygame.time.get_ticks()
-
-            # Calculate the time in seconds
             time_in_seconds = current_time / 1000
-
-            # Calculate the sine wave movement
             sine_wave = math.sin(2 * math.pi * self.frequency * time_in_seconds)
-
-            # Update the y position using the sine wave formula with amplitude
             self.y += self.amplitude * sine_wave
 
     def determine_sel_sprite_index(self):

@@ -71,6 +71,7 @@ class PacMan(GameObject):
                 if self.timer % self.walk_animation_delay == 0:
                     self.state += 1
 
+            # Play waka sound when needed
             if self.play_sound_timer >= self.play_sound_delay and self.visible:
                 play_sound(self.waka_sound, 0.15)
                 self.play_sound_timer = 0
