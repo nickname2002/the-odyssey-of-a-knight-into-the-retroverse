@@ -170,7 +170,7 @@ class Link(GameObject):
     def handle_movement(self, cam_pos, level_length, at_level_end=False):
         super().handle_movement(cam_pos, level_length)
         if (self.x < screen_width / 2 or cam_pos >= (level_length - screen_width)
-                and self.x > 10):
+                and self.x > 30):
             self.x += self.direction.x * self.speed
 
         # Update jumping lock
@@ -183,9 +183,10 @@ class Link(GameObject):
             return
 
         # Update horizontal direction and position of Link
+        min_x = 75
         if move_right_key_pressed() and not move_left_key_pressed():
             self.move_right()
-        elif move_left_key_pressed() and not move_right_key_pressed():
+        elif move_left_key_pressed() and not move_right_key_pressed() and self.x > min_x:
             self.move_left()
         elif self.is_grounded:
             self.state = IDLE
