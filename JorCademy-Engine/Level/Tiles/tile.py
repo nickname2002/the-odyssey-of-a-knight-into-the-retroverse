@@ -93,11 +93,6 @@ class MovingTile(Tile, GameObject):
 
             # Handle collision on bottom side of tile
             if self.collision_bottom(tile):
-                try:
-                    if self.message == "+1 UP":
-                        print(tile.code)
-                except AttributeError:
-                    pass
                 if self.direction.y > 0:
                     self.y = tile.y - tile.height / 2 - self.height / 2
                     self.direction.y = 0
