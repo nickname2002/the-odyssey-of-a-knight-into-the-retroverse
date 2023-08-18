@@ -108,6 +108,7 @@ The game is currently in the last stage of development. The following issues are
 - Click events are not very responsive. This means that the player must likely click the 
 button multiple times to get a response. This is a known issue with the JorCademy Engine, 
 and will be fixed in a future update.
+- Sometimes, controller connection might not be detected. In order to fix this, restart the game. 
 
 ## Contact
 If you have any questions or feedback, feel free to reach out: nickjordan2002@gmail.com
