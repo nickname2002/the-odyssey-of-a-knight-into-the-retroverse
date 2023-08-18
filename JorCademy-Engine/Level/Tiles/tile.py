@@ -1,3 +1,4 @@
+from GameObject.gameobject import GameObject
 from Level.Tiles.tile_data import *
 from Support.settings import tile_size, screen_height, screen_width
 from jorcademy import *
@@ -42,7 +43,7 @@ class StaticTile(Tile):
         image(self.image, self.x, self.y, self.image.get_width() / tile_size)
 
 
-class MovingTile(Tile):
+class MovingTile(Tile, GameObject):
 
     def __init__(self, size, pos, surface, code, index):
         super().__init__(size, pos, index)
@@ -81,6 +82,7 @@ class MovingTile(Tile):
                 # Handle collision on left side of Link
             if self.collision_left(tile):
                 if self.direction.x < 0:
+                    self.speed *= -1
                     self.x = tile.x + tile.width / 2 + self.width / 2
 
             # Handle collision on right side of Link
@@ -91,111 +93,14 @@ class MovingTile(Tile):
 
             # Handle collision on bottom side of tile
             if self.collision_bottom(tile):
+                try:
+                    if self.message == "+1 UP":
+                        print(tile.code)
+                except AttributeError:
+                    pass
                 if self.direction.y > 0:
                     self.y = tile.y - tile.height / 2 - self.height / 2
                     self.direction.y = 0
-
-    def collision_top(self, other):
-        # Check in range horizontally
-        in_x_range = (self.x + self.width / 2 - 10) >= (other.x - other.width / 2) and \
-                     (self.x - self.width / 2 + 10) <= (other.x + other.width / 2)
-
-        # Check in range vertically
-        in_y_range = (self.y - self.height / 2 - 10) <= (other.y + other.height / 2) and \
-                     (self.y - self.height / 2 + 10) >= (other.y - other.height / 2)
-
-        # Check horizontally and vertically in range
-        return in_x_range and in_y_range
-
-    def collision_bottom(self, other):
-        # Check in range horizontally
-        in_x_range = (self.x + self.width / 2 - 10) >= (other.x - other.width / 2) and \
-                     (self.x - self.width / 2 + 10) <= (other.x + other.width / 2)
-
-        # Check in range vertically
-        in_y_range = (self.y + self.height / 2 - 10) <= (other.y - other.height / 2) <= (self.y + self.height / 2 + 10)
-
-        # Check horizontally and vertically in range
-        return in_x_range and in_y_range
-
-    def collision_left(self, other):
-        # Check in range horizontally
-        in_x_range = (self.x - self.width / 2 - 5) <= (other.x + other.width / 2) <= (self.x - self.width / 2 + 5)
-
-        # Check in range vertically
-        in_y_range = (self.y + self.height / 2 - 5) >= (other.y - other.height / 2) and \
-                     (self.y - self.height / 2 + 5) <= (other.y + other.height / 2)
-
-        # Check horizontally and vertically in range
-        return in_x_range and in_y_range
-
-    def collision_right(self, other):
-        # Check in range horizontally
-        in_x_range = (self.x + self.width / 2 + 5) >= (other.x - other.width / 2) and \
-                     (self.x + self.width / 2 - 5) <= (other.x + other.width / 2)
-
-        # Check in range vertically
-        in_y_range = (self.y + self.height / 2 - 5) >= (other.y - other.height / 2) and \
-                     (self.y - self.height / 2 + 5) <= (other.y + other.height / 2)
-
-        # Check horizontally and vertically in range
-        return in_x_range and in_y_range
-
-    # Change horizontal collision of player with the map
-    def horizontal_collision(self, tiles):
-
-        for tile in tiles:
-
-            if tile == self:
-                continue
-
-            # No collision when tile is part of backdrop
-            if tile.code in BACKDROP_TILES:
-                continue
-
-                # Handle collision on left side of Link
-            if self.collision_left(tile):
-                if self.direction.x < 0:
-                    self.x = tile.x + tile.width / 2 + self.width / 2
-
-            # Handle collision on right side of Link
-            elif self.collision_right(tile):
-                if self.direction.x > 0:
-                    self.speed *= -1
-                    self.x = tile.x - tile.width / 2 - self.width / 2
-
-    # Change vertical collision of player with the map
-    def vertical_collision(self, tiles):
-
-        for i, tile in enumerate(tiles):
-
-            if tile == self:
-                continue
-
-            # No collision when tile is part of backdrop
-            if tile.code in BACKDROP_TILES:
-                continue
-
-            # Handle collision on bottom side of Link
-            if self.collision_bottom(tile):
-                if self.direction.y > 0:
-                    self.y = tile.y - tile.height / 2 - self.height / 2
-                    self.direction.y = 0
-
-            # Handle collision on top side of Link
-            elif self.collision_top(tile):
-                if self.direction.y < 0:
-                    self.y = tile.y + tile.height / 2 + self.height / 2
-                    self.direction.y = 0
-
-                    # Handle collision with mystery box
-                    if tile.code == MYSTERY_BOX:
-                        try:
-                            #  self.break_sound = load_sound("assets/sounds/block_break.ogg")
-                            loot = tile.give_loot(self)
-                            self.tiles.insert(i, loot)
-                        except:
-                            pass
 
 
 class BreakableTile(StaticTile):

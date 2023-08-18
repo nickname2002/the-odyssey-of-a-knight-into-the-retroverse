@@ -1,6 +1,7 @@
 # Terrain & sky
 SKY_TILE = '0'
 CASTLE_WALL = '218'
+CASTLE_WALL_2 = '7'
 GANONDORF_CASTLE_WALL = '1035'
 GANONDORF_CASTLE_WINDOW = '987'
 GANONDORF_CASTLE_WALL_2 = '983'
@@ -30,6 +31,7 @@ GANONDORF = '242'
 # Collections
 BACKDROP_TILES = [SKY_TILE, '397', '398', '399',
                   CASTLE_WALL,
+                  CASTLE_WALL_2,
                   GANONDORF_CASTLE_WALL,
                   GANONDORF_CASTLE_WALL_2,
                   GANONDORF_CASTLE_WINDOW]

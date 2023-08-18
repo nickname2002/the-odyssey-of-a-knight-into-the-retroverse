@@ -318,6 +318,10 @@ class Link(GameObject):
             play_sound(self.one_up_sound, 0.5)
 
     def is_game_over(self):
+        print("KILLED: " + str(self.killed), "LIVES: " +
+              str(self.lives), "DIE ANIMATION TIMER: " +
+              str(self.die_animation_timer), "DIE ANIMATION DELAY: " +
+              str(self.die_animation_delay))
         return self.killed and \
             self.lives == 0 and \
             self.die_animation_timer >= self.die_animation_delay

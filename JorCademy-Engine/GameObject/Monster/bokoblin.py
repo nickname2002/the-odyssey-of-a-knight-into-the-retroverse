@@ -12,6 +12,7 @@ class Bokoblin(Monster):
             load_image("monsters/bokoblin/bokoblin_2.png"),
             load_image("monsters/bokoblin/bokoblin_dead.png")
         ]
+        self.y = self.y - 10 * scale
         self.speed = 1
         self.direction = pygame.Vector2(-self.speed, 0)
         self.die_state_index = 2

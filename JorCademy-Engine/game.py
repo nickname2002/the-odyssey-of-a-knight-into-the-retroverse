@@ -185,6 +185,7 @@ def update() -> None:
         main_menu_screen.main_menu_music.fadeout(500)
 
     # Check if game is over
+    print(levels[active_level_index].link.is_game_over())
     if levels[active_level_index].link.is_game_over() or current_screen == "GAME_OVER":
         current_screen = show_game_over_screen(levels[active_level_index], last_recorded_score)
         return

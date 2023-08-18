@@ -2,7 +2,7 @@ import random
 
 from GameObject.Monster.Weapons.enemy_fireball import EnemyFireBall
 from GameObject.Monster.monster import Monster
-from Support.settings import scale
+from Support.settings import scale, volume
 from jorcademy import *
 
 # Ganondorf states
@@ -90,9 +90,10 @@ class Ganondorf(Monster):
         self.random_attack_delay = random.randint(self.min_attack_delay, self.max_attack_delay)
 
         # Sounds
-        self.long_range_attack_sound = load_sound("assets/sounds/ganondorf_long_range_attack.ogg")
-        self.short_range_attack_sound = load_sound("assets/sounds/ganondorf_short_range_attack.ogg")
-        self.audio_played = False
+        self.long_range_attack_sound = load_sound("assets/sounds/monsters/ganondorf/ganondorf_long_range_attack.ogg")
+        self.short_range_attack_sound = load_sound("assets/sounds/monsters/ganondorf/ganondorf_short_range_attack.ogg")
+        self.hit_by_player_sound = load_sound("assets/sounds/monsters/ganondorf/ganondorf_damage.ogg")
+        self.die_sound = load_sound("assets/sounds/monsters/ganondorf/ganondorf_die.ogg")
 
     def update_sprite_state(self):
         # Dead
@@ -179,6 +180,7 @@ class Ganondorf(Monster):
 
         # Stop monster action when it is killed
         if self.killed:
+            play_sound(self.die_sound)
             self.y = self.die_y + self.height / 2 - 10 * scale
             self.rotation = -60
             return
@@ -258,14 +260,10 @@ class Ganondorf(Monster):
 
             # Reset speed
             self.speed = self.orig_speed
-
-            # Reset audio
-            self.audio_played = False
             return
 
-        if not self.audio_played and not self.health <= 0:
+        if not self.health <= 0:
             play_sound(self.short_range_attack_sound, 0.5)
-            self.audio_played = True
 
         self.short_range_attack_activated = True
         if self.state == IDLE:
@@ -303,17 +301,13 @@ class Ganondorf(Monster):
 
             # Reset speed
             self.speed = self.orig_speed
-
-            # Reset audio
-            self.audio_played = False
             return
 
         self.face_towards_player()
 
         # Play attack sound
-        if not self.audio_played and not self.health <= 0:
+        if not self.health <= 0:
             play_sound(self.long_range_attack_sound, 0.5)
-            self.audio_played = True
 
         # Activate long range attack state
         self.long_range_attack_activated = True

@@ -36,12 +36,9 @@ class BossLevel(Level):
         self.link.at_game_end = False
         self.end_game_triforce.moving_allowed = False
 
-    def transition_requested(self):
-        return self.link.killed or self.end_game_triforce.reached
-
     def update(self):
         # Stop music if game is over
-        if self.transition_requested():
+        if self.transition_requested() or self.boss.killed:
             self.level_music.fadeout(500)
 
         # Update chunks in range
@@ -64,7 +61,7 @@ class BossLevel(Level):
         self.end_game_triforce.update(self.cam_pos, self.level_length)
 
         # Play music
-        if not self.level_music.get_num_channels() > 0:
+        if not self.level_music.get_num_channels() > 0 and not self.boss.killed:
             self.level_music.play(-1)
             self.level_music.set_volume(0.25 * settings.volume)
 

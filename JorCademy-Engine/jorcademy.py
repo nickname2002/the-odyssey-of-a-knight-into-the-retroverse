@@ -166,7 +166,8 @@ def load_sound(path: str):
 def play_sound(sound, p_volume=1.0):
     try:
         sound.set_volume(p_volume * settings.volume)
-        pygame.mixer.find_channel().play(sound)
+        if sound.get_num_channels() == 0:
+            pygame.mixer.find_channel().play(sound)
     except:
         print("Error: Audio could not be played.")
 
