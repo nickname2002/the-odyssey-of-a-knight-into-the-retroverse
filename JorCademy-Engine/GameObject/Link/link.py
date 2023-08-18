@@ -93,7 +93,7 @@ class Link(GameObject):
         # Load sounds
         self.jump_sound = load_sound('assets/sounds/link/jump.ogg')
         self.one_up_sound = load_sound("assets/sounds/power_ups/1_up.ogg")
-        self.death_sound = load_sound("assets/sounds/link/link_death_sound.ogg")  # TODO: find improved dead sound
+        self.death_sound = load_sound("assets/sounds/link/link_death_sound.ogg")
 
     def collision_top(self, other):
         # Check in range horizontally
