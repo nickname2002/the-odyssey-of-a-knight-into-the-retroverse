@@ -12,7 +12,7 @@ class BossLevel(Level):
         self.boss_type = boss_type
         self.boss = None
         self.die_sound_played = False
-        self.boss_die_sound = load_sound("assets/sounds/ganondorf/ganondorf_die.ogg")
+        self.boss_die_sound = load_sound("assets/sounds/monsters/ganondorf/ganondorf_die.ogg")
 
         # Music
         self.level_music = load_sound(level_music_path)
