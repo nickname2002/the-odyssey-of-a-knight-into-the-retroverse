@@ -447,6 +447,7 @@ class Link(GameObject):
         self.coins_earned_current_level = 0
         self.activate_main_representation()
         self.height = self.orig_height
+        self.at_game_end = False
         self.x = 100
         self.y = screen_height - 2 * tile_size - self.height
 

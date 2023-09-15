@@ -158,7 +158,7 @@ def load_sound(path: str):
     try:
         sound = pygame.mixer.Sound(path)
     except:
-        print("Error: Audio could not be loaded.")
+        print(f"Error: Audio {path} could not be loaded.")
     return sound
 
 
